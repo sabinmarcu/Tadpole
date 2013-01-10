@@ -1,0 +1,13 @@
+<header class="fixed-top">
+	<div class="container">
+		<h1><a href="/"><%= @title %></a></h1>
+		<nav>
+			<% for item in @items : %>
+			<li><a href="<%= item.link %>" title="<%= item.help or ''%>"><%= item.title %></a></li>
+			<% end %>
+		</nav>
+	</div>
+</header>
+<section class='container'>
+
+</section>

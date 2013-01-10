@@ -1,0 +1,47 @@
+header
+	position absolute
+	top 0
+	left 0
+	right 0
+	height 75px
+	overflow hidden
+	z-index 9999
+	background linear-gradient(top, #e6e6e6 0, #fff 100)
+	box-shadow 0 0 10px #999
+	text-align center
+	&.fixed-top 
+		position fixed
+	.container
+		text-align left
+		* 
+			transition all 0.5s ease-in-out
+		a, a:visited, a:link
+			color inherit
+			text-decoration none
+		h1
+			float:left
+			margin 0 75px 0 25px
+			line-height 75px
+			color #999
+			font-size 36pt	
+			font-family "Source Sans Pro"
+			&:hover
+				color #222
+		nav 
+			list-style none
+			list-style none
+			line-height 75px
+			display  block
+			float left
+			font-family Electrolize
+			li 
+				display inline-block
+				a 
+					color inherit
+					text-decoration none
+					display block
+					height 100%
+					width 100%
+					color #666
+					font-size 13pt
+					padding 0 25px

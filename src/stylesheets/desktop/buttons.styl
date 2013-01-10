@@ -1,0 +1,55 @@
+button 
+	display inline-block
+	padding 10px 20px
+	margin 10px
+	color #222
+	text-shadow 0 1px 1px white
+	background-image linear-gradient(top, rgba(256, 256, 256, 0.6) 0, rgba(256, 256, 526, 0.2) 50, rgba(256, 256, 256, 0) 100)
+	background-color #e6e6e6
+	border-radius 5px
+	border-top solid 1px #ccc
+	border-left solid 1px #bbb
+	border-right solid 1px #ddd
+	border-bottom solid 1px #aaa
+	transition all 0.5s ease-in-out
+	position relative
+	&:before
+		content ""
+		z-index -2
+		position absolute
+		left 10px
+		right 10px
+		top 0
+		bottom 0
+		border-top-left-radius 100px  10px
+		border-top-right-radius 100px  10px
+		border-bottom-left-radius 100px  10px
+		border-bottom-right-radius 100px  10px
+		box-shadow 0 0 15px #aaa
+	
+	&.red-bg, &.blue-bg, &.purple-bg, &.pink_bg, &.yellow-bg, &.orange-bg, &.green-bg 
+		background-image linear-gradient(top, rgba(256, 256, 256, 0.6) 0, rgba(256, 256, 256, 0.4) 50, rgba(256, 256, 256, 0) 100)
+		text-shadow 0 -1px 1px #666
+	
+	&:hover 
+		background-color darken(#eee, 10%)
+		&.red-bg 
+			background-color lighten(red, 10%)
+		
+		&.blue-bg 
+			background-color lighten(blue, 10%)
+		
+		&.purple-bg 
+			background-color lighten(purple, 10%)
+		
+		&.pink-bg 
+			background-color darken(pink, 10%)
+		
+		&.green-bg 
+			background-color darken(green, 10%)
+		
+		&.yellow-bg 
+			background-color darken(yellow, 5%)
+		
+		&.orange-bg 
+			background-color lighten(orange, 10%)

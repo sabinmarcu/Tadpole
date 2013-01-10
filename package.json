@@ -9,6 +9,10 @@
 		"coffee-script" :  "*",
 		"cliparser" :  "*",
 		"express" :  "2.5.0",
+		"eco" : "*",
+		"stylus": "*",
+		"nib": "*",
+		"canvas": "*",
 		"isf" :  "*",
 		"codo" :  "*",
 		"stitchw" :  "*"

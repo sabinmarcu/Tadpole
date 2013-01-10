@@ -8,6 +8,9 @@ class Server
 	# @return Server The server instance
 	constructor: (data) ->
 
+		for item, values of data
+			if values.length <= 1 then data[item] = values[0]
+
 		# Testing to check for the right value
 		return throw ServerErrorReporter.generate 1 if not data.address?
 		return throw ServerErrorReporter.generate 2 if not data.port?
@@ -43,15 +46,25 @@ class Server
 			App = do Express.createServer
 			App.configure =>
 				App.use App.router
-				App.use Express.static "./public"
-				if @compiler? then App.get "/js/g.js", (req, res) => @compiler.compile null, (source) ->
-					res.send source, {"Content-Type": "text/javascript"}, 201
+				App.use Express.static((require "path").resolve("#{__dirname}/../public"))
+				if @compiler? 
+					App.get "/js/g.js", (req, res) => @compiler.compile null, (source) ->
+						res.send source, {"Content-Type": "text/javascript"}, 201
+					App.get "/css/styles.css", (req, res) => @compiler.compileStyles null, (source) ->
+						res.send source, {"Content-Type": "text/css"}, 201
+					App.get "/font/*", (req, res) => 
+						res.sendfile (require "path").resolve "#{__dirname}/../public#{req.url}"
+					App.get "*", (req, res) => 
+						res.sendfile (require "path").resolve("#{__dirname}/../public/index.html")
 		catch e then return throw ServerErrorReporter.generate 8, ServerErrorReporter.wrapCustomError e
 
 		# Finally launch the server
-		App.listen @port, @address
-		console.log "Started the static server on address : #{@address}, and port : #{@port}"
-		console.log "Instant compiling is enabled." if @compiler
+		try
+			App.listen @port, @address
+			console.log "Started the static server on address : #{@address}, and port : #{@port}"
+			console.log "Instant compiling is enabled." if @compiler
+		catch e
+			throw ServerErrorReporter.generate 9, ServerErrorReporter.wrapCustomError e
 		@
 
 # Defining the ErrorReporting for the Server class
@@ -59,7 +72,7 @@ class ServerErrorReporter extends IS.Object
 
 	# Defining the error messages, assigning them to groups and naming them.
 	@errorGroups = [ "ConstructorError", "CompileConnectionrError", "InternalError" ]
-	@errorGroupMap = [ 1, 1, 1, 1, 2, 2, 3, 3 ]
+	@errorGroupMap = [ 1, 1, 1, 1, 2, 2, 3, 3, 3 ]
 	@errorMessages = [
 		"There is no address supplied"
 		"There is no port supplied"
@@ -69,6 +82,7 @@ class ServerErrorReporter extends IS.Object
 		"The object supplied was not compatible"
 		"Express module was not installed"
 		"Error at configuring the server"
+		"Error at starting the server"
 	]
 
 	# Making sure it behaves as it should

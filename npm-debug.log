@@ -1,0 +1,707 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/local/bin/node', '/usr/local/bin/npm', 'install', '.' ]
+2 info using npm@1.1.64
+3 info using node@v0.9.3
+4 verbose read json /home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal/package.json
+5 warn package.json gesturili@0.0.1 No README.md file found!
+6 verbose readDependencies using package.json deps
+7 verbose install where, deps [ '/home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal',
+7 verbose install   [ 'coffee-script',
+7 verbose install     'cliparser',
+7 verbose install     'express',
+7 verbose install     'eco',
+7 verbose install     'stylus',
+7 verbose install     'nib',
+7 verbose install     'canvas',
+7 verbose install     'isf',
+7 verbose install     'codo',
+7 verbose install     'stitchw',
+7 verbose install     'jasmine-node' ] ]
+8 verbose from cache /home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal/package.json
+9 info preinstall gesturili@0.0.1
+10 verbose read json /home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal/node_modules/cliparser/package.json
+11 verbose read json /home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal/node_modules/codo/package.json
+12 verbose read json /home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal/node_modules/coffee-script/package.json
+13 verbose read json /home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal/node_modules/eco/package.json
+14 verbose read json /home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal/node_modules/express/package.json
+15 verbose read json /home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal/node_modules/isf/package.json
+16 verbose read json /home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal/node_modules/jasmine-node/package.json
+17 verbose read json /home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal/node_modules/less/package.json
+18 verbose read json /home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal/node_modules/node-markdown/package.json
+19 verbose read json /home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal/node_modules/stitchw/package.json
+20 verbose read json /home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal/node_modules/stylus/package.json
+21 verbose from cache /home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal/package.json
+22 verbose readDependencies using package.json deps
+23 verbose read json /home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal/node_modules/.bin/package.json
+24 verbose from cache /home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal/node_modules/cliparser/package.json
+25 verbose from cache /home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal/node_modules/codo/package.json
+26 verbose from cache /home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal/node_modules/coffee-script/package.json
+27 verbose from cache /home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal/node_modules/eco/package.json
+28 verbose from cache /home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal/node_modules/express/package.json
+29 verbose from cache /home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal/node_modules/isf/package.json
+30 verbose from cache /home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal/node_modules/jasmine-node/package.json
+31 verbose from cache /home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal/node_modules/less/package.json
+32 verbose from cache /home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal/node_modules/node-markdown/package.json
+33 verbose from cache /home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal/node_modules/stitchw/package.json
+34 verbose from cache /home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal/node_modules/stylus/package.json
+35 verbose already installed skipping coffee-script@* /home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal
+36 verbose already installed skipping cliparser@* /home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal
+37 verbose already installed skipping express@2.5.0 /home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal
+38 verbose already installed skipping eco@* /home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal
+39 verbose already installed skipping stylus@* /home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal
+40 verbose cache add [ 'nib@*', null ]
+41 silly cache add name=undefined spec="nib@*" args=["nib@*",null]
+42 verbose parsed url { protocol: null,
+42 verbose parsed url   slashes: null,
+42 verbose parsed url   auth: null,
+42 verbose parsed url   host: null,
+42 verbose parsed url   port: null,
+42 verbose parsed url   hostname: null,
+42 verbose parsed url   hash: null,
+42 verbose parsed url   search: null,
+42 verbose parsed url   query: null,
+42 verbose parsed url   pathname: 'nib@*',
+42 verbose parsed url   path: 'nib@*',
+42 verbose parsed url   href: 'nib@*' }
+43 silly cache add name="nib" spec="*" args=["nib","*"]
+44 verbose parsed url { protocol: null,
+44 verbose parsed url   slashes: null,
+44 verbose parsed url   auth: null,
+44 verbose parsed url   host: null,
+44 verbose parsed url   port: null,
+44 verbose parsed url   hostname: null,
+44 verbose parsed url   hash: null,
+44 verbose parsed url   search: null,
+44 verbose parsed url   query: null,
+44 verbose parsed url   pathname: '*',
+44 verbose parsed url   path: '*',
+44 verbose parsed url   href: '*' }
+45 verbose addNamed [ 'nib', '*' ]
+46 verbose addNamed [ null, '' ]
+47 verbose cache add [ 'canvas@*', null ]
+48 silly cache add name=undefined spec="canvas@*" args=["canvas@*",null]
+49 verbose parsed url { protocol: null,
+49 verbose parsed url   slashes: null,
+49 verbose parsed url   auth: null,
+49 verbose parsed url   host: null,
+49 verbose parsed url   port: null,
+49 verbose parsed url   hostname: null,
+49 verbose parsed url   hash: null,
+49 verbose parsed url   search: null,
+49 verbose parsed url   query: null,
+49 verbose parsed url   pathname: 'canvas@*',
+49 verbose parsed url   path: 'canvas@*',
+49 verbose parsed url   href: 'canvas@*' }
+50 silly cache add name="canvas" spec="*" args=["canvas","*"]
+51 verbose parsed url { protocol: null,
+51 verbose parsed url   slashes: null,
+51 verbose parsed url   auth: null,
+51 verbose parsed url   host: null,
+51 verbose parsed url   port: null,
+51 verbose parsed url   hostname: null,
+51 verbose parsed url   hash: null,
+51 verbose parsed url   search: null,
+51 verbose parsed url   query: null,
+51 verbose parsed url   pathname: '*',
+51 verbose parsed url   path: '*',
+51 verbose parsed url   href: '*' }
+52 verbose addNamed [ 'canvas', '*' ]
+53 verbose addNamed [ null, '' ]
+54 silly lockFile 37a66fad-nib nib@*
+55 verbose lock nib@* /home/sabin/.npm/37a66fad-nib.lock
+56 verbose already installed skipping codo@* /home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal
+57 verbose already installed skipping isf@* /home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal
+58 verbose already installed skipping stitchw@* /home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal
+59 verbose already installed skipping jasmine-node@* /home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal
+60 silly addNameRange { name: 'nib', range: '', hasData: false }
+61 silly lockFile 5098a37a-canvas canvas@*
+62 verbose lock canvas@* /home/sabin/.npm/5098a37a-canvas.lock
+63 verbose url raw nib
+64 verbose url resolving [ 'https://registry.npmjs.org/', './nib' ]
+65 verbose url resolved https://registry.npmjs.org/nib
+66 info trying registry request attempt 1 at 02:28:56
+67 http GET https://registry.npmjs.org/nib
+68 silly addNameRange { name: 'canvas', range: '', hasData: false }
+69 verbose url raw canvas
+70 verbose url resolving [ 'https://registry.npmjs.org/', './canvas' ]
+71 verbose url resolved https://registry.npmjs.org/canvas
+72 info trying registry request attempt 1 at 02:28:56
+73 http GET https://registry.npmjs.org/canvas
+74 http 200 https://registry.npmjs.org/nib
+75 silly registry.get cb [ 200,
+75 silly registry.get   { vary: 'Accept',
+75 silly registry.get     server: 'CouchDB/1.2.0 (Erlang OTP/R15B)',
+75 silly registry.get     etag: '"A7CT0DCW1O1HH5VDU96QHBZV1"',
+75 silly registry.get     date: 'Tue, 08 Jan 2013 00:27:38 GMT',
+75 silly registry.get     'content-type': 'application/json',
+75 silly registry.get     'content-length': '44711' } ]
+76 silly addNameRange number 2 { name: 'nib', range: '', hasData: true }
+77 silly addNameRange versions [ 'nib',
+77 silly addNameRange   [ '0.0.1',
+77 silly addNameRange     '0.0.2',
+77 silly addNameRange     '0.0.3',
+77 silly addNameRange     '0.0.4',
+77 silly addNameRange     '0.0.5',
+77 silly addNameRange     '0.0.6',
+77 silly addNameRange     '0.0.7',
+77 silly addNameRange     '0.0.8',
+77 silly addNameRange     '0.1.0',
+77 silly addNameRange     '0.2.0',
+77 silly addNameRange     '0.3.0',
+77 silly addNameRange     '0.3.1',
+77 silly addNameRange     '0.3.2',
+77 silly addNameRange     '0.4.0',
+77 silly addNameRange     '0.4.1',
+77 silly addNameRange     '0.5.0',
+77 silly addNameRange     '0.6.0',
+77 silly addNameRange     '0.7.0',
+77 silly addNameRange     '0.7.1',
+77 silly addNameRange     '0.8.1',
+77 silly addNameRange     '0.8.2',
+77 silly addNameRange     '0.9.0',
+77 silly addNameRange     '0.9.1' ] ]
+78 verbose addNamed [ 'nib', '0.9.1' ]
+79 verbose addNamed [ '0.9.1', '0.9.1' ]
+80 silly lockFile b7317574-nib-0-9-1 nib@0.9.1
+81 verbose lock nib@0.9.1 /home/sabin/.npm/b7317574-nib-0-9-1.lock
+82 silly lockFile b6b64aef-stry-npmjs-org-nib-nib-0-9-1-tgz https://registry.npmjs.org/nib/-/nib-0.9.1.tgz
+83 verbose lock https://registry.npmjs.org/nib/-/nib-0.9.1.tgz /home/sabin/.npm/b6b64aef-stry-npmjs-org-nib-nib-0-9-1-tgz.lock
+84 verbose addRemoteTarball [ 'https://registry.npmjs.org/nib/-/nib-0.9.1.tgz',
+84 verbose addRemoteTarball   '1dd2be2f3bb4fe86451020604b6e56f04ca7f13c' ]
+85 info retry fetch attempt 1 at 02:28:58
+86 verbose fetch to= /home/sabin/tmp/npm-13179/1357604938129-0.13214243412949145/tmp.tgz
+87 http GET https://registry.npmjs.org/nib/-/nib-0.9.1.tgz
+88 http 200 https://registry.npmjs.org/canvas
+89 silly registry.get cb [ 200,
+89 silly registry.get   { vary: 'Accept',
+89 silly registry.get     server: 'CouchDB/1.2.0 (Erlang OTP/R15B)',
+89 silly registry.get     etag: '"BN5Z82M9FLGULPJ3Y88HWMXMS"',
+89 silly registry.get     date: 'Tue, 08 Jan 2013 00:27:38 GMT',
+89 silly registry.get     'content-type': 'application/json',
+89 silly registry.get     'content-length': '107096' } ]
+90 silly addNameRange number 2 { name: 'canvas', range: '', hasData: true }
+91 silly addNameRange versions [ 'canvas',
+91 silly addNameRange   [ '0.0.1',
+91 silly addNameRange     '0.0.2',
+91 silly addNameRange     '0.0.3',
+91 silly addNameRange     '0.0.4',
+91 silly addNameRange     '0.0.5',
+91 silly addNameRange     '0.0.6',
+91 silly addNameRange     '0.0.7',
+91 silly addNameRange     '0.0.8',
+91 silly addNameRange     '0.1.0',
+91 silly addNameRange     '0.2.0',
+91 silly addNameRange     '0.2.1',
+91 silly addNameRange     '0.3.0',
+91 silly addNameRange     '0.3.1',
+91 silly addNameRange     '0.3.2',
+91 silly addNameRange     '0.3.3',
+91 silly addNameRange     '0.4.0',
+91 silly addNameRange     '0.4.1',
+91 silly addNameRange     '0.4.2',
+91 silly addNameRange     '0.4.3',
+91 silly addNameRange     '0.5.0',
+91 silly addNameRange     '0.5.1',
+91 silly addNameRange     '0.5.2',
+91 silly addNameRange     '0.5.3',
+91 silly addNameRange     '0.5.4',
+91 silly addNameRange     '0.6.0',
+91 silly addNameRange     '0.7.0',
+91 silly addNameRange     '0.7.1',
+91 silly addNameRange     '0.7.2',
+91 silly addNameRange     '0.7.3',
+91 silly addNameRange     '0.8.0',
+91 silly addNameRange     '0.8.1',
+91 silly addNameRange     '0.8.2',
+91 silly addNameRange     '0.8.3',
+91 silly addNameRange     '0.9.0',
+91 silly addNameRange     '0.10.0',
+91 silly addNameRange     '0.10.1',
+91 silly addNameRange     '0.10.2',
+91 silly addNameRange     '0.10.3',
+91 silly addNameRange     '0.11.0',
+91 silly addNameRange     '0.11.1',
+91 silly addNameRange     '0.11.2',
+91 silly addNameRange     '0.11.3',
+91 silly addNameRange     '0.12.0',
+91 silly addNameRange     '0.12.1',
+91 silly addNameRange     '0.13.0',
+91 silly addNameRange     '0.13.1' ] ]
+92 verbose addNamed [ 'canvas', '0.13.1' ]
+93 verbose addNamed [ '0.13.1', '0.13.1' ]
+94 silly lockFile 28b25045-canvas-0-13-1 canvas@0.13.1
+95 verbose lock canvas@0.13.1 /home/sabin/.npm/28b25045-canvas-0-13-1.lock
+96 silly lockFile 6c064a16-mjs-org-canvas-canvas-0-13-1-tgz https://registry.npmjs.org/canvas/-/canvas-0.13.1.tgz
+97 verbose lock https://registry.npmjs.org/canvas/-/canvas-0.13.1.tgz /home/sabin/.npm/6c064a16-mjs-org-canvas-canvas-0-13-1-tgz.lock
+98 verbose addRemoteTarball [ 'https://registry.npmjs.org/canvas/-/canvas-0.13.1.tgz',
+98 verbose addRemoteTarball   '97d62dd8f18aa5e8c79496660625434e6785fcff' ]
+99 info retry fetch attempt 1 at 02:28:58
+100 verbose fetch to= /home/sabin/tmp/npm-13179/1357604938436-0.36757705034688115/tmp.tgz
+101 http GET https://registry.npmjs.org/canvas/-/canvas-0.13.1.tgz
+102 http 200 https://registry.npmjs.org/nib/-/nib-0.9.1.tgz
+103 http 200 https://registry.npmjs.org/canvas/-/canvas-0.13.1.tgz
+104 silly shasum updated bytes 40960
+105 silly shasum updated bytes 40960
+106 silly shasum updated bytes 888
+107 info shasum 1dd2be2f3bb4fe86451020604b6e56f04ca7f13c
+107 info shasum /home/sabin/tmp/npm-13179/1357604938129-0.13214243412949145/tmp.tgz
+108 verbose tar unpack /home/sabin/tmp/npm-13179/1357604938129-0.13214243412949145/tmp.tgz
+109 silly lockFile c4af9906-8129-0-13214243412949145-package /home/sabin/tmp/npm-13179/1357604938129-0.13214243412949145/package
+110 verbose lock /home/sabin/tmp/npm-13179/1357604938129-0.13214243412949145/package /home/sabin/.npm/c4af9906-8129-0-13214243412949145-package.lock
+111 silly gunzTarPerm modes [ '755', '644' ]
+112 silly gunzTarPerm extractEntry package.json
+113 silly gunzTarPerm extractEntry .npmignore
+114 silly gunzTarPerm extractEntry .gitmodules
+115 silly gunzTarPerm extractEntry History.md
+116 silly gunzTarPerm extractEntry iconic/demo.html
+117 silly gunzTarPerm extractEntry iconic/iconic.css
+118 silly gunzTarPerm extractEntry iconic/iconic_stroke.eot
+119 silly gunzTarPerm extractEntry iconic/iconic_stroke.otf
+120 silly gunzTarPerm extractEntry iconic/iconic_stroke.svg
+121 silly gunzTarPerm extractEntry iconic/iconic_stroke.ttf
+122 silly gunzTarPerm extractEntry index.styl
+123 silly gunzTarPerm extractEntry lib/nib.js
+124 silly gunzTarPerm extractEntry lib/nib/image.styl
+125 silly gunzTarPerm extractEntry lib/nib/border.styl
+126 silly gunzTarPerm extractEntry lib/nib/color-image.styl
+127 silly gunzTarPerm extractEntry lib/nib/config.styl
+128 silly gunzTarPerm extractEntry lib/nib/flex.styl
+129 silly gunzTarPerm extractEntry lib/nib/gradients.styl
+130 silly gunzTarPerm extractEntry lib/nib/iconic.styl
+131 silly gunzTarPerm extractEntry lib/nib/clearfix.styl
+132 silly gunzTarPerm extractEntry lib/nib/index.styl
+133 silly gunzTarPerm extractEntry lib/nib/overflow.styl
+134 silly gunzTarPerm extractEntry lib/nib/positions.styl
+135 silly gunzTarPerm extractEntry lib/nib/reset.styl
+136 silly gunzTarPerm extractEntry lib/nib/text/aliases.styl
+137 silly gunzTarPerm extractEntry lib/nib/text/ellipsis.styl
+138 silly gunzTarPerm extractEntry lib/nib/text/hide-text.styl
+139 silly gunzTarPerm extractEntry lib/nib/text/index.styl
+140 silly gunzTarPerm extractEntry lib/nib/text/replace-text.styl
+141 silly gunzTarPerm extractEntry lib/nib/vendor.styl
+142 silly gunzTarPerm extractEntry lib/nodes/color-image.js
+143 silly gunzTarPerm extractEntry lib/nodes/gradient.js
+144 silly gunzTarPerm extractEntry Makefile
+145 silly gunzTarPerm extractEntry Readme.md
+146 verbose read json /home/sabin/tmp/npm-13179/1357604938129-0.13214243412949145/package/package.json
+147 silly lockFile c4af9906-8129-0-13214243412949145-package /home/sabin/tmp/npm-13179/1357604938129-0.13214243412949145/package
+148 verbose from cache /home/sabin/tmp/npm-13179/1357604938129-0.13214243412949145/package/package.json
+149 verbose tar pack [ '/home/sabin/.npm/nib/0.9.1/package.tgz',
+149 verbose tar pack   '/home/sabin/tmp/npm-13179/1357604938129-0.13214243412949145/package' ]
+150 verbose tarball /home/sabin/.npm/nib/0.9.1/package.tgz
+151 verbose folder /home/sabin/tmp/npm-13179/1357604938129-0.13214243412949145/package
+152 silly lockFile 9c49bd23--sabin-npm-nib-0-9-1-package-tgz /home/sabin/.npm/nib/0.9.1/package.tgz
+153 verbose lock /home/sabin/.npm/nib/0.9.1/package.tgz /home/sabin/.npm/9c49bd23--sabin-npm-nib-0-9-1-package-tgz.lock
+154 silly lockFile 9c49bd23--sabin-npm-nib-0-9-1-package-tgz /home/sabin/.npm/nib/0.9.1/package.tgz
+155 silly lockFile 2982dfe2-home-sabin-npm-nib-0-9-1-package /home/sabin/.npm/nib/0.9.1/package
+156 verbose lock /home/sabin/.npm/nib/0.9.1/package /home/sabin/.npm/2982dfe2-home-sabin-npm-nib-0-9-1-package.lock
+157 silly lockFile 2982dfe2-home-sabin-npm-nib-0-9-1-package /home/sabin/.npm/nib/0.9.1/package
+158 verbose tar unpack /home/sabin/.npm/nib/0.9.1/package.tgz
+159 silly lockFile 2982dfe2-home-sabin-npm-nib-0-9-1-package /home/sabin/.npm/nib/0.9.1/package
+160 verbose lock /home/sabin/.npm/nib/0.9.1/package /home/sabin/.npm/2982dfe2-home-sabin-npm-nib-0-9-1-package.lock
+161 silly gunzTarPerm modes [ '755', '644' ]
+162 silly gunzTarPerm extractEntry package.json
+163 silly gunzTarPerm extractEntry .npmignore
+164 silly gunzTarPerm extractEntry .gitmodules
+165 silly gunzTarPerm extractEntry History.md
+166 silly gunzTarPerm extractEntry Makefile
+167 silly gunzTarPerm extractEntry Readme.md
+168 silly gunzTarPerm extractEntry iconic/demo.html
+169 silly gunzTarPerm extractEntry iconic/iconic.css
+170 silly gunzTarPerm extractEntry iconic/iconic_stroke.eot
+171 silly gunzTarPerm extractEntry iconic/iconic_stroke.otf
+172 silly gunzTarPerm extractEntry iconic/iconic_stroke.svg
+173 silly gunzTarPerm extractEntry iconic/iconic_stroke.ttf
+174 silly gunzTarPerm extractEntry index.styl
+175 silly gunzTarPerm extractEntry lib/nib.js
+176 silly gunzTarPerm extractEntry lib/nib/image.styl
+177 silly gunzTarPerm extractEntry lib/nib/border.styl
+178 silly gunzTarPerm extractEntry lib/nib/color-image.styl
+179 silly gunzTarPerm extractEntry lib/nib/config.styl
+180 silly gunzTarPerm extractEntry lib/nib/flex.styl
+181 silly gunzTarPerm extractEntry lib/nib/gradients.styl
+182 silly gunzTarPerm extractEntry lib/nib/iconic.styl
+183 silly gunzTarPerm extractEntry lib/nib/clearfix.styl
+184 silly gunzTarPerm extractEntry lib/nib/index.styl
+185 silly gunzTarPerm extractEntry lib/nib/overflow.styl
+186 silly gunzTarPerm extractEntry lib/nib/positions.styl
+187 silly gunzTarPerm extractEntry lib/nib/reset.styl
+188 silly gunzTarPerm extractEntry lib/nib/text/aliases.styl
+189 silly gunzTarPerm extractEntry lib/nib/text/ellipsis.styl
+190 silly gunzTarPerm extractEntry lib/nib/text/hide-text.styl
+191 silly gunzTarPerm extractEntry lib/nib/text/index.styl
+192 silly gunzTarPerm extractEntry lib/nib/text/replace-text.styl
+193 silly gunzTarPerm extractEntry lib/nib/vendor.styl
+194 silly gunzTarPerm extractEntry lib/nodes/color-image.js
+195 silly gunzTarPerm extractEntry lib/nodes/gradient.js
+196 verbose read json /home/sabin/.npm/nib/0.9.1/package/package.json
+197 silly lockFile 2982dfe2-home-sabin-npm-nib-0-9-1-package /home/sabin/.npm/nib/0.9.1/package
+198 silly shasum updated bytes 40960
+199 silly shasum updated bytes 40960
+200 silly shasum updated bytes 1038
+201 info shasum c1747a7aaffe4441214f54e6cbe56e6ccf925c04
+201 info shasum /home/sabin/.npm/nib/0.9.1/package.tgz
+202 verbose from cache /home/sabin/.npm/nib/0.9.1/package/package.json
+203 verbose chmod /home/sabin/.npm/nib/0.9.1/package.tgz 644
+204 verbose chown /home/sabin/.npm/nib/0.9.1/package.tgz [ 0, 0 ]
+205 silly lockFile b6b64aef-stry-npmjs-org-nib-nib-0-9-1-tgz https://registry.npmjs.org/nib/-/nib-0.9.1.tgz
+206 silly lockFile b7317574-nib-0-9-1 nib@0.9.1
+207 silly lockFile 37a66fad-nib nib@*
+208 silly shasum updated bytes 40960
+209 silly shasum updated bytes 40960
+210 silly shasum updated bytes 40960
+211 silly shasum updated bytes 40960
+212 silly shasum updated bytes 40960
+213 silly shasum updated bytes 40960
+214 silly shasum updated bytes 40960
+215 silly shasum updated bytes 40960
+216 silly shasum updated bytes 40960
+217 silly shasum updated bytes 40960
+218 silly shasum updated bytes 40960
+219 silly shasum updated bytes 40960
+220 silly shasum updated bytes 40960
+221 silly shasum updated bytes 40960
+222 silly shasum updated bytes 40960
+223 silly shasum updated bytes 40960
+224 silly shasum updated bytes 40960
+225 silly shasum updated bytes 28146
+226 info shasum 97d62dd8f18aa5e8c79496660625434e6785fcff
+226 info shasum /home/sabin/tmp/npm-13179/1357604938436-0.36757705034688115/tmp.tgz
+227 verbose tar unpack /home/sabin/tmp/npm-13179/1357604938436-0.36757705034688115/tmp.tgz
+228 silly lockFile cb9b595a-8436-0-36757705034688115-package /home/sabin/tmp/npm-13179/1357604938436-0.36757705034688115/package
+229 verbose lock /home/sabin/tmp/npm-13179/1357604938436-0.36757705034688115/package /home/sabin/.npm/cb9b595a-8436-0-36757705034688115-package.lock
+230 silly gunzTarPerm modes [ '755', '644' ]
+231 silly gunzTarPerm extractEntry package.json
+232 silly gunzTarPerm extractEntry .npmignore
+233 silly gunzTarPerm extractEntry index.js
+234 silly gunzTarPerm extractEntry lib/bindings.js
+235 silly gunzTarPerm extractEntry lib/canvas.js
+236 silly gunzTarPerm extractEntry lib/context2d.js
+237 silly gunzTarPerm extractEntry lib/image.js
+238 silly gunzTarPerm extractEntry lib/jpegstream.js
+239 silly gunzTarPerm extractEntry lib/pixelarray.js
+240 silly gunzTarPerm extractEntry lib/pngstream.js
+241 silly gunzTarPerm extractEntry History.md
+242 silly gunzTarPerm extractEntry .gitmodules
+243 silly gunzTarPerm extractEntry install
+244 silly gunzTarPerm extractEntry .travis.yml
+245 silly gunzTarPerm extractEntry Makefile
+246 silly gunzTarPerm extractEntry out.pdf
+247 silly gunzTarPerm extractEntry out.png
+248 silly gunzTarPerm extractEntry binding.gyp
+249 silly gunzTarPerm extractEntry Readme.md
+250 silly gunzTarPerm extractEntry src/color.h
+251 silly gunzTarPerm extractEntry src/Canvas.cc
+252 silly gunzTarPerm extractEntry src/CanvasGradient.cc
+253 silly gunzTarPerm extractEntry src/CanvasGradient.h
+254 silly gunzTarPerm extractEntry src/CanvasPattern.cc
+255 silly gunzTarPerm extractEntry src/CanvasPattern.h
+256 silly gunzTarPerm extractEntry src/CanvasRenderingContext2d.cc
+257 silly gunzTarPerm extractEntry src/CanvasRenderingContext2d.h
+258 silly gunzTarPerm extractEntry src/closure.h
+259 silly gunzTarPerm extractEntry src/color.cc
+260 silly gunzTarPerm extractEntry src/Canvas.h
+261 silly gunzTarPerm extractEntry src/Image.cc
+262 silly gunzTarPerm extractEntry src/Image.h
+263 silly gunzTarPerm extractEntry src/ImageData.cc
+264 silly gunzTarPerm extractEntry src/ImageData.h
+265 silly gunzTarPerm extractEntry src/init.cc
+266 silly gunzTarPerm extractEntry src/JPEGStream.h
+267 silly gunzTarPerm extractEntry src/PixelArray.cc
+268 silly gunzTarPerm extractEntry src/PixelArray.h
+269 silly gunzTarPerm extractEntry src/Point.h
+270 silly gunzTarPerm extractEntry util/has_lib.sh
+271 verbose read json /home/sabin/tmp/npm-13179/1357604938436-0.36757705034688115/package/package.json
+272 silly lockFile cb9b595a-8436-0-36757705034688115-package /home/sabin/tmp/npm-13179/1357604938436-0.36757705034688115/package
+273 verbose from cache /home/sabin/tmp/npm-13179/1357604938436-0.36757705034688115/package/package.json
+274 verbose tar pack [ '/home/sabin/.npm/canvas/0.13.1/package.tgz',
+274 verbose tar pack   '/home/sabin/tmp/npm-13179/1357604938436-0.36757705034688115/package' ]
+275 verbose tarball /home/sabin/.npm/canvas/0.13.1/package.tgz
+276 verbose folder /home/sabin/tmp/npm-13179/1357604938436-0.36757705034688115/package
+277 silly lockFile 8f7ad560-in-npm-canvas-0-13-1-package-tgz /home/sabin/.npm/canvas/0.13.1/package.tgz
+278 verbose lock /home/sabin/.npm/canvas/0.13.1/package.tgz /home/sabin/.npm/8f7ad560-in-npm-canvas-0-13-1-package-tgz.lock
+279 silly lockFile 8f7ad560-in-npm-canvas-0-13-1-package-tgz /home/sabin/.npm/canvas/0.13.1/package.tgz
+280 silly lockFile e1aca311--sabin-npm-canvas-0-13-1-package /home/sabin/.npm/canvas/0.13.1/package
+281 verbose lock /home/sabin/.npm/canvas/0.13.1/package /home/sabin/.npm/e1aca311--sabin-npm-canvas-0-13-1-package.lock
+282 silly lockFile e1aca311--sabin-npm-canvas-0-13-1-package /home/sabin/.npm/canvas/0.13.1/package
+283 verbose tar unpack /home/sabin/.npm/canvas/0.13.1/package.tgz
+284 silly lockFile e1aca311--sabin-npm-canvas-0-13-1-package /home/sabin/.npm/canvas/0.13.1/package
+285 verbose lock /home/sabin/.npm/canvas/0.13.1/package /home/sabin/.npm/e1aca311--sabin-npm-canvas-0-13-1-package.lock
+286 silly gunzTarPerm modes [ '755', '644' ]
+287 silly gunzTarPerm extractEntry package.json
+288 silly gunzTarPerm extractEntry .npmignore
+289 silly gunzTarPerm extractEntry index.js
+290 silly gunzTarPerm extractEntry History.md
+291 silly gunzTarPerm extractEntry Makefile
+292 silly gunzTarPerm extractEntry Readme.md
+293 silly gunzTarPerm extractEntry binding.gyp
+294 silly gunzTarPerm extractEntry .gitmodules
+295 silly gunzTarPerm extractEntry install
+296 silly gunzTarPerm extractEntry lib/bindings.js
+297 silly gunzTarPerm extractEntry lib/canvas.js
+298 silly gunzTarPerm extractEntry lib/context2d.js
+299 silly gunzTarPerm extractEntry lib/image.js
+300 silly gunzTarPerm extractEntry lib/jpegstream.js
+301 silly gunzTarPerm extractEntry lib/pixelarray.js
+302 silly gunzTarPerm extractEntry lib/pngstream.js
+303 silly gunzTarPerm extractEntry out.pdf
+304 silly gunzTarPerm extractEntry out.png
+305 silly gunzTarPerm extractEntry .travis.yml
+306 silly gunzTarPerm extractEntry src/ImageData.cc
+307 silly gunzTarPerm extractEntry src/Canvas.cc
+308 silly gunzTarPerm extractEntry src/CanvasGradient.cc
+309 silly gunzTarPerm extractEntry src/CanvasGradient.h
+310 silly gunzTarPerm extractEntry src/CanvasPattern.cc
+311 silly gunzTarPerm extractEntry src/CanvasPattern.h
+312 silly gunzTarPerm extractEntry src/CanvasRenderingContext2d.cc
+313 silly gunzTarPerm extractEntry src/CanvasRenderingContext2d.h
+314 silly gunzTarPerm extractEntry src/Image.cc
+315 silly gunzTarPerm extractEntry src/Image.h
+316 silly gunzTarPerm extractEntry src/Canvas.h
+317 silly gunzTarPerm extractEntry src/ImageData.h
+318 silly gunzTarPerm extractEntry src/JPEGStream.h
+319 silly gunzTarPerm extractEntry src/PixelArray.cc
+320 silly gunzTarPerm extractEntry src/PixelArray.h
+321 silly gunzTarPerm extractEntry src/Point.h
+322 silly gunzTarPerm extractEntry src/closure.h
+323 silly gunzTarPerm extractEntry src/color.cc
+324 silly gunzTarPerm extractEntry src/color.h
+325 silly gunzTarPerm extractEntry src/init.cc
+326 silly gunzTarPerm extractEntry util/has_lib.sh
+327 verbose read json /home/sabin/.npm/canvas/0.13.1/package/package.json
+328 silly lockFile e1aca311--sabin-npm-canvas-0-13-1-package /home/sabin/.npm/canvas/0.13.1/package
+329 silly shasum updated bytes 40960
+330 silly shasum updated bytes 40960
+331 silly shasum updated bytes 40960
+332 silly shasum updated bytes 40960
+333 silly shasum updated bytes 40960
+334 silly shasum updated bytes 40960
+335 silly shasum updated bytes 40960
+336 silly shasum updated bytes 40960
+337 silly shasum updated bytes 40960
+338 silly shasum updated bytes 40960
+339 silly shasum updated bytes 40960
+340 silly shasum updated bytes 40960
+341 silly shasum updated bytes 40960
+342 silly shasum updated bytes 40960
+343 silly shasum updated bytes 40960
+344 silly shasum updated bytes 40960
+345 silly shasum updated bytes 40960
+346 silly shasum updated bytes 27632
+347 info shasum 999a2f0358d131ad94315a59d1560d029f1eea17
+347 info shasum /home/sabin/.npm/canvas/0.13.1/package.tgz
+348 verbose from cache /home/sabin/.npm/canvas/0.13.1/package/package.json
+349 verbose chmod /home/sabin/.npm/canvas/0.13.1/package.tgz 644
+350 verbose chown /home/sabin/.npm/canvas/0.13.1/package.tgz [ 0, 0 ]
+351 silly lockFile 6c064a16-mjs-org-canvas-canvas-0-13-1-tgz https://registry.npmjs.org/canvas/-/canvas-0.13.1.tgz
+352 silly lockFile 28b25045-canvas-0-13-1 canvas@0.13.1
+353 silly lockFile 5098a37a-canvas canvas@*
+354 silly resolved [ { name: 'nib',
+354 silly resolved     description: 'Stylus mixins and utilities',
+354 silly resolved     version: '0.9.1',
+354 silly resolved     repository: { type: 'git', url: 'git://github.com/visionmedia/nib.git' },
+354 silly resolved     devDependencies:
+354 silly resolved      { connect: '1.x',
+354 silly resolved        jade: '0.22.0',
+354 silly resolved        stylus: '0.28.x',
+354 silly resolved        mocha: '*',
+354 silly resolved        should: '*',
+354 silly resolved        canvas: '*' },
+354 silly resolved     author: { name: 'TJ Holowaychuk', email: 'tj@vision-media.ca' },
+354 silly resolved     main: 'lib/nib.js',
+354 silly resolved     engines: { node: '*' },
+354 silly resolved     readme: '# Nib\n\n  Stylus mixins, utilities, components, and gradient image generation. Don\'t forget to check out the [documentation](http://visionmedia.github.com/nib/).\n\n## Installation\n\n```bash\n$ npm install nib\n```\n\n If the image generation features of Nib are desired, such as generating the linear gradient images, install [node-canvas](http://github.com/learnboost/node-canvas):\n \n```bash \n$ npm install canvas\n```\n\n## JavaScript API\n\n Below is an example of how to utilize nib and stylus with the connect framework (or express).\n\n```javascript\nvar connect = require(\'connect\')\n  , stylus = require(\'stylus\')\n  , nib = require(\'nib\');\n\nvar server = connect();\n\nfunction compile(str, path) {\n  return stylus(str)\n\t.set(\'filename\', path)\n\t.set(\'compress\', true)\n\t.use(nib());\n}\n\nserver.use(stylus.middleware({\n\tsrc: __dirname\n  , compile: compile\n}));\n```\n\n## Stylus API\n\n  To gain access to everything nib has to offer, simply add:\n\n  ```css\n  @import \'nib\'\n  ```\n  \n  Or you may also pick and choose based on the directory structure in `./lib`, for example:\n  \n  ```css\n  @import \'nib/gradients\'\n  @import \'nib/overflow\'\n  ```\n  \nto be continued....\n\n## More Information\n\n  - Introduction [screencast](http://www.screenr.com/M6a)\n\n## Testing\n\n You will first need to install the dependencies:\n \n ```bash\n    $ npm install -d\n ```\n \n Run the automated test cases:\n \n ```bash\n    $ make test\n ```\n \n For visual testing run the test server:\n \n ```bash\n    $ make test-server\n ```\n \n Then visit `localhost:3000` in your browser.\n\n## Contributors\n\n  - TJ Holowaychuk\n  - Isaac Johnston\n\n## License \n\n(The MIT License)\n\nCopyright (c) 2011 TJ Holowaychuk &lt;tj@vision-media.ca&gt;\n\nPermission is hereby granted, free of charge, to any person obtaining\na copy of this software and associated documentation files (the\n\'Software\'), to deal in the Software without restriction, including\nwithout limitation the rights to use, copy, modify, merge, publish,\ndistribute, sublicense, and/or sell copies of the Software, and to\npermit persons to whom the Software is furnished to do so, subject to\nthe following conditions:\n\nThe above copyright notice and this permission notice shall be\nincluded in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \'AS IS\', WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.\nIN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY\nCLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,\nTORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE\nSOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n',
+354 silly resolved     readmeFilename: 'Readme.md',
+354 silly resolved     _id: 'nib@0.9.1',
+354 silly resolved     dist: { shasum: 'c1747a7aaffe4441214f54e6cbe56e6ccf925c04' },
+354 silly resolved     _from: 'nib@*' },
+354 silly resolved   { name: 'canvas',
+354 silly resolved     description: 'Canvas graphics API backed by Cairo',
+354 silly resolved     version: '0.13.1',
+354 silly resolved     author: { name: 'TJ Holowaychuk', email: 'tj@learnboost.com' },
+354 silly resolved     keywords:
+354 silly resolved      [ 'canvas',
+354 silly resolved        'graphic',
+354 silly resolved        'graphics',
+354 silly resolved        'pixman',
+354 silly resolved        'cairo',
+354 silly resolved        'image',
+354 silly resolved        'images',
+354 silly resolved        'pdf' ],
+354 silly resolved     homepage: 'https://github.com/learnboost/node-canvas',
+354 silly resolved     repository: { type: 'git', url: 'git://github.com/learnboost/node-canvas' },
+354 silly resolved     scripts: { test: 'make test', install: 'node-gyp rebuild' },
+354 silly resolved     devDependencies:
+354 silly resolved      { express: '>= 2.3.7 && < 3.0.0',
+354 silly resolved        jade: '0.11.0',
+354 silly resolved        mocha: '*',
+354 silly resolved        should: '*' },
+354 silly resolved     engines: { node: '>= 0.4.0' },
+354 silly resolved     main: './lib/canvas.js',
+354 silly resolved     gypfile: true,
+354 silly resolved     readme: '# node-canvas\n\n Node canvas is a [Cairo](http://cairographics.org/) backed Canvas implementation for [NodeJS](http://nodejs.org).\n\n## Authors\n\n  - TJ Holowaychuk ([visionmedia](http://github.com/visionmedia))\n\n## Installation\n\n    $ npm install canvas\n\nUnless previously installed you\'ll _need_ __Cairo__. For system-specific installation view the [Wiki](https://github.com/LearnBoost/node-canvas/wiki/_pages).\n\n## Screencasts\n\n  - [Introduction](http://screenr.com/CTk)\n\n## Example\n\n```javascript\nvar Canvas = require(\'canvas\')\n  , canvas = new Canvas(200,200)\n  , ctx = canvas.getContext(\'2d\');\n\nctx.font = \'30px Impact\';\nctx.rotate(.1);\nctx.fillText("Awesome!", 50, 100);\n\nvar te = ctx.measureText(\'Awesome!\');\nctx.strokeStyle = \'rgba(0,0,0,0.5)\';\nctx.beginPath();\nctx.lineTo(50, 102);\nctx.lineTo(50 + te.width, 102);\nctx.stroke();\n\nconsole.log(\'<img src="\' + canvas.toDataURL() + \'" />\');\n```\n\n## Non-Standard API\n\n node-canvas extends the canvas API to provide interfacing with node, for example streaming PNG data, converting to a `Buffer` instance, etc. Among the interfacing API, in some cases the drawing API has been extended for SSJS image manipulation / creation usage, however keep in mind these additions may fail to render properly within browsers.\n\n### Image#src=Buffer\n\n node-canvas adds `Image#src=Buffer` support, allowing you to read images from disc, redis, etc and apply them via `ctx.drawImage()`. Below we draw scaled down squid png by reading it from the disk with node\'s I/O.\n\n```javascript\nfs.readFile(__dirname + \'/images/squid.png\', function(err, squid){\n  if (err) throw err;\n  img = new Image;\n  img.src = squid;\n  ctx.drawImage(img, 0, 0, img.width / 4, img.height / 4);\n});\n```\n\n Below is an example of a canvas drawing it-self as the source several time:\n\n```javascript\nvar img = new Image;\nimg.src = canvas.toBuffer();\nctx.drawImage(img, 0, 0, 50, 50);\nctx.drawImage(img, 50, 0, 50, 50);\nctx.drawImage(img, 100, 0, 50, 50);\n```\n\n### Image#dataMode\n\nnode-canvas adds `Image#dataMode` support, which can be used to opt-in to mime data tracking of images (currently only JPEGs).\n\nWhen mime data is tracked, in PDF mode JPEGs can be embedded directly into the output, rather than being re-encoded into PNG. This can drastically reduce filesize, and speed up rendering.\n\n```javascript\nvar img = new Image;\nimg.dataMode = Image.MODE_IMAGE; // Only image data tracked\nimg.dataMode = Image.MODE_MIME; // Only mime data tracked\nimg.dataMode = Image.MODE_MIME | Image.MODE_IMAGE; // Both are tracked\n```\n\nIf image data is not tracked, and the Image is drawn to an image rather than a PDF canvas, the output will be junk. Enabling mime data tracking has no benefits (only a slow down) unless you are generating a PDF.\n\n### Canvas#createPNGStream()\n\n  To create a `PNGStream` simply call `canvas.createPNGStream()`, and the stream will start to emit _data_ events, finally emitting _end_ when finished. If an exception occurs the _error_ event is emitted.\n\n```javascript\nvar fs = require(\'fs\')\n  , out = fs.createWriteStream(__dirname + \'/text.png\')\n  , stream = canvas.createPNGStream();\n\nstream.on(\'data\', function(chunk){\n  out.write(chunk);\n});\n\nstream.on(\'end\', function(){\n  console.log(\'saved png\');\n});\n```\n\nCurrently _only_ sync streaming is supported, however we plan on supporting async streaming as well (of course :) ). Until then the `Canvas#toBuffer(callback)` alternative is async utilizing `eio_custom()`.\n\n### Canvas#createJPEGStream()\n\nYou can likewise create a `JPEGStream` by calling `canvas.createJPEGStream()` with some optional parameters; functionality is otherwise identical to `createPNGStream()`. See `examples/crop.js` for an example.\n\n### Canvas#toBuffer()\n\nA call to `Canvas#toBuffer()` will return a node `Buffer` instance containing all of the PNG data.\n\n```javascript\ncanvas.toBuffer();\n```\n\n### Canvas#toBuffer() async\n\nOptionally we may pass a callback function to `Canvas#toBuffer()`, and this process will be performed asynchronously, and will `callback(err, buf)`.\n\n```javascript\ncanvas.toBuffer(function(err, buf){\n\n});\n```\n\n### Canvas#toDataURL() async\n\nOptionally we may pass a callback function to `Canvas#toDataURL()`, and this process will be performed asynchronously, and will `callback(err, str)`.\n\n```javascript\ncanvas.toDataURL(function(err, str){\n\n});\n```\n\nor specify the mime type:\n\n```javascript\ncanvas.toDataURL(\'image/png\', function(err, str){\n\n});\n```\n\n### CanvasRenderingContext2d#patternQuality\n\nGiven one of the values below will alter pattern (gradients, images, etc) render quality, defaults to _good_.\n\n  - fast\n  - good\n  - best\n\n### CanvasRenderingContext2d#textDrawingMode\n\nCan be either `path` or `glyph`. Using `glyph` is much faster than `path` for drawing, and when using a PDF context will embed the text natively, so will be selectable and lower filesize. The downside is that cairo does not have any subpixel precision for `glyph`, so this will be noticeably lower quality for text positioning in cases such as rotated text. Also, strokeText in `glyph` will act the same as fillText, except using the stroke style for the fill.\n\nDefaults to _path_.\n\nThis property is tracked as part of the canvas state in save/restore.\n\n### Global Composite Operations\n\nIn addition to those specified and commonly implemented by browsers, the following have been added:\n\n  - multiply\n  - screen\n  - overlay\n  - hard-light\n  - soft-light\n  - hsl-hue\n  - hsl-saturation\n  - hsl-color\n  - hsl-luminosity\n\n## Anti-Aliasing\n\n Set anti-aliasing mode\n\n - default\n - none\n - gray\n - subpixel\n\n For example:\n\n```javascript\nctx.antialias = \'none\';\n```\n\n## PDF Support\n\n  Basic PDF support was added in 0.11.0. Make sure to install cairo with `--enable-pdf=yes` for the PDF backend. node-canvas must know that it is creating\n  a PDF on initialization, using the "pdf" string:\n\n```js\nvar canvas = new Canvas(200, 500, \'pdf\');\n```\n\n An additional method `.addPage()` is then available to create \n multiple page PDFs:\n\n```js\nctx.font = \'22px Helvetica\';\nctx.fillText(\'Hello World\', 50, 80);\nctx.addPage();\n\nctx.font = \'22px Helvetica\';\nctx.fillText(\'Hello World 2\', 50, 80);\nctx.addPage();\n\nctx.font = \'22px Helvetica\';\nctx.fillText(\'Hello World 3\', 50, 80);\nctx.addPage();\n```\n\n## Benchmarks\n\n Although node-canvas is extremely new, and we have not even begun optimization yet it is already quite fast. For benchmarks vs other node canvas implementations view this [gist](https://gist.github.com/664922), or update the submodules and run `$ make benchmark` yourself.\n\n## Contribute\n\n Want to contribute to node-canvas? patches for features, bug fixes, documentation, examples and others are certainly welcome. Take a look at the [issue queue](https://github.com/LearnBoost/node-canvas/issues) for existing issues.\n\n## Examples\n\n Examples are placed in _./examples_, be sure to check them out! most produce a png image of the same name, and others such as _live-clock.js_ launch an http server to be viewed in the browser.\n\n## Testing\n\nIf you have not previously, init git submodules:\n\n    $ git submodule update --init\n\nBuild node-canvas:\n\n    $ node-waf configure build\n\nUnit tests:\n\n    $ make test\n\nVisual tests:\n\n    $ make test-server\n\n## Versions\n\nTested with and designed for:\n\n  - node 0.4.2\n  - cairo 1.8.6\n\nFor node 0.2.x `node-canvas` <= 0.4.3 may be used,\n0.5.0 and above are designed for node 0.4.x only.\n\n## License\n\n(The MIT License)\n\nCopyright (c) 2010 LearnBoost &lt;dev@learnboost.ca&gt;\n\nPermission is hereby granted, free of charge, to any person obtaining\na copy of this software and associated documentation files (the\n\'Software\'), to deal in the Software without restriction, including\nwithout limitation the rights to use, copy, modify, merge, publish,\ndistribute, sublicense, and/or sell copies of the Software, and to\npermit persons to whom the Software is furnished to do so, subject to\nthe following conditions:\n\nThe above copyright notice and this permission notice shall be\nincluded in all copies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \'AS IS\', WITHOUT WARRANTY OF ANY KIND,\nEXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF\nMERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.\nIN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY\nCLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,\nTORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE\nSOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.\n',
+354 silly resolved     readmeFilename: 'Readme.md',
+354 silly resolved     _id: 'canvas@0.13.1',
+354 silly resolved     dist: { shasum: '999a2f0358d131ad94315a59d1560d029f1eea17' },
+354 silly resolved     _from: 'canvas@*' } ]
+355 info install nib@0.9.1 into /home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal
+356 info install canvas@0.13.1 into /home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal
+357 info installOne nib@0.9.1
+358 info installOne canvas@0.13.1
+359 verbose from cache /home/sabin/.npm/nib/0.9.1/package/package.json
+360 info /home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal/node_modules/nib unbuild
+361 verbose read json /home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal/node_modules/nib/package.json
+362 verbose from cache /home/sabin/.npm/canvas/0.13.1/package/package.json
+363 info /home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal/node_modules/canvas unbuild
+364 verbose read json /home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal/node_modules/canvas/package.json
+365 verbose tar unpack /home/sabin/.npm/nib/0.9.1/package.tgz
+366 silly lockFile 4e7bbaca-las-AtlasPortal-node-modules-nib /home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal/node_modules/nib
+367 verbose lock /home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal/node_modules/nib /home/sabin/.npm/4e7bbaca-las-AtlasPortal-node-modules-nib.lock
+368 verbose tar unpack /home/sabin/.npm/canvas/0.13.1/package.tgz
+369 silly lockFile 5c480528--AtlasPortal-node-modules-canvas /home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal/node_modules/canvas
+370 verbose lock /home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal/node_modules/canvas /home/sabin/.npm/5c480528--AtlasPortal-node-modules-canvas.lock
+371 silly gunzTarPerm modes [ '755', '644' ]
+372 silly gunzTarPerm modes [ '755', '644' ]
+373 silly gunzTarPerm extractEntry package.json
+374 silly gunzTarPerm extractEntry package.json
+375 silly gunzTarPerm extractEntry .npmignore
+376 silly gunzTarPerm extractEntry .gitmodules
+377 silly gunzTarPerm extractEntry .npmignore
+378 silly gunzTarPerm extractEntry index.js
+379 silly gunzTarPerm extractEntry History.md
+380 silly gunzTarPerm extractEntry Makefile
+381 silly gunzTarPerm extractEntry History.md
+382 silly gunzTarPerm extractEntry Makefile
+383 silly gunzTarPerm extractEntry Readme.md
+384 silly gunzTarPerm extractEntry iconic/demo.html
+385 silly gunzTarPerm extractEntry Readme.md
+386 silly gunzTarPerm extractEntry binding.gyp
+387 silly gunzTarPerm extractEntry iconic/iconic.css
+388 silly gunzTarPerm extractEntry iconic/iconic_stroke.eot
+389 silly gunzTarPerm extractEntry iconic/iconic_stroke.otf
+390 silly gunzTarPerm extractEntry .gitmodules
+391 silly gunzTarPerm extractEntry install
+392 silly gunzTarPerm extractEntry lib/bindings.js
+393 silly gunzTarPerm extractEntry iconic/iconic_stroke.svg
+394 silly gunzTarPerm extractEntry lib/canvas.js
+395 silly gunzTarPerm extractEntry lib/context2d.js
+396 silly gunzTarPerm extractEntry iconic/iconic_stroke.ttf
+397 silly gunzTarPerm extractEntry lib/image.js
+398 silly gunzTarPerm extractEntry lib/jpegstream.js
+399 silly gunzTarPerm extractEntry index.styl
+400 silly gunzTarPerm extractEntry lib/pixelarray.js
+401 silly gunzTarPerm extractEntry lib/pngstream.js
+402 silly gunzTarPerm extractEntry out.pdf
+403 silly gunzTarPerm extractEntry lib/nib.js
+404 silly gunzTarPerm extractEntry lib/nib/image.styl
+405 silly gunzTarPerm extractEntry lib/nib/border.styl
+406 silly gunzTarPerm extractEntry lib/nib/color-image.styl
+407 silly gunzTarPerm extractEntry lib/nib/config.styl
+408 silly gunzTarPerm extractEntry lib/nib/flex.styl
+409 silly gunzTarPerm extractEntry lib/nib/gradients.styl
+410 silly gunzTarPerm extractEntry lib/nib/iconic.styl
+411 silly gunzTarPerm extractEntry lib/nib/clearfix.styl
+412 silly gunzTarPerm extractEntry lib/nib/index.styl
+413 silly gunzTarPerm extractEntry lib/nib/overflow.styl
+414 silly gunzTarPerm extractEntry lib/nib/positions.styl
+415 silly gunzTarPerm extractEntry lib/nib/reset.styl
+416 silly gunzTarPerm extractEntry lib/nib/text/aliases.styl
+417 silly gunzTarPerm extractEntry lib/nib/text/ellipsis.styl
+418 silly gunzTarPerm extractEntry lib/nib/text/hide-text.styl
+419 silly gunzTarPerm extractEntry lib/nib/text/index.styl
+420 silly gunzTarPerm extractEntry lib/nib/text/replace-text.styl
+421 silly gunzTarPerm extractEntry lib/nib/vendor.styl
+422 silly gunzTarPerm extractEntry lib/nodes/color-image.js
+423 silly gunzTarPerm extractEntry lib/nodes/gradient.js
+424 silly gunzTarPerm extractEntry out.png
+425 silly gunzTarPerm extractEntry .travis.yml
+426 silly gunzTarPerm extractEntry src/ImageData.cc
+427 silly gunzTarPerm extractEntry src/Canvas.cc
+428 silly gunzTarPerm extractEntry src/CanvasGradient.cc
+429 silly gunzTarPerm extractEntry src/CanvasGradient.h
+430 silly gunzTarPerm extractEntry src/CanvasPattern.cc
+431 silly gunzTarPerm extractEntry src/CanvasPattern.h
+432 silly gunzTarPerm extractEntry src/CanvasRenderingContext2d.cc
+433 silly gunzTarPerm extractEntry src/CanvasRenderingContext2d.h
+434 silly gunzTarPerm extractEntry src/Image.cc
+435 silly gunzTarPerm extractEntry src/Image.h
+436 silly gunzTarPerm extractEntry src/Canvas.h
+437 silly gunzTarPerm extractEntry src/ImageData.h
+438 silly gunzTarPerm extractEntry src/JPEGStream.h
+439 silly gunzTarPerm extractEntry src/PixelArray.cc
+440 silly gunzTarPerm extractEntry src/PixelArray.h
+441 silly gunzTarPerm extractEntry src/Point.h
+442 silly gunzTarPerm extractEntry src/closure.h
+443 silly gunzTarPerm extractEntry src/color.cc
+444 silly gunzTarPerm extractEntry src/color.h
+445 silly gunzTarPerm extractEntry src/init.cc
+446 silly gunzTarPerm extractEntry util/has_lib.sh
+447 verbose read json /home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal/node_modules/nib/package.json
+448 silly lockFile 4e7bbaca-las-AtlasPortal-node-modules-nib /home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal/node_modules/nib
+449 info preinstall nib@0.9.1
+450 verbose from cache /home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal/node_modules/nib/package.json
+451 verbose readDependencies using package.json deps
+452 verbose from cache /home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal/node_modules/nib/package.json
+453 verbose readDependencies using package.json deps
+454 silly resolved []
+455 verbose about to build /home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal/node_modules/nib
+456 info build /home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal/node_modules/nib
+457 verbose from cache /home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal/node_modules/nib/package.json
+458 verbose linkStuff [ false,
+458 verbose linkStuff   false,
+458 verbose linkStuff   false,
+458 verbose linkStuff   '/home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal/node_modules' ]
+459 info linkStuff nib@0.9.1
+460 verbose linkBins nib@0.9.1
+461 verbose linkMans nib@0.9.1
+462 verbose rebuildBundles nib@0.9.1
+463 info install nib@0.9.1
+464 info postinstall nib@0.9.1
+465 verbose read json /home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal/node_modules/canvas/package.json
+466 silly lockFile 5c480528--AtlasPortal-node-modules-canvas /home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal/node_modules/canvas
+467 info preinstall canvas@0.13.1
+468 verbose from cache /home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal/node_modules/canvas/package.json
+469 verbose readDependencies using package.json deps
+470 verbose from cache /home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal/node_modules/canvas/package.json
+471 verbose readDependencies using package.json deps
+472 silly resolved []
+473 verbose about to build /home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal/node_modules/canvas
+474 info build /home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal/node_modules/canvas
+475 verbose from cache /home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal/node_modules/canvas/package.json
+476 verbose linkStuff [ false,
+476 verbose linkStuff   false,
+476 verbose linkStuff   false,
+476 verbose linkStuff   '/home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal/node_modules' ]
+477 info linkStuff canvas@0.13.1
+478 verbose linkBins canvas@0.13.1
+479 verbose linkMans canvas@0.13.1
+480 verbose rebuildBundles canvas@0.13.1
+481 info install canvas@0.13.1
+482 verbose unsafe-perm in lifecycle false
+483 verbose set uid from=0 to=1000
+484 silly exec sh "-c" "node-gyp rebuild"
+485 silly sh,-c,node-gyp rebuild,/home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal/node_modules/canvas spawning
+486 info canvas@0.13.1 Failed to exec install script
+487 info /home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal/node_modules/canvas unbuild
+488 verbose from cache /home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal/node_modules/canvas/package.json
+489 info preuninstall canvas@0.13.1
+490 info uninstall canvas@0.13.1
+491 verbose true,/home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal/node_modules,/home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal/node_modules unbuild canvas@0.13.1
+492 info postuninstall canvas@0.13.1
+493 error canvas@0.13.1 install: `node-gyp rebuild`
+493 error `sh "-c" "node-gyp rebuild"` failed with 1
+494 error Failed at the canvas@0.13.1 install script.
+494 error This is most likely a problem with the canvas package,
+494 error not with npm itself.
+494 error Tell the author that this fails on your system:
+494 error     node-gyp rebuild
+494 error You can get their info via:
+494 error     npm owner ls canvas
+494 error There is likely additional logging output above.
+495 error System Linux 3.2.0-35-generic
+496 error command "/usr/local/bin/node" "/usr/local/bin/npm" "install" "."
+497 error cwd /home/sabin/Documents/Projects/Aurora/Atlas/AtlasPortal
+498 error node -v v0.9.3
+499 error npm -v 1.1.64
+500 error code ELIFECYCLE
+501 verbose exit [ 1, true ]

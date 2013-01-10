@@ -1,0 +1,28 @@
+aside 
+	position fixed
+	left 0
+	top 75px
+	bottom 0
+	width 300px
+	border-left solid 1px #ccc
+	box-shadow 0 0 5px #999
+	overflow auto
+	&::-webkit-scrollbar-track 
+		border-radius 0
+		box-shadow inset 0 0 6px rgba(0, 0, 0, 0.2)
+	
+	&::-webkit-scrollbar-thumb
+		border-radius 0
+	
+	&::-webkit-scrollbar-thumb:hover
+		background lighten(blue, 30%)
+	
+	li 
+		list-style none
+		padding 50px 25px
+		background #eee linear-gradient(top, rgba(256, 256, 256, 0.8) 0, rgba(256, 256, 256, 0.2) 100)
+		border-bottom solid 1px #ccc
+		transition all 0.5s ease-in-out
+		&:hover 
+			background-color #ccc
+			box-shadow inset 0 0 50px  rgba(0, 0, 0, 0.2)

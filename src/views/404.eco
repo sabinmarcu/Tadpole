@@ -1,0 +1,10 @@
+<div id="fourohfour">
+	<section>
+		<h1><a href="/"><%= @text %></a></h1>
+	</section>
+	<header>
+		<h1><%= @title %></h1>
+		<h2><%= @reason %></h2>
+		<article><%= @message %></article>
+	</header>
+</div>
