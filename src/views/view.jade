@@ -1,0 +1,21 @@
+mixin listItems(items, brickLevel, backstring)
+    - if (backstring[0] === ".")
+        - backstring = backstring.substr(1)
+    - if (backstring[backstring.length - 1] !== ".")
+        - backstring = backstring + "."
+    .container
+        - each value, key in items
+            -var isNested = typeof value.children !== "undefined" && value.children !== null
+            -var klass = (isNested ? "noborder" : "")
+            .row(style="padding-left: #{50 * ( brickLevel + 1 ) }px; margin-left: -#{50 * (brickLevel)}px", class="#{klass} folded", data-objectpath="#{backstring}#{key}")
+                - if (isNested)
+                    i.icon-custom
+                i(class="icon-#{value.status}")
+                p #{key}
+                - if (typeof value.note !== "undefined")
+                    span!= value.note
+                - if (isNested)
+                  .row.bordertop(style="padding-left: #{50 * ( brickLevel + 1 )}px; margin-left: -#{50 * (brickLevel + 1)}px")
+                        mixin listItems(value.children, brickLevel + 1, backstring + key) 
+
+mixin listItems(items, 0, "")

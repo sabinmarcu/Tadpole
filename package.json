@@ -1,5 +1,5 @@
 {
-	"name" :  "gesturili",
+	"name" :  "Arrow",
 	"version" :  "0.0.1",
 	"author" :  {
 		"name": "Sabin Marcu",
@@ -9,10 +9,10 @@
 		"coffee-script" :  "*",
 		"cliparser" :  "*",
 		"express" :  "2.5.0",
-		"eco" : "*",
+		"less" : "*",
+		"jade": "*",
 		"stylus": "*",
 		"nib": "*",
-		"canvas": "*",
 		"isf" :  "*",
 		"codo" :  "*",
 		"stitchw" :  "*"
