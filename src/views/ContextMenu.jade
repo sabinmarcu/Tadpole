@@ -1,0 +1,3 @@
+nav.contextMenu(style="left: #{event.x}px; top: #{event.y}px;")
+	- each item, count in items
+		li(id="item-#{count}")= item

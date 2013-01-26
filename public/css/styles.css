@@ -608,3 +608,43 @@ html.smallscreen body aside:focus:before {
   filter: alpha(opacity=0);
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
 }
+section nav.contextMenu {
+  position: absolute;
+  height: 50px;
+  line-height: 50px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  border: solid 1px #ddd;
+  color: #222;
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #eee), color-stop(1, #ccc));
+  background: -webkit-linear-gradient(top, #eee 0%, #ccc 100%);
+  background: -moz-linear-gradient(top, #eee 0%, #ccc 100%);
+  background: -o-linear-gradient(top, #eee 0%, #ccc 100%);
+  background: -ms-linear-gradient(top, #eee 0%, #ccc 100%);
+  background: linear-gradient(top, #eee 0%, #ccc 100%);
+  text-shadow: 0 0 1px #fff;
+}
+section nav.contextMenu li {
+  padding: 0 15px;
+  display: inline-block;
+  border-left: #eee;
+  border-right: #ccc;
+}
+section nav.contextMenu li:first-child {
+  border-left: none;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+section nav.contextMenu li:last-child {
+  border-right: none;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+section nav.contextMenu li:only-child {
+  border: none;
+}
+section nav.contextMenu li:hover {
+  background: rgba(0,0,0,0.4);
+  color: #000;
+  cursor: pointer;
+}

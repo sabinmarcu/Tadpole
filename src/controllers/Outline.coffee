@@ -4,6 +4,13 @@ class OutlineController extends BaseObject
 		throw ER.generate 1 if not @e? or not @e.tagName?
 		throw ER.generate 2 if not @model?
 		@e.controller = @
+		@e.addEventListener "contextmenu", (e) => 
+			new (DepMan.controller "ContextMenu")({
+				"Delete": => console.log "Clicked Delete"
+				"Add": => console.log "Clicked Add"
+			}, e)
+			do e.preventDefault
+			do e.stopPropagation
 		kids = @e.children
 		for kid in kids then do (kid) => 
 			switch kid.tagName
