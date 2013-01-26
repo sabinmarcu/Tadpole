@@ -43,5 +43,21 @@ class OPMLManager extends IS.Object
 		for item in list
 			item.addEventListener "click", (e) =>
 				@openOPML e.target.id
+			for kid in item.children
+				if kid.tagName is "P" then do (kid) =>
+					kid.addEventListener "dblclick", =>
+						kid.original = kid.innerHTML
+						kid.setAttribute "contenteditable", "true"
+						kid.focus()
+					kid.addEventListener "blur", =>
+						kid.setAttribute "contenteditable", "false"
+						@OPMLs[kid.original].title = kid.innerHTML
+						@OPMLs[kid.innerHTML] = @OPMLs[kid.original]
+						@OPMLs[kid.original] = null
+						@OPMLs[kid.innerHTML].save()
+						storageIndex = JSON.parse window.localStorage?.getItem "opmls"
+						storageIndex.splice storageIndex.indexOf(kid.original), 1
+						window.localStorage?.setItem "opmls", JSON.stringify storageIndex
+						window.localStorage?.setItem "opmls.#{kid.original}", null
 
 module.exports = new OPMLManager()

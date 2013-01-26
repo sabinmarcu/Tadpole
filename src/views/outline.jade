@@ -1,15 +1,5 @@
-- var hasChildren = item.children.get() !== null
-- var klass = hasChildren ? "noborder" : ""
-- path = path + "." + item.text.get()
-- path = (path[0] === "." ? path.substr(1) : path)
-.row(style="padding-left: #{50 * ( depth + 1 ) }px; margin-left: -#{50 * (depth)}px", class="#{klass}", data-objectpath="#{path}")
-	- var klass = item.children.get() === null ? "hidden" : ""
-	i.icon-custom(class="#{klass}")
-	i(class="#{item.status.getFormatted()}")
-	p #{item.text.get()}
-	- if (item.note.get() !== null)
-		span!= item.note.get()
-	- if (hasChildren)
-		.row.bordertop(style="padding-left: #{50 * ( depth + 1 )}px; margin-left: -#{50 * (depth + 1)}px")
-			- var string = DepMan.render("collection", {item: item.children.get(), depth: depth + 1, path: path})
-			| !{string}
+i.icon-custom(class="#{hidden}")
+i(class="#{item.status.getFormatted()}")
+p #{item.text.get()}
+- if (item.note.get() !== null)
+    span!= item.note.get()

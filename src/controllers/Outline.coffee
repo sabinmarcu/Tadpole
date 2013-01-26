@@ -1,18 +1,25 @@
+class FakeOutline
+	constructor: -> @text = "New Node"; @_status = "unchecked"; @childNodes = []
+	getAttribute: (attr) -> @[attr] or null
+
 class OutlineController extends BaseObject
 	constructor: (@e, @model) ->
-		@model.controller = @
 		throw ER.generate 1 if not @e? or not @e.tagName?
 		throw ER.generate 2 if not @model?
 		@e.controller = @
-		@e.addEventListener "contextmenu", (e) => 
+		@e.addEventListener "contextmenu", (e) =>
 			new (DepMan.controller "ContextMenu")({
-				"Delete": => console.log "Clicked Delete"
-				"Add": => console.log "Clicked Add"
+				"Delete": @del
+				"Add": @add
 			}, e)
 			do e.preventDefault
 			do e.stopPropagation
+		if @model.controls?
+			console.log @model.controls
+			@model.controls.add.addEventListener "click", @add
+			@model.controls.remove.addEventListener "click", @del
 		kids = @e.children
-		for kid in kids then do (kid) => 
+		for kid in kids then do (kid) =>
 			switch kid.tagName
 				when "P"
 					@p = kid
@@ -25,6 +32,31 @@ class OutlineController extends BaseObject
 							when "icon-check" then kid.className = "icon-check-empty"; @update "status", "unchecked"
 							when "icon-check-empty" then kid.className = "icon-check"; @update "status", "checked"
 						@refreshParents @model.parent.parent.controller
+
+	add: =>
+		kids = @model.children.get()
+		if not kids?
+			@model.children.set new (DepMan.model "Outline").Collection([], @model, @model.parent.depth + 1)
+			e = document.createElement "div"
+			e.setAttribute "class", "row bordertop"
+			e.setAttribute "style", "padding-left: #{50 * ( @model.parent.depth + 1 ) }px; margin-left: -#{50 * (@model.parent.depth + 1)}px"
+			@model.children.get().render e
+			@e.appendChild e
+			kids = @model.children.get()
+		addition = new (DepMan.model "Outline").Element(new FakeOutline, kids)
+		kids.topics.push addition
+		console.log addition
+		do addition.render
+		@model.children.set kids
+		@update "status", "indeterminate"
+		@c.setAttribute "class", "icon-circle-blank"
+		@f.className = @f.className.replace /\ ?hidden/g, ""
+		@e.className += " noborder"
+
+
+	del: =>
+		@e.parentNode.removeChild @e
+		@model.parent.topics.splice @model.parent.topics.indexOf(@model), 1
 		
 	update: (prop, value) =>
 		throw ER.generate 3 if not @model[prop]?

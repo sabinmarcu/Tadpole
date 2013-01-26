@@ -269,6 +269,20 @@ body section {
   -ms-transition: all 0.5s ease-in-out;
   transition: all 0.5s ease-in-out;
 }
+body section div {
+  position: relative;
+}
+body section nav {
+  position: absolute;
+  right: 0;
+  top: 15px;
+}
+body section nav li {
+  margin: 5px;
+  padding: 0 5px;
+  list-style: none;
+  display: inline-block;
+}
 body section .container {
   margin: 0;
   padding: 0;
@@ -402,14 +416,6 @@ body article article {
   position: absolute;
   left: 100%;
   right: -100%;
-}
-body article article nav {
-  position: fixed;
-  -webkit-transition: all 0.5s ease-in-out;
-  -moz-transition: all 0.5s ease-in-out;
-  -o-transition: all 0.5s ease-in-out;
-  -ms-transition: all 0.5s ease-in-out;
-  transition: all 0.5s ease-in-out;
 }
 body article article.activated {
   left: 0;

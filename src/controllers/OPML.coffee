@@ -2,18 +2,7 @@ class OPMLController extends BaseObject
 
 	constructor: (@model) ->
 		@e = document.createElement "article"
-		@e.innerHTML = DepMan.render "collection", item: @model.structure, depth: 0, path: ""
-		do @hookControllers
-
-	hookControllers: (base = @e.children[0], prev = "") =>
-		for dom in base.children
-			obj = @model.find dom.dataset.objectpath
-			cntrl = new (DepMan.controller "Outline")(dom, obj)
-			obj.controller = dom.controller = cntrl
-			if obj.children.get()?
-				div = null
-				div = kid for kid in dom.children when kid.className.indexOf("row") >= 0
-				@hookControllers div.children[0], dom.dataset.objectpath + "."
+		@model.structure.render @e
 
 		
 	activate: =>

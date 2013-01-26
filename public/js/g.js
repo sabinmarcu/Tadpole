@@ -1038,23 +1038,9 @@ Dual licensed under the MIT and GPL licenses.
       });
       root.DnD = DepMan.controller("DragAndDrop");
       root.DnD.init();
-      DepMan.helper("OPMLManager");
-      switchMode = function(mode) {
-        var html;
-        html = document.querySelector("html");
-        if (html.className.indexOf(mode) >= 0) {
-          return html.className = html.className.replace(new RegExp("\ ?" + mode), "");
-        } else {
-          return html.className += " " + mode;
-        }
-      };
-      document.getElementById("sidebarToggle").addEventListener("click", function() {
-        return switchMode("sidebaroff");
-      });
-      document.getElementById("fullScreenToggle").addEventListener("click", function() {
-        return switchMode("fullscreen");
-      });
-      if (window.orientation != null) {
+      root.isMobile = true;
+      if ((window.orientation != null) || (document.orientation != null)) {
+        root.isMobile = true;
         document.querySelector("html").className += " mobile ";
         document.querySelector("aside").addEventListener("click", function(e) {
           return console.log("Aside Tagged");
@@ -1080,6 +1066,22 @@ Dual licensed under the MIT and GPL licenses.
       };
       window.addEventListener("resize", _resize);
       _resize();
+      DepMan.helper("OPMLManager");
+      switchMode = function(mode) {
+        var html;
+        html = document.querySelector("html");
+        if (html.className.indexOf(mode) >= 0) {
+          return html.className = html.className.replace(new RegExp("\ ?" + mode), "");
+        } else {
+          return html.className += " " + mode;
+        }
+      };
+      document.getElementById("sidebarToggle").addEventListener("click", function() {
+        return switchMode("sidebaroff");
+      });
+      document.getElementById("fullScreenToggle").addEventListener("click", function() {
+        return switchMode("fullscreen");
+      });
     }
 
     return Application;
@@ -1141,7 +1143,7 @@ Dual licensed under the MIT and GPL licenses.
     function ContextMenuController(data, event) {
       this.deactivate = __bind(this.deactivate, this);
 
-      var handler, handlers, id, items, kid, name, _i, _len, _ref,
+      var handler, handlers, items, kid, name, _fn, _i, _len, _ref,
         _this = this;
       items = [];
       handlers = [];
@@ -1162,14 +1164,23 @@ Dual licensed under the MIT and GPL licenses.
       document.body.appendChild(this.placeholder);
       this.menu.focus();
       this.menu.addEventListener("blur", this.deactivate);
+      window.addEventListener("click", function(e) {
+        if (e.target !== _this.menu) {
+          return _this.deactivate();
+        }
+      });
       _ref = this.menu.children;
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        kid = _ref[_i];
+      _fn = function(kid) {
+        var id;
         id = kid.id.replace("item-", "");
-        kid.addEventListener("click", function() {
+        return kid.addEventListener("click", function() {
           _this.deactivate();
           return handlers[id]();
         });
+      };
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        kid = _ref[_i];
+        _fn(kid);
       }
     }
 
@@ -1305,48 +1316,9 @@ Dual licensed under the MIT and GPL licenses.
 
       this.activate = __bind(this.activate, this);
 
-      this.hookControllers = __bind(this.hookControllers, this);
-
       this.e = document.createElement("article");
-      this.e.innerHTML = DepMan.render("collection", {
-        item: this.model.structure,
-        depth: 0,
-        path: ""
-      });
-      this.hookControllers();
+      this.model.structure.render(this.e);
     }
-
-    OPMLController.prototype.hookControllers = function(base, prev) {
-      var cntrl, div, dom, kid, obj, _i, _j, _len, _len1, _ref, _ref1, _results;
-      if (base == null) {
-        base = this.e.children[0];
-      }
-      if (prev == null) {
-        prev = "";
-      }
-      _ref = base.children;
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        dom = _ref[_i];
-        obj = this.model.find(dom.dataset.objectpath);
-        cntrl = new (DepMan.controller("Outline"))(dom, obj);
-        obj.controller = dom.controller = cntrl;
-        if (obj.children.get() != null) {
-          div = null;
-          _ref1 = dom.children;
-          for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
-            kid = _ref1[_j];
-            if (kid.className.indexOf("row") >= 0) {
-              div = kid;
-            }
-          }
-          _results.push(this.hookControllers(div.children[0], dom.dataset.objectpath + "."));
-        } else {
-          _results.push(void 0);
-        }
-      }
-      return _results;
-    };
 
     OPMLController.prototype.activate = function() {
       var _this = this;
@@ -1394,10 +1366,26 @@ Dual licensed under the MIT and GPL licenses.
 
 }).call(this);
 }, "controllers/Outline": function(exports, require, module) {(function() {
-  var ER, OutlineController, OutlineControllerErrorReporter,
+  var ER, FakeOutline, OutlineController, OutlineControllerErrorReporter,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  FakeOutline = (function() {
+
+    function FakeOutline() {
+      this.text = "New Node";
+      this._status = "unchecked";
+      this.childNodes = [];
+    }
+
+    FakeOutline.prototype.getAttribute = function(attr) {
+      return this[attr] || null;
+    };
+
+    return FakeOutline;
+
+  })();
 
   OutlineController = (function(_super) {
 
@@ -1412,7 +1400,10 @@ Dual licensed under the MIT and GPL licenses.
 
       this.update = __bind(this.update, this);
 
-      this.model.controller = this;
+      this.del = __bind(this.del, this);
+
+      this.add = __bind(this.add, this);
+
       if (!(this.e != null) || !(this.e.tagName != null)) {
         throw ER.generate(1);
       }
@@ -1422,16 +1413,17 @@ Dual licensed under the MIT and GPL licenses.
       this.e.controller = this;
       this.e.addEventListener("contextmenu", function(e) {
         new (DepMan.controller("ContextMenu"))({
-          "Delete": function() {
-            return console.log("Clicked Delete");
-          },
-          "Add": function() {
-            return console.log("Clicked Add");
-          }
+          "Delete": _this.del,
+          "Add": _this.add
         }, e);
         e.preventDefault();
         return e.stopPropagation();
       });
+      if (this.model.controls != null) {
+        console.log(this.model.controls);
+        this.model.controls.add.addEventListener("click", this.add);
+        this.model.controls.remove.addEventListener("click", this.del);
+      }
       kids = this.e.children;
       _fn = function(kid) {
         switch (kid.tagName) {
@@ -1471,6 +1463,34 @@ Dual licensed under the MIT and GPL licenses.
         _fn(kid);
       }
     }
+
+    OutlineController.prototype.add = function() {
+      var addition, e, kids;
+      kids = this.model.children.get();
+      if (!(kids != null)) {
+        this.model.children.set(new (DepMan.model("Outline")).Collection([], this.model, this.model.parent.depth + 1));
+        e = document.createElement("div");
+        e.setAttribute("class", "row bordertop");
+        e.setAttribute("style", "padding-left: " + (50 * (this.model.parent.depth + 1)) + "px; margin-left: -" + (50 * (this.model.parent.depth + 1)) + "px");
+        this.model.children.get().render(e);
+        this.e.appendChild(e);
+        kids = this.model.children.get();
+      }
+      addition = new (DepMan.model("Outline")).Element(new FakeOutline, kids);
+      kids.topics.push(addition);
+      console.log(addition);
+      addition.render();
+      this.model.children.set(kids);
+      this.update("status", "indeterminate");
+      this.c.setAttribute("class", "icon-circle-blank");
+      this.f.className = this.f.className.replace(/\ ?hidden/g, "");
+      return this.e.className += " noborder";
+    };
+
+    OutlineController.prototype.del = function() {
+      this.e.parentNode.removeChild(this.e);
+      return this.model.parent.topics.splice(this.model.parent.topics.indexOf(this.model), 1);
+    };
 
     OutlineController.prototype.update = function(prop, value) {
       if (!(this.model[prop] != null)) {
@@ -1886,7 +1906,7 @@ Dual licensed under the MIT and GPL licenses.
     };
 
     OPMLManager.prototype.renderList = function() {
-      var item, list, _i, _len, _results,
+      var item, kid, list, _i, _len, _results,
         _this = this;
       document.querySelector("aside section").innerHTML = DepMan.render("list", {
         items: this.OPMLs,
@@ -1896,9 +1916,44 @@ Dual licensed under the MIT and GPL licenses.
       _results = [];
       for (_i = 0, _len = list.length; _i < _len; _i++) {
         item = list[_i];
-        _results.push(item.addEventListener("click", function(e) {
+        item.addEventListener("click", function(e) {
           return _this.openOPML(e.target.id);
-        }));
+        });
+        _results.push((function() {
+          var _j, _len1, _ref, _results1,
+            _this = this;
+          _ref = item.children;
+          _results1 = [];
+          for (_j = 0, _len1 = _ref.length; _j < _len1; _j++) {
+            kid = _ref[_j];
+            if (kid.tagName === "P") {
+              _results1.push((function(kid) {
+                kid.addEventListener("dblclick", function() {
+                  kid.original = kid.innerHTML;
+                  kid.setAttribute("contenteditable", "true");
+                  return kid.focus();
+                });
+                return kid.addEventListener("blur", function() {
+                  var storageIndex, _ref1, _ref2, _ref3;
+                  kid.setAttribute("contenteditable", "false");
+                  _this.OPMLs[kid.original].title = kid.innerHTML;
+                  _this.OPMLs[kid.innerHTML] = _this.OPMLs[kid.original];
+                  _this.OPMLs[kid.original] = null;
+                  _this.OPMLs[kid.innerHTML].save();
+                  storageIndex = JSON.parse((_ref1 = window.localStorage) != null ? _ref1.getItem("opmls") : void 0);
+                  storageIndex.splice(storageIndex.indexOf(kid.original), 1);
+                  if ((_ref2 = window.localStorage) != null) {
+                    _ref2.setItem("opmls", JSON.stringify(storageIndex));
+                  }
+                  return (_ref3 = window.localStorage) != null ? _ref3.setItem("opmls." + kid.original, null) : void 0;
+                });
+              })(kid));
+            } else {
+              _results1.push(void 0);
+            }
+          }
+          return _results1;
+        }).call(this));
       }
       return _results;
     };
@@ -2102,6 +2157,7 @@ Dual licensed under the MIT and GPL licenses.
 }).call(this);
 }, "models/Outline": function(exports, require, module) {(function() {
   var Outline, OutlineCollection, _checkParam, _map, _params,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -2124,9 +2180,14 @@ Dual licensed under the MIT and GPL licenses.
 
     __extends(OutlineCollection, _super);
 
-    function OutlineCollection(bodyElement, parent) {
+    function OutlineCollection(bodyElement, parent, depth) {
       var _this = this;
       this.parent = parent;
+      this.depth = depth != null ? depth : 0;
+      this.render = __bind(this.render, this);
+
+      this.e = document.createElement("div");
+      this.e.className = "container";
       this.topics = (function() {
         var element, _i, _len, _results;
         _results = [];
@@ -2140,6 +2201,18 @@ Dual licensed under the MIT and GPL licenses.
       })();
     }
 
+    OutlineCollection.prototype.render = function(pe) {
+      var kid, _i, _len, _ref, _results;
+      pe.appendChild(this.e);
+      _ref = this.topics;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        kid = _ref[_i];
+        _results.push(kid.render());
+      }
+      return _results;
+    };
+
     return OutlineCollection;
 
   })(BaseObject);
@@ -2147,9 +2220,17 @@ Dual licensed under the MIT and GPL licenses.
   Outline = (function() {
 
     function Outline(xmlDoc, parent) {
+      this.parent = parent;
+      this.render = __bind(this.render, this);
+
+      this.getData = __bind(this.getData, this);
+
+      this.getData(xmlDoc);
+    }
+
+    Outline.prototype.getData = function(xmlDoc) {
       var what, _children, _i, _len,
         _this = this;
-      this.parent = parent;
       for (_i = 0, _len = _params.length; _i < _len; _i++) {
         what = _params[_i];
         this[what] = new IS.Variable;
@@ -2160,9 +2241,53 @@ Dual licensed under the MIT and GPL licenses.
       _checkParam(this.text, "text", xmlDoc);
       _checkParam(this.status, "_status", xmlDoc);
       _checkParam(this.note, "_note", xmlDoc);
-      _children = new OutlineCollection(xmlDoc.childNodes, this);
-      this.children.set((_children.topics.length ? _children : null));
-    }
+      _children = new OutlineCollection(xmlDoc.childNodes, this, this.parent.depth + 1);
+      return this.children.set((_children.topics.length ? _children : null));
+    };
+
+    Outline.prototype.render = function() {
+      var cntrl, e, hasChildren, klass, nav;
+      this.e = document.createElement("div");
+      hasChildren = this.children.get() || null;
+      if (hasChildren) {
+        klass = " noborder";
+      } else {
+        klass = "";
+      }
+      this.e.setAttribute("class", "row" + klass);
+      this.e.setAttribute("style", "padding-left: " + (50 * (this.parent.depth + 1)) + "px; margin-left: -" + (50 * this.parent.depth) + "px");
+      if (!hasChildren) {
+        klass = "hidden";
+      } else {
+        klass = "";
+      }
+      this.e.innerHTML = DepMan.render("outline", {
+        hidden: klass,
+        item: this
+      });
+      if (hasChildren != null) {
+        e = document.createElement("div");
+        e.setAttribute("class", "row bordertop");
+        e.setAttribute("style", "padding-left: " + (50 * (this.parent.depth + 1)) + "px; margin-left: -" + (50 * (this.parent.depth + 1)) + "px");
+        this.children.get().render(e);
+        this.e.appendChild(e);
+      }
+      if (window.isMobile != null) {
+        nav = document.createElement("nav");
+        this.controls = {
+          add: document.createElement("li"),
+          remove: document.createElement("li")
+        };
+        this.controls.add.innerHTML = "<i class='icon-plus'>";
+        this.controls.remove.innerHTML = "<i class='icon-remove'>";
+        nav.appendChild(this.controls.add);
+        nav.appendChild(this.controls.remove);
+        this.e.appendChild(nav);
+      }
+      cntrl = new (DepMan.controller("Outline"))(this.e, this);
+      this.controller = this.e.controller = cntrl;
+      return this.parent.e.appendChild(this.e);
+    };
 
     return Outline;
 
@@ -2605,12 +2730,9 @@ with (locals || {}) {
 var interp;
 __jade.unshift({ lineno: 1, filename: __jade[0].filename });
 __jade.unshift({ lineno: 1, filename: __jade[0].filename });
-buf.push('<div class="container">');
-__jade.unshift({ lineno: undefined, filename: __jade[0].filename });
-__jade.unshift({ lineno: 2, filename: __jade[0].filename });
  var children = item.topics
 __jade.shift();
-__jade.unshift({ lineno: 3, filename: __jade[0].filename });
+__jade.unshift({ lineno: 2, filename: __jade[0].filename });
 // iterate children
 ;(function(){
   if ('number' == typeof children.length) {
@@ -2618,11 +2740,11 @@ __jade.unshift({ lineno: 3, filename: __jade[0].filename });
     for (var $index = 0, $$l = children.length; $index < $$l; $index++) {
       var outline = children[$index];
 
+__jade.unshift({ lineno: 2, filename: __jade[0].filename });
 __jade.unshift({ lineno: 3, filename: __jade[0].filename });
-__jade.unshift({ lineno: 4, filename: __jade[0].filename });
 var string = DepMan.render("outline", {item: outline, depth: depth, path: path})
 __jade.shift();
-__jade.unshift({ lineno: 5, filename: __jade[0].filename });
+__jade.unshift({ lineno: 4, filename: __jade[0].filename });
 buf.push('' + ((interp = string) == null ? '' : interp) + '');
 __jade.shift();
 __jade.shift();
@@ -2633,11 +2755,11 @@ __jade.shift();
     for (var $index in children) {
       $$l++;      var outline = children[$index];
 
+__jade.unshift({ lineno: 2, filename: __jade[0].filename });
 __jade.unshift({ lineno: 3, filename: __jade[0].filename });
-__jade.unshift({ lineno: 4, filename: __jade[0].filename });
 var string = DepMan.render("outline", {item: outline, depth: depth, path: path})
 __jade.shift();
-__jade.unshift({ lineno: 5, filename: __jade[0].filename });
+__jade.unshift({ lineno: 4, filename: __jade[0].filename });
 buf.push('' + ((interp = string) == null ? '' : interp) + '');
 __jade.shift();
 __jade.shift();
@@ -2646,9 +2768,6 @@ __jade.shift();
   }
 }).call(this);
 
-__jade.shift();
-__jade.shift();
-buf.push('</div>');
 __jade.shift();
 __jade.shift();
 }
@@ -3518,34 +3637,14 @@ with (locals || {}) {
 var interp;
 __jade.unshift({ lineno: 1, filename: __jade[0].filename });
 __jade.unshift({ lineno: 1, filename: __jade[0].filename });
- var hasChildren = item.children.get() !== null
-__jade.shift();
-__jade.unshift({ lineno: 2, filename: __jade[0].filename });
- var klass = hasChildren ? "noborder" : ""
-__jade.shift();
-__jade.unshift({ lineno: 3, filename: __jade[0].filename });
- path = path + "." + item.text.get()
-__jade.shift();
-__jade.unshift({ lineno: 4, filename: __jade[0].filename });
- path = (path[0] === "." ? path.substr(1) : path)
-__jade.shift();
-__jade.unshift({ lineno: 5, filename: __jade[0].filename });
-buf.push('<div');
-buf.push(attrs({ 'style':("padding-left: " + (50 * ( depth + 1 ) ) + "px; margin-left: -" + (50 * (depth)) + "px"), 'data-objectpath':("" + (path) + ""), "class": ('row') + ' ' + ("" + (klass) + "") }, {"class":true,"style":true,"data-objectpath":true}));
-buf.push('>');
-__jade.unshift({ lineno: undefined, filename: __jade[0].filename });
-__jade.unshift({ lineno: 6, filename: __jade[0].filename });
- var klass = item.children.get() === null ? "hidden" : ""
-__jade.shift();
-__jade.unshift({ lineno: 7, filename: __jade[0].filename });
 buf.push('<i');
-buf.push(attrs({ "class": ('icon-custom') + ' ' + ("" + (klass) + "") }, {"class":true}));
+buf.push(attrs({ "class": ('icon-custom') + ' ' + ("" + (hidden) + "") }, {"class":true}));
 buf.push('>');
 __jade.unshift({ lineno: undefined, filename: __jade[0].filename });
 __jade.shift();
 buf.push('</i>');
 __jade.shift();
-__jade.unshift({ lineno: 8, filename: __jade[0].filename });
+__jade.unshift({ lineno: 2, filename: __jade[0].filename });
 buf.push('<i');
 buf.push(attrs({ "class": ("" + (item.status.getFormatted()) + "") }, {"class":true}));
 buf.push('>');
@@ -3553,20 +3652,20 @@ __jade.unshift({ lineno: undefined, filename: __jade[0].filename });
 __jade.shift();
 buf.push('</i>');
 __jade.shift();
-__jade.unshift({ lineno: 9, filename: __jade[0].filename });
+__jade.unshift({ lineno: 3, filename: __jade[0].filename });
 buf.push('<p>');
 __jade.unshift({ lineno: undefined, filename: __jade[0].filename });
-__jade.unshift({ lineno: 9, filename: __jade[0].filename });
+__jade.unshift({ lineno: 3, filename: __jade[0].filename });
 buf.push('' + escape((interp = item.text.get()) == null ? '' : interp) + '');
 __jade.shift();
 __jade.shift();
 buf.push('</p>');
 __jade.shift();
-__jade.unshift({ lineno: 10, filename: __jade[0].filename });
+__jade.unshift({ lineno: 4, filename: __jade[0].filename });
  if (item.note.get() !== null)
 {
-__jade.unshift({ lineno: 11, filename: __jade[0].filename });
-__jade.unshift({ lineno: 11, filename: __jade[0].filename });
+__jade.unshift({ lineno: 5, filename: __jade[0].filename });
+__jade.unshift({ lineno: 5, filename: __jade[0].filename });
 buf.push('<span>');
 var __val__ = item.note.get()
 buf.push(null == __val__ ? "" : __val__);
@@ -3576,30 +3675,6 @@ buf.push('</span>');
 __jade.shift();
 __jade.shift();
 }
-__jade.shift();
-__jade.unshift({ lineno: 12, filename: __jade[0].filename });
- if (hasChildren)
-{
-__jade.unshift({ lineno: 13, filename: __jade[0].filename });
-__jade.unshift({ lineno: 13, filename: __jade[0].filename });
-buf.push('<div');
-buf.push(attrs({ 'style':("padding-left: " + (50 * ( depth + 1 )) + "px; margin-left: -" + (50 * (depth + 1)) + "px"), "class": ('row') + ' ' + ('bordertop') }, {"style":true}));
-buf.push('>');
-__jade.unshift({ lineno: undefined, filename: __jade[0].filename });
-__jade.unshift({ lineno: 14, filename: __jade[0].filename });
- var string = DepMan.render("collection", {item: item.children.get(), depth: depth + 1, path: path})
-__jade.shift();
-__jade.unshift({ lineno: 15, filename: __jade[0].filename });
-buf.push('' + ((interp = string) == null ? '' : interp) + '');
-__jade.shift();
-__jade.shift();
-buf.push('</div>');
-__jade.shift();
-__jade.shift();
-}
-__jade.shift();
-__jade.shift();
-buf.push('</div>');
 __jade.shift();
 __jade.shift();
 }

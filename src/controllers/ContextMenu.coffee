@@ -14,7 +14,9 @@ class ContextMenuController extends BaseObject
 		document.body.appendChild @placeholder
 		do @menu.focus
 		@menu.addEventListener "blur", @deactivate
-		for kid in @menu.children
+		window.addEventListener "click", (e) =>
+			do @deactivate if e.target isnt @menu
+		for kid in @menu.children then do (kid) =>
 			id = kid.id.replace "item-", ""
 			kid.addEventListener "click", =>
 				do @deactivate

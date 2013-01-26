@@ -28,17 +28,9 @@ class Application extends BaseObject
 		root.DnD = ( DepMan.controller "DragAndDrop" )
 		root.DnD.init()
 
-		( DepMan.helper "OPMLManager" )
-
-		switchMode = (mode) ->
-			html = document.querySelector("html")
-			if html.className.indexOf(mode) >= 0 then html.className = html.className.replace (new RegExp("\ ?#{mode}")), ""
-			else html.className += " #{mode}"
-
-		document.getElementById("sidebarToggle").addEventListener "click", -> switchMode "sidebaroff"
-		document.getElementById("fullScreenToggle").addEventListener "click", -> switchMode "fullscreen"
-
-		if window.orientation?
+		root.isMobile = true
+		if window.orientation? or document.orientation?
+			root.isMobile = true
 			document.querySelector("html").className += " mobile "
 			document.querySelector("aside").addEventListener "click", (e) -> console.log "Aside Tagged"
 			els = document.querySelectorAll("article > *")
@@ -52,6 +44,17 @@ class Application extends BaseObject
 			else html.className = html.className.replace /\ ?smallscreen/, ""
 		window.addEventListener "resize", _resize
 		do _resize
+
+		( DepMan.helper "OPMLManager" )
+
+		switchMode = (mode) ->
+			html = document.querySelector("html")
+			if html.className.indexOf(mode) >= 0 then html.className = html.className.replace (new RegExp("\ ?#{mode}")), ""
+			else html.className += " #{mode}"
+
+		document.getElementById("sidebarToggle").addEventListener "click", -> switchMode "sidebaroff"
+		document.getElementById("fullScreenToggle").addEventListener "click", -> switchMode "fullscreen"
+
 
 module.exports = Application
 
