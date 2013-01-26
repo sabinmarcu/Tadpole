@@ -14,21 +14,23 @@ class DepMan extends BaseObject
 	helper     : (module) => @_require module, "helpers/"
 	controller : (module) => @_require module, "controllers/"
 	model      : (module) => @_require module, "models/"
-	googleFont : (font, sizes) =>
+	googleFont : (font, sizes, subsets = null) =>
 		names = font.split " "
 
 		_s = @deps["#{font}"] = document.createElement "link"
-		_s.setAttribute "href", "http://fonts.googleapis.com/css?family=#{names.join "+"}:#{sizes.join ","}"
+		string =  "http://fonts.googleapis.com/css?family=#{names.join "+"}:#{sizes.join ","}"
+		if subsets? then string += "&subset=#{subsets.join ","}"
+		_s.setAttribute "href", string
 		_s.setAttribute "rel", "stylesheet"
 		_s.setAttribute "type", "text/css"
 
 		document.head.appendChild _s
 		_s
-		
-		
+
+
 
 class DepErr extends IS.Object
-	
+
 	@errorGroups   = [ "RequireError" ]
 	@errorGroupMap = [ 1 ]
 	@errorMessages = [ "Could not require module!" ]

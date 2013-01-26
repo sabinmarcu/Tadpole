@@ -38,7 +38,7 @@ class DnD extends BaseObject
 
 		@ph.className = @ph.className.replace /\ ?(hover|active)/, ""
 
-		files = e.dataTransfer.files
+		files = e.dataTransfer.files or e.target.files
 		for file in files
 			continue if not file.name.match /.*opml/
 			do =>
@@ -47,7 +47,7 @@ class DnD extends BaseObject
 				reader.readAsText file
 
 	@readHandler: (file) =>
-		DepMan.controller("OPML").open file.target.result
+		DepMan.helper("OPMLManager").open file.target.result
 		
 
 module.exports = DnD

@@ -1,6 +1,6 @@
 // Basic Styles
 body
-	font-family "Droid Sans", "Helvetica", sans-serif
+	font-family "Open Sans", "Helvetica", sans-serif
 	font-size: 10pt
 	background #eee
 	width 100%
@@ -8,13 +8,17 @@ body
 	margin 0
 	padding 0
 
-// Grabbing vars
-@import "variables"
+html
+	background url(bgImage)
 
-// The rest of the imports 
+// The rest of the imports
 // Otherwise it will not work
 body
 	@import "grid"
 	@import "tables"
 	@import "aside"
 	@import "article"
+
+html
+	@import "variants"
+	@import "specialCases"

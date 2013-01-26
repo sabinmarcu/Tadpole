@@ -29,10 +29,6 @@ class Compiler
 			sty = (require "fs").readFileSync "#{base}/index.styl", "utf8"
 			paths = [
 				 "#{base}"
-				 "#{base}/tablet"
-				 "#{base}/touch"
-				 "#{base}/indexPage"
-				 "#{base}/404"
 			]
 			stylus(sty).set("filename", "#{base}/index.styl").set("paths", paths).use(do nib).import("nib").render (err, css) ->
 				if err then return throw CompilerErrorReporter.generate 4, CompilerErrorReporter.wrapCustomError err
@@ -42,7 +38,7 @@ class Compiler
 						( require "fs" ).writeFileSync to.toString(), css, "utf8"
 					catch e then return throw CompilerErrorReporter.generate 6, CompilerErrorReporter.wrapCustomError e
 		catch e
-			throw new CompilerErrorReporter.generate 5, CompilerErrorReporter.wrapCustomError e
+			throw CompilerErrorReporter.generate 5, CompilerErrorReporter.wrapCustomError e
 
 # Defining the Compiler Error Reporter
 class CompilerErrorReporter extends IS.Object

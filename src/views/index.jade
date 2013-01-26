@@ -1,12 +1,29 @@
-
 aside
-    header
-        h1 Files
-    section
-    footer
+	header
+		h1 Files
+	section
+	footer
+		nav.left
+			li#createOPML: i.icon-plus
+		nav
+			li Edit
 article
-    header
-        h1 #{title}
-    section
-    footer
-        h1 #{copyright}
+	header
+		h1 #{title}
+		nav.left#positionNav
+			li#sidebarToggle: i.icon-align-left
+			li#fullScreenToggle: i.icon-align-center
+		nav.right
+			li#downloadButton 
+				i.icon-circle-arrow-down
+				p Download
+			li#uploadButton
+				i.icon-circle-arrow-up
+				p Upload
+	section
+	footer
+		nav
+			li#saveButton
+				i.icon-ok
+				p Save
+		h1 #{copyright}

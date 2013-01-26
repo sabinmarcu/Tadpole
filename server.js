@@ -1,5 +1,5 @@
 require("coffee-script");
-var parser = require("cliparser");
+var parser = require("cliparser"),
 	args   = parser.parse(process.argv, {
 		"-v": "--version",
 		"-h": "--help",
@@ -19,14 +19,18 @@ if (args.version) {
 } else {
 	var Compiler = null, Static = null;
 	if (args.compile) {
-		var location = args.location || "./public/js/g.js"
+		var location = args.location || __dirname + "/public"
+		if (location[location.length - 1] !== "/") location += "/"
+		var jsLocation = location + "js/g.js",
+			cssLocation = location + "css/styles.css"
 		Compiler = require("./server/compiler");
-		Compiler.compile(location);
+		Compiler.compile(jsLocation);
+		Compiler.compileStyles(cssLocation);
 		if (args.location) return;
 	}
 	if (args.static) {
 		var data = {};
-		data.address = args.address || process.env.IP || "localhost"
+		data.address = args.address || process.env.IP || "0.0.0.0"
 		data.port    = args.port || process.env.PORT || "8080"
 
 		var Static = require("./server/static"),

@@ -48,19 +48,21 @@ class Server
 				App.use Express.bodyParser()
 				App.use App.router
 				App.use Express.static((require "path").resolve("#{__dirname}/../public"))
-				App.post "/echo/:id", (req, res) => 
+				App.post "/echo/:id", (req, res) =>
 					res.setHeader "Content-disposition", "attachment; filename=#{req.params.id}"
 					res.setHeader "Content-type", "text/x-opml"
 					console.log "Sending #{req.params.id}"
 					res.send req.body.content
-				if @compiler? 
+				if @compiler?
 					App.get "/js/g.js", (req, res) => @compiler.compile null, (source) ->
-						res.send source, {"Content-Type": "text/javascript"}, 201
+						res.send source, {"Content-Type": "application/javascript"}, 201
 					App.get "/css/styles.css", (req, res) => @compiler.compileStyles null, (source) ->
 						res.send source, {"Content-Type": "text/css"}, 201
-					App.get "/font/*", (req, res) => 
+					App.get "/font/*", (req, res) =>
 						res.sendfile (require "path").resolve "#{__dirname}/../public#{req.url}"
-					App.get "*", (req, res) => 
+					App.get "/images/*", (req, res) =>
+						res.sendfile (require "path").resolve "#{__dirname}/../public#{req.url}"
+					App.get "*", (req, res) =>
 						res.sendfile (require "path").resolve("#{__dirname}/../public/index.html")
 		catch e then return throw ServerErrorReporter.generate 8, ServerErrorReporter.wrapCustomError e
 
@@ -97,4 +99,5 @@ class ServerErrorReporter extends IS.Object
 
 # Exporting the server
 module.exports = Server
+
 
