@@ -1130,6 +1130,7 @@ Dual licensed under the MIT and GPL licenses.
 }).call(this);
 }, "controllers/ContextMenu": function(exports, require, module) {(function() {
   var ContextMenuController,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -1138,6 +1139,8 @@ Dual licensed under the MIT and GPL licenses.
     __extends(ContextMenuController, _super);
 
     function ContextMenuController(data, event) {
+      this.deactivate = __bind(this.deactivate, this);
+
       var handler, handlers, id, items, kid, name, _i, _len, _ref,
         _this = this;
       items = [];
@@ -1156,25 +1159,31 @@ Dual licensed under the MIT and GPL licenses.
         }
       });
       this.menu = this.placeholder.children[0];
+      document.body.appendChild(this.placeholder);
+      this.menu.focus();
+      this.menu.addEventListener("blur", this.deactivate);
       _ref = this.menu.children;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         kid = _ref[_i];
         id = kid.id.replace("item-", "");
-        kid.addEventListener(function() {
+        kid.addEventListener("click", function() {
           _this.deactivate();
           return handlers[id]();
         });
       }
     }
 
-    ContextMenuController.deactivate = function() {
-      delete ContextMenuController.menu;
-      return delete ContextMenuController.placeholder;
+    ContextMenuController.prototype.deactivate = function() {
+      this.placeholder.parentNode.removeChild(this.placeholder);
+      delete this.menu;
+      return delete this.placeholder;
     };
 
     return ContextMenuController;
 
-  }).call(this, BaseObject);
+  })(BaseObject);
+
+  module.exports = ContextMenuController;
 
 }).call(this);
 }, "controllers/DragAndDrop": function(exports, require, module) {(function() {
@@ -1419,10 +1428,7 @@ Dual licensed under the MIT and GPL licenses.
           "Add": function() {
             return console.log("Clicked Add");
           }
-        }, {
-          x: e.clientX,
-          y: e.clientY
-        });
+        }, e);
         e.preventDefault();
         return e.stopPropagation();
       });
@@ -2356,7 +2362,9 @@ with (locals || {}) {
 var interp;
 __jade.unshift({ lineno: 1, filename: __jade[0].filename });
 __jade.unshift({ lineno: 1, filename: __jade[0].filename });
-buf.push('<nav class="contextMenu">');
+buf.push('<nav');
+buf.push(attrs({ 'style':("left: " + (event.x) + "px; top: " + (event.y) + "px;"), "class": ('contextMenu') }, {"style":true}));
+buf.push('>');
 __jade.unshift({ lineno: undefined, filename: __jade[0].filename });
 __jade.unshift({ lineno: 2, filename: __jade[0].filename });
 // iterate items
@@ -2368,7 +2376,9 @@ __jade.unshift({ lineno: 2, filename: __jade[0].filename });
 
 __jade.unshift({ lineno: 2, filename: __jade[0].filename });
 __jade.unshift({ lineno: 3, filename: __jade[0].filename });
-buf.push('<li>');
+buf.push('<li');
+buf.push(attrs({ 'id':("item-" + (count) + "") }, {"id":true}));
+buf.push('>');
 var __val__ = item
 buf.push(escape(null == __val__ ? "" : __val__));
 __jade.unshift({ lineno: undefined, filename: __jade[0].filename });
@@ -2385,7 +2395,9 @@ __jade.shift();
 
 __jade.unshift({ lineno: 2, filename: __jade[0].filename });
 __jade.unshift({ lineno: 3, filename: __jade[0].filename });
-buf.push('<li>');
+buf.push('<li');
+buf.push(attrs({ 'id':("item-" + (count) + "") }, {"id":true}));
+buf.push('>');
 var __val__ = item
 buf.push(escape(null == __val__ ? "" : __val__));
 __jade.unshift({ lineno: undefined, filename: __jade[0].filename });
