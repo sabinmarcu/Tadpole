@@ -49,7 +49,7 @@ class OPML extends BaseObject
 		string = ""
 		for kid in tree.topics
 			string += "<outline text='#{kid.text.get().replace("\"", "&#34;").replace("'", "&#39;")}' "
-			string += "_note='#{kid.note.get().replace("\"", "&#34;").replace("'", "&#39;")}' " if kid.note.get()?
+			string += "_note='#{kid.note.get().replace("\"", "&#34;").replace("'", "&#39;").replace("\n", " ")}' " if kid.note.get()?
 			if kid.status.get()? then string += "_status='#{kid.status.get()}'"
 			else if kid.children.get()?
 				kids = kid.children.get().topics

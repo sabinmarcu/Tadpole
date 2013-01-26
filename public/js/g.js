@@ -2082,7 +2082,7 @@ Dual licensed under the MIT and GPL licenses.
         kid = _ref[_i];
         string += "<outline text='" + (kid.text.get().replace("\"", "&#34;").replace("'", "&#39;")) + "' ";
         if (kid.note.get() != null) {
-          string += "_note='" + (kid.note.get().replace("\"", "&#34;").replace("'", "&#39;")) + "' ";
+          string += "_note='" + (kid.note.get().replace("\"", "&#34;").replace("'", "&#39;").replace("\n", " ")) + "' ";
         }
         if (kid.status.get() != null) {
           string += "_status='" + (kid.status.get()) + "'";
