@@ -64,7 +64,7 @@ class OPML extends BaseObject
 			else string += "_status='unchecked'"
 			if kid.children.get() then string += ">#{@exportBody kid.children.get()}</outline>"
 			else string += "/>"
-		string
+		string.replace "\n", ""
 
 	save: =>
 		window.localStorage?.setItem "opmls.#{@title}", do @export
@@ -72,7 +72,7 @@ class OPML extends BaseObject
 		if not storageIndex then window.localStorage?.setItem "opmls", JSON.stringify [@title]
 		else if not ( @title in storageIndex )
 			storageIndex.push @title
-			window.localStorage?.setItem "opmls", JSON.stringify storageIndex
+			window.localStorage?.setItem "opmls", ( JSON.stringify storageIndex ).replace /<br\/?>/g, ""
 
 module.exports = OPML
 

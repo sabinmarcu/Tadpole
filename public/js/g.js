@@ -2111,7 +2111,7 @@ Dual licensed under the MIT and GPL licenses.
           string += "/>";
         }
       }
-      return string;
+      return string.replace("\n", "");
     };
 
     OPML.prototype.save = function() {
@@ -2124,7 +2124,7 @@ Dual licensed under the MIT and GPL licenses.
         return (_ref2 = window.localStorage) != null ? _ref2.setItem("opmls", JSON.stringify([this.title])) : void 0;
       } else if (!(_ref3 = this.title, __indexOf.call(storageIndex, _ref3) >= 0)) {
         storageIndex.push(this.title);
-        return (_ref4 = window.localStorage) != null ? _ref4.setItem("opmls", JSON.stringify(storageIndex)) : void 0;
+        return (_ref4 = window.localStorage) != null ? _ref4.setItem("opmls", (JSON.stringify(storageIndex)).replace(/<br\/?>/g, "")) : void 0;
       }
     };
 
