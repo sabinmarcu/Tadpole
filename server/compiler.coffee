@@ -5,7 +5,7 @@ stylus = require "stylus"
 nib    = require "nib"
 base   = (require "path").resolve "@{__dirname}/../src/stylesheets"
 pack   = stitch.createPackage
-	"dependencies": ["./node_modules/isf/lib/application.js"]
+	"dependencies": ["./node_modules/isf/lib/isf.min.js"]
 	"paths": ["./src"]
 
 
@@ -44,16 +44,18 @@ class Compiler
 class CompilerErrorReporter extends IS.Object
 
 	# Setting the error parameters
-	@errorGroups = [ "CompilationError", "WriteError" ]
-	@errorGroupMap = [ 1, 1, 2, 1, 1, 2 ]
-	@errorMessages = [
-		"An error occured when compiling the application"
-		"The compiler failed"
-		"Couldn't write the application to the file"
-		"The styles failed"
-		"An error occured when compiling the stylesheets"
-		"Couldn't write the styles to the file"
-	]
+	@errors: 
+		"CompilationError": [
+			"An error occured when compiling the application"
+			"The compiler failed"
+			"The styles failed"
+			"An error occured when compiling the stylesheets"
+		]
+		"WriteError" : [
+			"Couldn't write the application to the file"
+			"Couldn't write the styles to the file"
+		]
+
 
 	# Making sure it behaves properly
 	@extend IS.ErrorReporter

@@ -7,13 +7,19 @@ body {
   margin: 0;
   padding: 0;
 }
-html {
+* [class*=" icon-"],
+* [class*="icon-"],
+* [class^=" icon-"],
+* [class^="icon-"] {
+  width: auto !important;
+}
+html:not(.landing) {
   background: url("http://turbo.premiumpixels.com/wp-content/uploads/2010/11/lead-214.jpg");
 }
-body .hidden {
+body:not(.landing) .hidden {
   display: none;
 }
-body header {
+body:not(.landing) header {
   position: absolute;
   left: 0;
   right: 0;
@@ -38,10 +44,10 @@ body header {
   background: -ms-linear-gradient(top, #222822 0%, #222 100%);
   background: linear-gradient(top, #222822 0%, #222 100%);
 }
-body header * {
+body:not(.landing) header * {
   text-align: left;
 }
-body header h1 {
+body:not(.landing) header h1 {
   display: inline-block;
   color: #fff;
   margin: 0;
@@ -50,7 +56,7 @@ body header h1 {
   line-height: 45px;
   text-align: center;
 }
-body header nav {
+body:not(.landing) header nav {
   display: inline-block;
   position: absolute;
   right: 7px;
@@ -61,11 +67,11 @@ body header nav {
   border: solid 1px rgba(255,255,255,0.4);
   overflow: hidden;
 }
-body header nav.left {
+body:not(.landing) header nav.left {
   right: auto;
   left: 7px;
 }
-body header nav li {
+body:not(.landing) header nav li {
   display: inline-block;
   margin: 0;
   line-height: 29px;
@@ -87,28 +93,28 @@ body header nav li {
   border-right: solid 1px rgba(255,255,255,0.1);
   font-family: Electrolize;
 }
-body header nav li:first-of-type {
+body:not(.landing) header nav li:first-of-type {
   border-top-left-radius: 10px;
   border-bottom-left-radius: 10px;
   border-left: none;
 }
-body header nav li:last-of-type {
+body:not(.landing) header nav li:last-of-type {
   border-top-right-radius: 10px;
   border-bottom-right-radius: 10px;
   border-right: 0;
 }
-body header nav li:only-of-type {
+body:not(.landing) header nav li:only-of-type {
   border: none;
   -webkit-border-radius: 10px;
   border-radius: 10px;
 }
-body header nav li:hover,
-body header nav li:active {
+body:not(.landing) header nav li:hover,
+body:not(.landing) header nav li:active {
   color: #fff;
   background-color: rgba(0,0,0,0.6);
   cursor: pointer;
 }
-body header nav li p {
+body:not(.landing) header nav li p {
   opacity: 0;
   filter: alpha(opacity=0);
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
@@ -122,22 +128,22 @@ body header nav li p {
   float: right;
   display: none;
 }
-body header nav li:hover p {
+body:not(.landing) header nav li:hover p {
   opacity: 1;
   -ms-filter: none;
   filter: none;
   display: inline-block;
   width: auto;
 }
-body header nav li:hover i {
+body:not(.landing) header nav li:hover i {
   margin-right: 5px;
 }
-body header h1 {
+body:not(.landing) header h1 {
   color: #fff;
   margin: 0;
   padding: 0;
 }
-body footer {
+body:not(.landing) footer {
   position: absolute;
   left: 0;
   right: 0;
@@ -156,10 +162,10 @@ body footer {
   transition: all 0.5s ease-in-out;
   bottom: 0;
 }
-body footer * {
+body:not(.landing) footer * {
   text-align: left;
 }
-body footer h1 {
+body:not(.landing) footer h1 {
   display: inline-block;
   color: #fff;
   margin: 0;
@@ -168,7 +174,7 @@ body footer h1 {
   line-height: 45px;
   text-align: center;
 }
-body footer nav {
+body:not(.landing) footer nav {
   display: inline-block;
   position: absolute;
   right: 7px;
@@ -179,11 +185,11 @@ body footer nav {
   border: solid 1px rgba(255,255,255,0.4);
   overflow: hidden;
 }
-body footer nav.left {
+body:not(.landing) footer nav.left {
   right: auto;
   left: 7px;
 }
-body footer nav li {
+body:not(.landing) footer nav li {
   display: inline-block;
   margin: 0;
   line-height: 29px;
@@ -205,28 +211,28 @@ body footer nav li {
   border-right: solid 1px rgba(255,255,255,0.1);
   font-family: Electrolize;
 }
-body footer nav li:first-of-type {
+body:not(.landing) footer nav li:first-of-type {
   border-top-left-radius: 10px;
   border-bottom-left-radius: 10px;
   border-left: none;
 }
-body footer nav li:last-of-type {
+body:not(.landing) footer nav li:last-of-type {
   border-top-right-radius: 10px;
   border-bottom-right-radius: 10px;
   border-right: 0;
 }
-body footer nav li:only-of-type {
+body:not(.landing) footer nav li:only-of-type {
   border: none;
   -webkit-border-radius: 10px;
   border-radius: 10px;
 }
-body footer nav li:hover,
-body footer nav li:active {
+body:not(.landing) footer nav li:hover,
+body:not(.landing) footer nav li:active {
   color: #fff;
   background-color: rgba(0,0,0,0.6);
   cursor: pointer;
 }
-body footer nav li p {
+body:not(.landing) footer nav li p {
   opacity: 0;
   filter: alpha(opacity=0);
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
@@ -240,21 +246,21 @@ body footer nav li p {
   float: right;
   display: none;
 }
-body footer nav li:hover p {
+body:not(.landing) footer nav li:hover p {
   opacity: 1;
   -ms-filter: none;
   filter: none;
   display: inline-block;
   width: auto;
 }
-body footer nav li:hover i {
+body:not(.landing) footer nav li:hover i {
   margin-right: 5px;
 }
-body footer h1 {
+body:not(.landing) footer h1 {
   color: #666;
   font-size: 10pt;
 }
-body section {
+body:not(.landing) section {
   position: absolute;
   left: 0;
   right: 0;
@@ -269,39 +275,42 @@ body section {
   -ms-transition: all 0.5s ease-in-out;
   transition: all 0.5s ease-in-out;
 }
-body section div {
+body:not(.landing) section div {
   position: relative;
 }
-body section nav {
+body:not(.landing) section nav {
   position: absolute;
   right: 0;
   top: 15px;
 }
-body section nav li {
+body:not(.landing) section nav li {
   margin: 5px;
   padding: 0 5px;
   list-style: none;
   display: inline-block;
 }
-body section .container {
+body:not(.landing) section .container {
   margin: 0;
   padding: 0;
 }
-body section .container .row {
+body:not(.landing) section .container .row {
   background: #fff;
   border-bottom: solid 1px #999;
 }
-body section .container .row i.icon-custom {
+body:not(.landing) section .container .row i {
+  cursor: pointer;
+}
+body:not(.landing) section .container .row i.icon-custom {
   margin-right: 5px;
 }
-body section .container .row i.icon-custom:before {
+body:not(.landing) section .container .row i.icon-custom:before {
   content: "\f078";
 }
-body section .container .row p {
+body:not(.landing) section .container .row p {
   display: inline-block;
   padding: 10px;
 }
-body section .container .row span {
+body:not(.landing) section .container .row span {
   display: block;
   height: 15px;
   margin-top: -15px;
@@ -315,7 +324,7 @@ body section .container .row span {
   transition: color 0.5s linear;
   white-space: pre-wrap;
 }
-body section .container .row span:before {
+body:not(.landing) section .container .row span:before {
   content: "";
   position: absolute;
   left: 0;
@@ -330,28 +339,28 @@ body section .container .row span:before {
   background: linear-gradient(top, rgba(255,255,255,0) 0%, #fff 100);
   background-position: center 0;
 }
-body section .container .row span:hover {
+body:not(.landing) section .container .row span:hover {
   height: auto;
   color: #222;
 }
-body section .container .row span:hover:before {
+body:not(.landing) section .container .row span:hover:before {
   background: none;
 }
-body section .container .row.bordertop {
+body:not(.landing) section .container .row.bordertop {
   border-top: solid 1px #999;
   border-bottom: none;
   padding: 0;
 }
-body section .container .row.noborder {
+body:not(.landing) section .container .row.noborder {
   border-bottom: none;
 }
-body section .container .row.folded .container {
+body:not(.landing) section .container .row.folded .container {
   display: none;
 }
-body section .container .row.folded i.icon-custom:before {
+body:not(.landing) section .container .row.folded i.icon-custom:before {
   content: "\f054";
 }
-body aside {
+body:not(.landing) aside {
   position: fixed;
   left: 0;
   top: 0;
@@ -370,11 +379,11 @@ body aside {
   -ms-transform-origin: left center 0;
   transform-origin: left center 0;
 }
-body aside section {
+body:not(.landing) aside section {
   -webkit-box-shadow: 0 0 15px #666;
   box-shadow: 0 0 15px #666;
 }
-body aside section li {
+body:not(.landing) aside section li {
   padding: 25px;
   list-style: none;
   border-bottom: solid 1px #999;
@@ -386,15 +395,15 @@ body aside section li {
   background: linear-gradient(top, #fff 0%, rgba(255,255,255,0.2) 100);
   font-size: 10pt;
 }
-body aside section li p {
+body:not(.landing) aside section li p {
   display: inline-block;
   padding: 0;
   margin: 0;
 }
-body aside section li i {
+body:not(.landing) aside section li i {
   margin-right: 5px;
 }
-body article {
+body:not(.landing) article {
   position: fixed;
   left: 25%;
   right: 0;
@@ -412,20 +421,29 @@ body article {
   -ms-transition-delay: 0.2s;
   transition-delay: 0.2s;
 }
-body article article {
+body:not(.landing) article article {
   position: absolute;
   left: 100%;
   right: -100%;
 }
-body article article.activated {
+body:not(.landing) article article.activated {
   left: 0;
   right: 0;
 }
-body article article.deactivated {
+body:not(.landing) article article.deactivated {
   left: -100%;
   right: 100%;
 }
-body article .dragdropplaceholder {
+body:not(.landing) article p {
+  margin-left: 5px;
+  margin-right: 5px;
+}
+body:not(.landing) article *[contenteditable=true] {
+  -webkit-box-shadow: 0 0 15px #3cf;
+  box-shadow: 0 0 15px #3cf;
+  outline: none;
+}
+body:not(.landing) article .dragdropplaceholder {
   position: fixed;
   bottom: 70px;
   top: 70px;
@@ -446,16 +464,16 @@ body article .dragdropplaceholder {
   -ms-transition: all 0.25s ease-in-out;
   transition: all 0.25s ease-in-out;
 }
-body article .dragdropplaceholder.active {
+body:not(.landing) article .dragdropplaceholder.active {
   opacity: 1;
   -ms-filter: none;
   filter: none;
   z-index: 1;
 }
-body article .dragdropplaceholder.active.hover {
+body:not(.landing) article .dragdropplaceholder.active.hover {
   background: rgba(0,0,0,0.8);
 }
-body article .dragdropplaceholder span {
+body:not(.landing) article .dragdropplaceholder span {
   position: absolute;
   left: 50%;
   top: 50%;
@@ -468,38 +486,38 @@ body article .dragdropplaceholder span {
   text-shadow: 0 0 5px #fff;
   font-family: Electrolize;
 }
-html.sidebaroff {
+html:not(.landing).sidebaroff {
   -webkit-box-shadow: 0 0 100% #000 inset;
   box-shadow: 0 0 100% #000 inset;
 }
-html.sidebaroff aside {
+html:not(.landing).sidebaroff aside {
   -webkit-transform: perspective(1000px) rotateY(-90deg);
   -moz-transform: perspective(1000px) rotateY(-90deg);
   -o-transform: perspective(1000px) rotateY(-90deg);
   -ms-transform: perspective(1000px) rotateY(-90deg);
   transform: perspective(1000px) rotateY(-90deg);
 }
-html.sidebaroff article {
+html:not(.landing).sidebaroff article {
   left: 0;
 }
-html.fullscreen .dragdropplaceholder {
+html:not(.landing).fullscreen .dragdropplaceholder {
   left: 25px;
 }
-html.fullscreen article header nav#positionNav {
+html:not(.landing).fullscreen article header nav#positionNav {
   position: fixed;
   bottom: auto;
   left: auto;
   right: 7px;
   z-index: 999;
 }
-html.fullscreen article header nav#positionNav li:first-child {
+html:not(.landing).fullscreen article header nav#positionNav li:first-child {
   display: none;
 }
-html.fullscreen article header nav#positionNav li:last-child {
+html:not(.landing).fullscreen article header nav#positionNav li:last-child {
   border-top-left-radius: 10px;
   border-bottom-left-radius: 10px;
 }
-html.fullscreen article section {
+html:not(.landing).fullscreen article section {
   position: fixed;
   top: 0;
   bottom: 0;
@@ -507,26 +525,67 @@ html.fullscreen article section {
   right: 0;
   z-index: 10;
 }
-html.fullscreen aside {
+html:not(.landing).fullscreen aside {
   -webkit-transform: perspective(1000px) rotateY(-90deg);
   -moz-transform: perspective(1000px) rotateY(-90deg);
   -o-transform: perspective(1000px) rotateY(-90deg);
   -ms-transform: perspective(1000px) rotateY(-90deg);
   transform: perspective(1000px) rotateY(-90deg);
 }
-html nav li#sidebarToggle i,
-html nav li#fullScreenToggle i,
-html nav li#createOPML i {
+html:not(.landing) nav li#sidebarToggle i,
+html:not(.landing) nav li#fullScreenToggle i,
+html:not(.landing) nav li#createOPML i {
   margin-right: 0;
 }
-html nav li#createOPML {
+html:not(.landing) nav li#createOPML {
   font-size: 14pt;
 }
-html.mobile.smallscreen li:hover i {
+html:not(.landing).mobile.smallscreen li:hover i {
   margin-right: 0;
 }
-html.mobile.smallscreen li:hover p {
+html:not(.landing).mobile.smallscreen li:hover p {
   display: none;
+}
+nav.contextMenu {
+  position: absolute;
+  z-index: 999;
+  height: 50px;
+  line-height: 50px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  border: solid 1px #ddd;
+  color: #222;
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #eee), color-stop(1, #ccc));
+  background: -webkit-linear-gradient(top, #eee 0%, #ccc 100%);
+  background: -moz-linear-gradient(top, #eee 0%, #ccc 100%);
+  background: -o-linear-gradient(top, #eee 0%, #ccc 100%);
+  background: -ms-linear-gradient(top, #eee 0%, #ccc 100%);
+  background: linear-gradient(top, #eee 0%, #ccc 100%);
+  text-shadow: 0 0 1px #fff;
+}
+nav.contextMenu li {
+  padding: 0 15px;
+  display: inline-block;
+  border-left: #eee;
+  border-right: #ccc;
+}
+nav.contextMenu li:first-child {
+  border-left: none;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+nav.contextMenu li:last-child {
+  border-right: none;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+nav.contextMenu li:only-child {
+  border: none;
+}
+nav.contextMenu li:hover {
+  background: rgba(0,0,0,0.4);
+  color: #000;
+  cursor: pointer;
 }
 html.smallscreen .dragdropplaceholder {
   left: 15px;
@@ -614,44 +673,132 @@ html.smallscreen body aside:focus:before {
   filter: alpha(opacity=0);
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
 }
-nav.contextMenu {
+body.landing .container {
+  width: 1000px;
+  margin: 0 auto;
+}
+@media (max-width:1024px) {
+  body.landing {
+    width: 800px;
+  }
+}
+@media (max-width: 768px) {
+  body.landing {
+    width: 600px;
+  }
+}
+body.landing header {
+  display: block;
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0, rgba(0,0,0,0.8)), color-stop(1, rgba(0,0,0,0.9)));
+  background: -webkit-linear-gradient(top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.9) 100%);
+  background: -moz-linear-gradient(top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.9) 100%);
+  background: -o-linear-gradient(top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.9) 100%);
+  background: -ms-linear-gradient(top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.9) 100%);
+  background: linear-gradient(top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.9) 100%);
+  font-weight: 300;
+}
+body.landing header h1 {
+  font-size: 72pt;
+  font-family: "Electrolize";
+  margin: 0;
+  padding: 50px 0 0;
+  color: #1262bb;
+}
+body.landing header h2 {
+  font-size: 12pt;
+  text-align: right;
+  margin: 0;
+  padding-bottom: 15px;
+  color: rgba(255,255,255,0.1);
+}
+body.landing header h2 span {
+  color: rgba(255,255,255,0.2);
+}
+body.landing header h2 span:first-child {
+  color: rgba(255,25,25,0.3);
+}
+body.landing section article {
+  margin: 25px 0;
+}
+body.landing section article .container {
+  background: rgba(0,0,0,0.05);
+  -webkit-border-radius: 25px;
+  border-radius: 25px;
+  position: relative;
+}
+body.landing section article .container aside {
   position: absolute;
-  z-index: 999;
+  left: 20px;
+  top: 15px;
+}
+body.landing section article .container aside a {
+  color: #999;
+  -webkit-transition: all 0.5s ease-in-out;
+  -moz-transition: all 0.5s ease-in-out;
+  -o-transition: all 0.5s ease-in-out;
+  -ms-transition: all 0.5s ease-in-out;
+  transition: all 0.5s ease-in-out;
+  text-decoration: none;
+}
+body.landing section article .container aside a:hover,
+body.landing section article .container aside a:active {
+  color: #000;
+}
+body.landing section article .container aside a:visited,
+body.landing section article .container aside a:link {
+  text-decoration: none;
+  color: #999;
+}
+body.landing section article .container section {
+  padding: 25px;
+  margin-left: 50px;
+  border-left: solid 1px #ccc;
+}
+body.landing section article .container section h1 {
+  font-size: 1.4em;
+  color: #1262aa;
+  margin: 0;
+}
+body.landing section article .container section h1:before {
+  content: "// ";
+}
+body.landing section article .container section h2 {
+  font-size: 1.1em;
+  color: #aa1268;
+  margin: 0;
+}
+body.landing section article .container section h2:before {
+  content: "// ";
+}
+body.landing section article:first-child {
+  margin-top: 100px;
+}
+body.landing .install {
+  display: block;
+  width: 200px;
   height: 50px;
   line-height: 50px;
-  -webkit-border-radius: 5px;
-  border-radius: 5px;
-  border: solid 1px #ddd;
-  color: #222;
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #eee), color-stop(1, #ccc));
-  background: -webkit-linear-gradient(top, #eee 0%, #ccc 100%);
-  background: -moz-linear-gradient(top, #eee 0%, #ccc 100%);
-  background: -o-linear-gradient(top, #eee 0%, #ccc 100%);
-  background: -ms-linear-gradient(top, #eee 0%, #ccc 100%);
-  background: linear-gradient(top, #eee 0%, #ccc 100%);
-  text-shadow: 0 0 1px #fff;
+  color: #fff;
+  border: solid 1px #126488;
+  -webkit-border-radius: 15px;
+  border-radius: 15px;
+  font-weight: bold;
+  text-shadow: 0 -1px 1px #000;
+  margin: 15px 15px 15px 0;
 }
-nav.contextMenu li {
-  padding: 0 15px;
-  display: inline-block;
-  border-left: #eee;
-  border-right: #ccc;
+body.landing .install.ff {
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #1264cc), color-stop(1, #0a366e));
+  background: -webkit-linear-gradient(top, #1264cc 0%, #0a366e 100%);
+  background: -moz-linear-gradient(top, #1264cc 0%, #0a366e 100%);
+  background: -o-linear-gradient(top, #1264cc 0%, #0a366e 100%);
+  background: -ms-linear-gradient(top, #1264cc 0%, #0a366e 100%);
+  background: linear-gradient(top, #1264cc 0%, #0a366e 100%);
 }
-nav.contextMenu li:first-child {
-  border-left: none;
-  border-top-left-radius: 5px;
-  border-bottom-left-radius: 5px;
-}
-nav.contextMenu li:last-child {
-  border-right: none;
-  border-top-right-radius: 5px;
-  border-bottom-right-radius: 5px;
-}
-nav.contextMenu li:only-child {
-  border: none;
-}
-nav.contextMenu li:hover {
-  background: rgba(0,0,0,0.4);
-  color: #000;
-  cursor: pointer;
+body.landing .install.run {
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #0f0), color-stop(1, #090));
+  background: -webkit-linear-gradient(top, #0f0 0%, #090 100%);
+  background: -moz-linear-gradient(top, #0f0 0%, #090 100%);
+  background: -o-linear-gradient(top, #0f0 0%, #090 100%);
+  background: -ms-linear-gradient(top, #0f0 0%, #090 100%);
+  background: linear-gradient(top, #0f0 0%, #090 100%);
 }

@@ -58,10 +58,11 @@ class Server
 						res.send source, {"Content-Type": "application/javascript"}, 201
 					App.get "/css/styles.css", (req, res) => @compiler.compileStyles null, (source) ->
 						res.send source, {"Content-Type": "text/css"}, 201
-					App.get "/font/*", (req, res) =>
-						res.sendfile (require "path").resolve "#{__dirname}/../public#{req.url}"
-					App.get "/images/*", (req, res) =>
-						res.sendfile (require "path").resolve "#{__dirname}/../public#{req.url}"
+					App.get "/font/*", (req, res) => res.sendfile (require "path").resolve "#{__dirname}/../public#{req.url}"
+					App.get "/images/*", (req, res) => res.sendfile (require "path").resolve "#{__dirname}/../public#{req.url}"
+					App.get "/index.app.html", (req, res)  => res.sendfile (require "path").resolve "#{__dirname}/../public#{req.url}"
+					App.get "/manifest.webapp", (req, res)  => res.sendfile (require "path").resolve "#{__dirname}/../public#{req.url}"
+					App.get "/arrow_up_1.png", (req, res)  => res.sendfile (require "path").resolve "#{__dirname}/../public#{req.url}"
 					App.get "*", (req, res) =>
 						res.sendfile (require "path").resolve("#{__dirname}/../public/index.html")
 		catch e then return throw ServerErrorReporter.generate 8, ServerErrorReporter.wrapCustomError e
@@ -79,19 +80,22 @@ class Server
 class ServerErrorReporter extends IS.Object
 
 	# Defining the error messages, assigning them to groups and naming them.
-	@errorGroups = [ "ConstructorError", "CompileConnectionrError", "InternalError" ]
-	@errorGroupMap = [ 1, 1, 1, 1, 2, 2, 3, 3, 3 ]
-	@errorMessages = [
-		"There is no address supplied"
-		"There is no port supplied"
-		"The address is not a string"
-		"The port is not a string"
-		"There was no object supplied"
-		"The object supplied was not compatible"
-		"Express module was not installed"
-		"Error at configuring the server"
-		"Error at starting the server"
-	]
+	@errors = 
+		"ConstructorError": [
+			"There is no address supplied"
+			"There is no port supplied"
+			"The address is not a string"
+			"The port is not a string"
+		]
+		"CompileConnectionError": [
+			"There was no object supplied"
+			"The object supplied was not compatible"
+		]
+		"InternalError": [
+			"Express module was not installed"
+			"Error at configuring the server"
+			"Error at starting the server"
+		]
 
 	# Making sure it behaves as it should
 	@extend IS.ErrorReporter

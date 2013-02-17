@@ -51,11 +51,3 @@ class DnD extends BaseObject
 		
 
 module.exports = DnD
-
-class DnDER extends IS.Object
-
-	@errorGroups = []
-	@errorGroupMap = []
-	@errorMessages = []
-
-	@extend IS.ErrorReporter

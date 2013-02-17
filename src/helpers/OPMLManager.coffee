@@ -9,19 +9,19 @@ class OPMLManager extends IS.Object
 		document.getElementById("createOPML").addEventListener "click", (e) => do @new
 
 	open: (file, silent = false) =>
-		do @activeOPML.controller.deactivate if @activeOPML?
+		do @activeOPML.rcontroller.deactivate if @activeOPML?
 		@activeOPML = new (DepMan.model "OPML")(file)
 		@OPMLs[@activeOPML.title] = @activeOPML
-		do @activeOPML.controller.activate
+		do @activeOPML.rcontroller.activate
 		do @renderList
 
 	openOPML: (which) =>
 		les = document.querySelectorAll ".dragdropplaceholder"
 		le.parentNode.removeChild le for le in les if les?
 		if not @activeOPML? or ( which isnt @activeOPML.title )
-			do @activeOPML.controller.deactivate if @activeOPML?
+			do @activeOPML.rcontroller.deactivate if @activeOPML?
 			@activeOPML = @OPMLs[which]
-			do @activeOPML.controller.activate
+			do @activeOPML.rcontroller.activate
 			do @renderList
 
 	new: => @open """

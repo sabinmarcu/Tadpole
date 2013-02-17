@@ -4,34 +4,52 @@ class FakeOutline
 
 class OutlineController extends BaseObject
 	constructor: (@e, @model) ->
+
+		# Error Handling
 		throw ER.generate 1 if not @e? or not @e.tagName?
 		throw ER.generate 2 if not @model?
+
+		# Bindings
 		@e.controller = @
-		@e.addEventListener "contextmenu", (e) =>
-			new (DepMan.controller "ContextMenu")({
-				"Delete": @del
-				"Add": @add
-			}, e)
-			do e.preventDefault
-			do e.stopPropagation
-		if @model.controls?
-			console.log @model.controls
-			@model.controls.add.addEventListener "click", @add
-			@model.controls.remove.addEventListener "click", @del
+
+		# ContextMenu for Desktop
+		if !isMobile
+			@e.addEventListener "contextmenu", (e) =>
+				new (DepMan.controller "ContextMenu")({
+					"Delete": @del
+					"Add": @add
+				}, e)
+				do e.preventDefault
+				do e.stopPropagation
+		else 
+			if @model.controls?
+				@model.controls.add.addEventListener "click", @add
+				@model.controls.remove.addEventListener "click", @del
+
+		# The Controller Part
 		kids = @e.children
 		for kid in kids then do (kid) =>
 			switch kid.tagName
 				when "P"
 					@p = kid
-					kid.addEventListener "dblclick", => console.log kid; kid.setAttribute "contenteditable", true
-					kid.addEventListener "blur", => kid.setAttribute "contenteditable", false; @update "text", kid.innerHTML
+					kid.addEventListener "dblclick", @doubleClick
+					kid.addEventListener "blur", @blur
 				when "I"
 					if kid.className.indexOf("icon-custom") >= 0 then @f = kid; kid.addEventListener "click", @fold
 					else @c = kid; kid.addEventListener "click", =>
 						switch kid.className
-							when "icon-check" then kid.className = "icon-check-empty"; @update "status", "unchecked"
-							when "icon-check-empty" then kid.className = "icon-check"; @update "status", "checked"
+							when "icon-check" then kid.className = "icon-check-empty"; @model.update "status", "unchecked"
+							when "icon-check-empty" then kid.className = "icon-check"; @model.update "status", "checked"
 						@refreshParents @model.parent.parent.controller
+
+	doubleClick: =>	
+		@p.setAttribute "contenteditable", true
+		$("*").each (k, e) => e.addEventListener "click", @blur
+
+	blur: => 
+		@p.setAttribute "contenteditable", false
+		@model.update "text", @p.innerHTML
+		$("*").each (k, e) => e.removeEventListener "click", @blur
 
 	add: =>
 		kids = @model.children.get()
@@ -48,7 +66,7 @@ class OutlineController extends BaseObject
 		console.log addition
 		do addition.render
 		@model.children.set kids
-		@update "status", "indeterminate"
+		@model.update "status", "indeterminate"
 		@c.setAttribute "class", "icon-circle-blank"
 		@f.className = @f.className.replace /\ ?hidden/g, ""
 		@e.className += " noborder"
@@ -56,11 +74,7 @@ class OutlineController extends BaseObject
 
 	del: =>
 		@e.parentNode.removeChild @e
-		@model.parent.topics.splice @model.parent.topics.indexOf(@model), 1
-		
-	update: (prop, value) =>
-		throw ER.generate 3 if not @model[prop]?
-		@model[prop].set value
+		do @model.delete
 		
 	fold: =>
 		if @model.children.get()?
@@ -75,21 +89,19 @@ class OutlineController extends BaseObject
 				break
 		if valid
 			el.c.className = "icon-circle"
-			el.update "status", "determinate"
+			el.model.update "status", "determinate"
 		else
 			el.c.className = "icon-circle-blank"
-			el.update "status", "indeterminate"
+			el.model.update "status", "indeterminate"
 		@refreshParents el.model.parent.parent.controller if el.model.parent.parent?
 			
 class OutlineControllerErrorReporter extends BaseObject
 
-	@errorGroupMap: [ 1, 1, 2 ]
-	@errorGroups: [ "Crud", "cRud", "crUd", "cruD" ]
-	@errorMessages: [
-		"Must provide a valid HTML node"
-		"Must provide a valid Outline Model"
-		"Must provide a valid property"
-	]
+	@errors: 
+		"Crud" : [
+			"Must provide a valid HTML node"
+			"Must provide a valid Outline Model"
+		]
 	
 	@extend IS.ErrorReporter
 

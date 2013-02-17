@@ -57,9 +57,23 @@ class Outline
 			nav.appendChild @controls.add
 			nav.appendChild @controls.remove
 			@e.appendChild nav
-		cntrl = new (DepMan.controller "Outline")(@e, @)
-		@controller = @e.controller = cntrl
+		outlinecntrl = new (DepMan.controller "Outline")(@e, @)
+		rendercntrl = new (DepMan.controller "OutlineRender")(@e, @)
+		@controller = @e.controller = outlinecntrl
+		@rcontroller = @e.rcontroller = rendercntrl
 		@parent.e.appendChild @e
+
+	delete: =>	@parent.topics.splice @model.topics.indexOf(@), 1
+	update: (prop, value) =>
+		throw ER.generate 1 if not @[prop]?
+		@[prop].set value
+
+class OutlineErrorReporter extends BaseObject
+
+	@errors: 
+		"UpdateError": ["Must give a proper property to update!"]
+
+ER = OutlineErrorReporter
 
 
 module.exports =

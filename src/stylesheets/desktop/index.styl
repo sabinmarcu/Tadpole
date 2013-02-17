@@ -8,17 +8,22 @@ body
 	margin 0
 	padding 0
 
-html
+*
+	[class*=" icon-"], [class*="icon-"], [class^=" icon-"], [class^="icon-"]
+		width auto !important
+
+html:not(.landing)
 	background url(bgImage)
 
 // The rest of the imports
 // Otherwise it will not work
-body
+body:not(.landing)
 	@import "grid"
 	@import "tables"
 	@import "aside"
 	@import "article"
 
-html
+html:not(.landing)
 	@import "variants"
 	@import "specialCases"
+    @import "ContextMenu"

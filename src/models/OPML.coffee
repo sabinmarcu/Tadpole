@@ -75,12 +75,3 @@ class OPML extends BaseObject
 			window.localStorage?.setItem "opmls", ( JSON.stringify storageIndex ).replace /<br\/?>/g, ""
 
 module.exports = OPML
-
-
-class OPMLER extends IS.Object
-
-	@errorGroups = []
-	@errorGroupMap = []
-	@errorMessages = []
-
-	@extend IS.ErrorReporter

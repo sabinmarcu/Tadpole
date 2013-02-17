@@ -14,6 +14,7 @@ class DepMan extends BaseObject
 	helper     : (module) => @_require module, "helpers/"
 	controller : (module) => @_require module, "controllers/"
 	model      : (module) => @_require module, "models/"
+	lib        : (module) => @_require module, "libs/"
 	googleFont : (font, sizes, subsets = null) =>
 		names = font.split " "
 
@@ -31,9 +32,8 @@ class DepMan extends BaseObject
 
 class DepErr extends IS.Object
 
-	@errorGroups   = [ "RequireError" ]
-	@errorGroupMap = [ 1 ]
-	@errorMessages = [ "Could not require module!" ]
+	@errors:
+		"RequireError": [ "Could not require module!" ]
 
 	@extend IS.ErrorReporter
 
