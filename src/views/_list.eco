@@ -1,0 +1,34 @@
+<header>
+	<h1 <%= _T "Files" %>></h1>
+</header>
+<section>
+	<li id="{{item.title}}" ng-repeat="item in opmls" ng-click="activate(item)">
+		<i class="icon-{{isactive(item)}}"></i>
+		<p><input 
+			type="text" 
+			id="opml-{{item.index}}" 
+			value="{{item.title}}" 
+			ng-model="item.title" 
+			ng-dblclick="edit(item)" 
+			ng-change="(item)"
+		/></p>
+	</li>
+</section>
+<footer>
+	<nav class="left">
+		<li ng-click="new()">
+			<i class='icon-plus'><p>Add</p></i>
+		</li>
+		<li ng-click="delete()">
+			<i class='icon-trash'><p>Delete</p></i>
+		</li>
+		<li ng-click="save()">
+			<i class='icon-save'><p>Save</p></i>
+		</li>
+	</nav>
+	<nav>
+		<li data-toggle="modal" data-target="#settings">
+			<i class="icon-wrench"><p>Settings</p></i>
+		</li>
+	</nav>
+</footer>    

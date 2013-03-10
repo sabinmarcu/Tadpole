@@ -1,0 +1,20 @@
+<i class="{{folded(item)}}" ng-click="toggleFold(item)"></i>
+<i class="{{status(item)}}" ng-click="toggleCheck(item)"></i>
+<p><input type='text' ng-model="item.text" /></p>
+<div class="approw bordertop" style="
+	padding-left: {{50 * (item.parent.depth + 1)}}px;
+	margin-left: -{{50 * (item.parent.depth + 1)}}px;
+">
+
+	<div class="appcontainer" ng-model="item.children.topics" ng-hide="item.fold">
+		<div ng-repeat="item in item.children.topics" ng-include="'tree_row.html'" class="approw {{type(item)}}" style="
+			padding-left: {{50 * (item.parent.depth + 1)}}px;
+			margin-left: -{{50 * item.parent.depth}}px;
+		"></div>
+	</div>
+</div>
+<nav ng-show="isMobile">
+	<li ng-click="addChild(item)"><i class="icon-plus"></i></li>
+	<li ng-click="remove(item)"><i class="icon-remove"></i></li>	
+	<li ng-click="edit(item)"><i class="icon-wrench"></i></li>
+</nav>

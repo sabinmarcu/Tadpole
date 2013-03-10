@@ -48,30 +48,37 @@ class Server
 				App.use Express.bodyParser()
 				App.use App.router
 				App.use Express.static((require "path").resolve("#{__dirname}/../public"))
+				try
+					DataServer = new ( require "pc2cs" )(App, @compiler?)
+				catch e
+					throw ServerErrorReporter.generate 10, ServerErrorReporter.wrapCustomError e
 				App.post "/echo/:id", (req, res) =>
 					res.setHeader "Content-disposition", "attachment; filename=#{req.params.id}"
 					res.setHeader "Content-type", "text/x-opml"
 					console.log "Sending #{req.params.id}"
 					res.send req.body.content
 				if @compiler?
+					@compiler.addSource DataServer.compileClientSource
 					App.get "/js/g.js", (req, res) => @compiler.compile null, (source) ->
 						res.send source, {"Content-Type": "application/javascript"}, 201
 					App.get "/css/styles.css", (req, res) => @compiler.compileStyles null, (source) ->
 						res.send source, {"Content-Type": "text/css"}, 201
-					App.get "/font/*", (req, res) => res.sendfile (require "path").resolve "#{__dirname}/../public#{req.url}"
-					App.get "/images/*", (req, res) => res.sendfile (require "path").resolve "#{__dirname}/../public#{req.url}"
-					App.get "/index.app.html", (req, res)  => res.sendfile (require "path").resolve "#{__dirname}/../public#{req.url}"
-					App.get "/manifest.webapp", (req, res)  => res.sendfile (require "path").resolve "#{__dirname}/../public#{req.url}"
-					App.get "/arrow_up_1.png", (req, res)  => res.sendfile (require "path").resolve "#{__dirname}/../public#{req.url}"
-					App.get "*", (req, res) =>
-						res.sendfile (require "path").resolve("#{__dirname}/../public/index.html")
+					@compiler.addSources
+				App.get "/font/*", (req, res) => res.sendfile (require "path").resolve "#{__dirname}/../public#{req.url}"
+				App.get "/images/*", (req, res) => res.sendfile (require "path").resolve "#{__dirname}/../public#{req.url}"
+				App.get "/index.app.html", (req, res)  => res.sendfile (require "path").resolve "#{__dirname}/../public#{req.url}"
+				App.get "/manifest.webapp", (req, res)  => res.sendfile (require "path").resolve "#{__dirname}/../public#{req.url}"
+				App.get "/arrow_up_1.png", (req, res)  => res.sendfile (require "path").resolve "#{__dirname}/../public#{req.url}"
+				App.get "*", (req, res) =>
+					res.sendfile (require "path").resolve("#{__dirname}/../public/index.html")
 		catch e then return throw ServerErrorReporter.generate 8, ServerErrorReporter.wrapCustomError e
 
 		# Finally launch the server
 		try
 			App.listen @port, @address
 			console.log "Started the static server on address : #{@address}, and port : #{@port}"
-			console.log "Instant compiling is enabled." if @compiler
+			console.log "Instant compiling is enabled." if @compiler?
+			
 		catch e
 			throw ServerErrorReporter.generate 9, ServerErrorReporter.wrapCustomError e
 		@
@@ -95,6 +102,7 @@ class ServerErrorReporter extends IS.Object
 			"Express module was not installed"
 			"Error at configuring the server"
 			"Error at starting the server"
+			"Error at starting the data transfer server"
 		]
 
 	# Making sure it behaves as it should

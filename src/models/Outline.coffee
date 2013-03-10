@@ -5,68 +5,51 @@ _map =
 	indeterminate: "icon-circle-blank"
 
 _params     = [ "status", "note", "text", "children" ]
-_checkParam = (field, param, from) ->
-	value = from.getAttribute(param) or null
-	field.set value
+_checkParam = (object, field, param, from) -> object[field] = from.getAttribute(param) or ""
 
 class OutlineCollection extends BaseObject
-	constructor: (bodyElement, @parent, @depth = 0) ->
-		@e = document.createElement "div"
-		@e.className = "container"
-		@topics = do =>
+	constructor: (bodyElement = null, @parent, @depth = 0) ->
+		if not bodyElement then @topics = [] 
+		else @topics = do =>
 			new Outline element, @ for element in bodyElement when element.tagName is "outline"
-	render: (pe) =>
-		pe.appendChild @e
-		do kid.render for kid in @topics
+	remove: (item) -> @topics.splice (@topics.indexOf item), 1
 
+class FakeOutline
+	constructor: (@text = "New Node", @_status = "unchecked", @childNodes = []) ->
+	getAttribute: (attr) -> @[attr] or null
 
 class Outline
-	constructor: (xmlDoc, @parent) ->
+	constructor: (xmlDoc = null, @parent) ->
+		xmlDoc ?= new FakeOutline()
 		@getData xmlDoc
+		@_map = _map
 
 	getData: (xmlDoc) =>
-		@[what] = new IS.Variable for what in _params
-		@status.getFormatted = => _map[@status.get()]
-		_checkParam @text, "text", xmlDoc
-		_checkParam @status, "_status", xmlDoc
-		_checkParam @note, "_note", xmlDoc
+		@fold = false
+		@[what] = null for what in _params
+		_checkParam @, "text", "text", xmlDoc
+		_checkParam @, "status", "_status", xmlDoc
+		_checkParam @, "note", "_note", xmlDoc
 		_children = new OutlineCollection xmlDoc.childNodes, @, @parent.depth + 1
-		@children.set (if _children.topics.length then _children else null)
+		@children = (if _children.topics.length then _children else null)
+		if @status is ""
+			if not (@children? and @children.topics.length) then @status = "unchecked"
 
-	render: =>
-		@e = document.createElement "div"
-		hasChildren = @children.get() or null
-		if hasChildren then klass = " noborder" else klass = ""
-		@e.setAttribute "class", "row#{klass}"
-		@e.setAttribute "style", "padding-left: #{50 * (@parent.depth + 1)}px; margin-left: -#{50 * @parent.depth}px"
-		if not hasChildren then klass = "hidden" else klass = ""
-		@e.innerHTML = DepMan.render "outline", hidden: klass, item: @
-		if hasChildren?
-			e = document.createElement "div"
-			e.setAttribute "class", "row bordertop"
-			e.setAttribute "style", "padding-left: #{50 * ( @parent.depth + 1 )}px; margin-left: -#{50 * (@parent.depth + 1)}px"
-			@children.get().render e
-			@e.appendChild e
-		if window.isMobile?
-			nav = document.createElement "nav"
-			@controls =
-				add: document.createElement "li"
-				remove: document.createElement "li"
-			@controls.add.innerHTML = "<i class='icon-plus'>"
-			@controls.remove.innerHTML = "<i class='icon-remove'>"
-			nav.appendChild @controls.add
-			nav.appendChild @controls.remove
-			@e.appendChild nav
-		outlinecntrl = new (DepMan.controller "Outline")(@e, @)
-		rendercntrl = new (DepMan.controller "OutlineRender")(@e, @)
-		@controller = @e.controller = outlinecntrl
-		@rcontroller = @e.rcontroller = rendercntrl
-		@parent.e.appendChild @e
+	getStatus: => 
+		if @children? and @children.topics.length
+			done = 1
+			for kid in @children.topics
+				if not (kid.status in ["checked", "determinate"])
+					@status = "indeterminate"
+					done = 0
+					break
+			@status = "determinate" if done
+		else if @status in ["determinate", "indeterminate"] then @status = "unchecked"
+		_map[@status]
 
-	delete: =>	@parent.topics.splice @model.topics.indexOf(@), 1
-	update: (prop, value) =>
-		throw ER.generate 1 if not @[prop]?
-		@[prop].set value
+	addChild: =>
+		if not @children? then @children = new OutlineCollection false, @, @parent.depth + 1
+		@children.topics.push new Outline null, @children
 
 class OutlineErrorReporter extends BaseObject
 

@@ -1,28 +1,41 @@
 class OPMLManager extends IS.Object
 
-	constructor: ->
-		@OPMLs = {}
+	constructor: () ->
+		@OPMLs = []
+		@activeOPML = null
 		index = JSON.parse window.localStorage?.getItem "opmls"
 		if index
-			for item in index
+			for item, key in index
+				console.log item, key, key is index.length - 1
 				@open ( window.localStorage?.getItem "opmls.#{item}" ), true
-		document.getElementById("createOPML").addEventListener "click", (e) => do @new
+
+
+	bootstrap: () ->
+
+		# Binding AngularJS
+		DepMan.angular("OPMLController")
+		$("aside").html DepMan.render "_list"
+		$("aside").attr "ng-controller", "OPMLManager"
+		$("article > section").attr "ng-controller", "OPMLController"
+		angular.bootstrap $("article section")[0], ["Arrow"]
+		DepMan.angular("OPMLManager")
 
 	open: (file, silent = false) =>
-		do @activeOPML.rcontroller.deactivate if @activeOPML?
+		do @activeOPML.controller.deactivate if @activeOPML? and not silent
 		@activeOPML = new (DepMan.model "OPML")(file)
-		@OPMLs[@activeOPML.title] = @activeOPML
-		do @activeOPML.rcontroller.activate
-		do @renderList
+		@OPMLs.push @activeOPML
+		@activeOPML.index = @OPMLs.indexOf @activeOPML
+		do @activeOPML.controller.activate if not silent
+		if silent then @activeOPML = null
 
-	openOPML: (which) =>
+	openOPML: (opml, override = false) =>
+		return if not opml?
 		les = document.querySelectorAll ".dragdropplaceholder"
 		le.parentNode.removeChild le for le in les if les?
-		if not @activeOPML? or ( which isnt @activeOPML.title )
-			do @activeOPML.rcontroller.deactivate if @activeOPML?
-			@activeOPML = @OPMLs[which]
-			do @activeOPML.rcontroller.activate
-			do @renderList
+		if not @activeOPML? or ( opml isnt @activeOPML ) or override
+			do @activeOPML.controller.deactivate if @activeOPML?
+			if opml in @OPMLs then @activeOPML = opml
+			do @activeOPML.controller.activate
 
 	new: => @open """
 		<opml version='1.0'>
@@ -37,27 +50,9 @@ class OPMLManager extends IS.Object
 			</body>
 		</opml>"""
 
-	renderList: =>
-		document.querySelector("aside section").innerHTML = DepMan.render "list", items: @OPMLs, active: @activeOPML
-		list = document.querySelectorAll("aside section li")
-		for item in list
-			item.addEventListener "click", (e) =>
-				@openOPML e.target.id
-			for kid in item.children
-				if kid.tagName is "P" then do (kid) =>
-					kid.addEventListener "dblclick", =>
-						kid.original = kid.innerHTML
-						kid.setAttribute "contenteditable", "true"
-						kid.focus()
-					kid.addEventListener "blur", =>
-						kid.setAttribute "contenteditable", "false"
-						@OPMLs[kid.original].title = kid.innerHTML
-						@OPMLs[kid.innerHTML] = @OPMLs[kid.original]
-						@OPMLs[kid.original] = null
-						@OPMLs[kid.innerHTML].save()
-						storageIndex = JSON.parse window.localStorage?.getItem "opmls"
-						storageIndex.splice storageIndex.indexOf(kid.original), 1
-						window.localStorage?.setItem "opmls", JSON.stringify storageIndex
-						window.localStorage?.setItem "opmls.#{kid.original}", null
+	delete: (opml) => @OPMLs.splice (@OPMLs.indexOf opml), 1; do opml.delete
 
-module.exports = new OPMLManager()
+_inst = new OPMLManager()
+Arrow.factory "OPML", -> _inst
+do _inst.bootstrap
+module.exports = _inst

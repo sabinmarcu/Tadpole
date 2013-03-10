@@ -2,11 +2,8 @@ class DepMan extends BaseObject
 
 	constructor : (@basePrefix = "", @deps = []) -> @echo "Activated DependenciesManager!"
 	_require    : (module, prefix = "") =>
-		try
-			@deps["#{prefix}#{module}"] = require "#{@basePrefix}#{prefix}#{module}"
-			return @deps["#{prefix}#{module}"]
-		catch e
-			throw DepErr.generate 1, "[BP= #{@basePrefix}][P= #{prefix}][P= #{module}] #{DepErr.wrapCustomError e}"
+		@deps["#{prefix}#{module}"] = require "#{@basePrefix}#{prefix}#{module}"
+		return @deps["#{prefix}#{module}"]
 
 	render     : (module, args...) => (@_require module, "views/").apply @, args
 	doc        : (module) => @_require module, "docs/"
@@ -15,6 +12,7 @@ class DepMan extends BaseObject
 	controller : (module) => @_require module, "controllers/"
 	model      : (module) => @_require module, "models/"
 	lib        : (module) => @_require module, "libs/"
+	angular    : (module) => @_require module, "angular/"
 	googleFont : (font, sizes, subsets = null) =>
 		names = font.split " "
 

@@ -12,18 +12,44 @@ class Application extends BaseObject
 			meta.setAttribute "name", "viewport"
 			meta.setAttribute "content", "width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1"
 			document.head.appendChild meta
+			meta = document.createElement "link"
+			meta.setAttribute "rel", "applie-touch-icon"
+			meta.setAttribute "href", "arrow_up_1.png"
+			document.head.appendChild meta
+			meta = document.createElement "meta"
+			meta.setAttribute "name", "apple-mobile-web-app-capable"
+			meta.setAttribute "content", "yes"
+			document.head.appendChild meta
 
 		root.DepMan = new ( require "helpers/DependenciesManager" )
 
 		#jQuery
 		DepMan.lib "jquery"
+		DepMan.lib "angular.min"
+		DepMan.lib "bootstrap.min"
+
+		# Messaging
+		window.Toast = (title = "Message", body = "")->
+				jQuery("#tip-message-head").html title
+				jQuery("#tip-message-body").html body
+				jQuery("#tip-message").modal("show")
+				setTimeout((-> jQuery("#tip-message").modal("hide")), 1500)
+
+		# Ajustments for Angular
+		window.Arrow = angular.module "Arrow", []
+		$("body").attr "ng-app", "Arrow"
 
 		# FontAwesome
 		DepMan.stylesheet "font-awesome"
+		DepMan.stylesheet "bootstrap.min"
+		DepMan.stylesheet "bootstrap-responsive.min"
 
 		# Fonts
 		DepMan.googleFont "Electrolize", [400]
 		DepMan.googleFont "Open Sans", [400, 300], ["latin", "latin-ext"]
+		
+		# Hook Language Translation
+		DepMan.helper "LanguageHelper"
 
 		_resize = ->
 			html = document.querySelector "html"
@@ -51,12 +77,15 @@ class Application extends BaseObject
 			return
 
 		document.body.innerHTML = DepMan.render "index", title:"Arrow", copyright: "&copy; Sabin Marcu 2013"
+		
+		jQuery("#languageSelector").change ->
+			LanguageHelper.switchLanguage @value
 
 		# DnD API
 		root.DnD = ( DepMan.controller "DragAndDrop" )
 		root.DnD.init()
 
-		root.isMobile = false
+		root.isMobile = true
 		if window.orientation? or document.orientation?
 			root.isMobile = true
 			document.querySelector("html")?.className += " mobile "
@@ -69,13 +98,16 @@ class Application extends BaseObject
 
 		( DepMan.helper "OPMLManager" )
 
-		switchMode = (mode) ->
+		window.switchMode = (mode) ->
 			html = document.querySelector("html")
 			if html.className.indexOf(mode) >= 0 then html.className = html.className.replace (new RegExp("\ ?#{mode}")), ""
 			else html.className += " #{mode}"
 
-		document.getElementById("sidebarToggle").addEventListener "click", -> switchMode "sidebaroff"
-		document.getElementById("fullScreenToggle").addEventListener "click", -> switchMode "fullscreen"
+		document.getElementById("sidebarToggle").addEventListener "click", -> Client?.publish "switchMode", "sidebaroff"
+		document.getElementById("fullScreenToggle").addEventListener "click", -> Client?.publish "switchMode", "fullscreen"
+		
+		# Grab connectivity drivers
+		DepMan.helper "DataTransfer"
 
 
 module.exports = Application

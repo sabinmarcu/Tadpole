@@ -92,6 +92,7 @@ body:not(.landing) header nav li {
   border-left: solid 1px rgba(255,255,255,0.3);
   border-right: solid 1px rgba(255,255,255,0.1);
   font-family: Electrolize;
+  float: left;
 }
 body:not(.landing) header nav li:first-of-type {
   border-top-left-radius: 10px;
@@ -134,9 +135,7 @@ body:not(.landing) header nav li:hover p {
   filter: none;
   display: inline-block;
   width: auto;
-}
-body:not(.landing) header nav li:hover i {
-  margin-right: 5px;
+  margin-left: 5px;
 }
 body:not(.landing) header h1 {
   color: #fff;
@@ -210,6 +209,7 @@ body:not(.landing) footer nav li {
   border-left: solid 1px rgba(255,255,255,0.3);
   border-right: solid 1px rgba(255,255,255,0.1);
   font-family: Electrolize;
+  float: left;
 }
 body:not(.landing) footer nav li:first-of-type {
   border-top-left-radius: 10px;
@@ -252,9 +252,7 @@ body:not(.landing) footer nav li:hover p {
   filter: none;
   display: inline-block;
   width: auto;
-}
-body:not(.landing) footer nav li:hover i {
-  margin-right: 5px;
+  margin-left: 5px;
 }
 body:not(.landing) footer h1 {
   color: #666;
@@ -281,36 +279,60 @@ body:not(.landing) section div {
 body:not(.landing) section nav {
   position: absolute;
   right: 0;
-  top: 15px;
+  top: 0;
 }
 body:not(.landing) section nav li {
-  margin: 5px;
+  margin: 0 5px;
   padding: 0 5px;
   list-style: none;
   display: inline-block;
 }
-body:not(.landing) section .container {
+body:not(.landing) section .appcontainer {
   margin: 0;
   padding: 0;
 }
-body:not(.landing) section .container .row {
+body:not(.landing) section .appcontainer .approw {
   background: #fff;
   border-bottom: solid 1px #999;
 }
-body:not(.landing) section .container .row i {
+body:not(.landing) section .appcontainer .approw i {
   cursor: pointer;
+  float: left;
+  margin: 20px 0;
+  height: 10px;
 }
-body:not(.landing) section .container .row i.icon-custom {
+body:not(.landing) section .appcontainer .approw i.icon-hidden {
+  margin-left: 15px;
+}
+body:not(.landing) section .appcontainer .approw i.icon-custom {
   margin-right: 5px;
 }
-body:not(.landing) section .container .row i.icon-custom:before {
+body:not(.landing) section .appcontainer .approw i.icon-custom:before {
   content: "\f078";
 }
-body:not(.landing) section .container .row p {
+body:not(.landing) section .appcontainer .approw p {
   display: inline-block;
-  padding: 10px;
+  display: block !important;
+  margin: 0 10px 0 35px;
 }
-body:not(.landing) section .container .row span {
+body:not(.landing) section .appcontainer .approw p input {
+  border: none;
+  padding: 10px 0;
+  margin: 10px 0;
+  height: 10px;
+  line-height: 10px;
+  width: 100%;
+  background: none;
+  border: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+body:not(.landing) section .appcontainer .approw p input:focus {
+  outline: none;
+  -webkit-box-shadow: 0 0 5px #0cf;
+  box-shadow: 0 0 5px #0cf;
+}
+body:not(.landing) section .appcontainer .approw span {
   display: block;
   height: 15px;
   margin-top: -15px;
@@ -324,7 +346,7 @@ body:not(.landing) section .container .row span {
   transition: color 0.5s linear;
   white-space: pre-wrap;
 }
-body:not(.landing) section .container .row span:before {
+body:not(.landing) section .appcontainer .approw span:before {
   content: "";
   position: absolute;
   left: 0;
@@ -339,25 +361,25 @@ body:not(.landing) section .container .row span:before {
   background: linear-gradient(top, rgba(255,255,255,0) 0%, #fff 100);
   background-position: center 0;
 }
-body:not(.landing) section .container .row span:hover {
+body:not(.landing) section .appcontainer .approw span:hover {
   height: auto;
   color: #222;
 }
-body:not(.landing) section .container .row span:hover:before {
+body:not(.landing) section .appcontainer .approw span:hover:before {
   background: none;
 }
-body:not(.landing) section .container .row.bordertop {
+body:not(.landing) section .appcontainer .approw.bordertop {
   border-top: solid 1px #999;
   border-bottom: none;
   padding: 0;
 }
-body:not(.landing) section .container .row.noborder {
+body:not(.landing) section .appcontainer .approw.noborder {
   border-bottom: none;
 }
-body:not(.landing) section .container .row.folded .container {
+body:not(.landing) section .appcontainer .approw.folded .container {
   display: none;
 }
-body:not(.landing) section .container .row.folded i.icon-custom:before {
+body:not(.landing) section .appcontainer .approw.folded i.icon-custom:before {
   content: "\f054";
 }
 body:not(.landing) aside {
@@ -384,7 +406,6 @@ body:not(.landing) aside section {
   box-shadow: 0 0 15px #666;
 }
 body:not(.landing) aside section li {
-  padding: 25px;
   list-style: none;
   border-bottom: solid 1px #999;
   background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #fff), color-stop(1, rgba(255,255,255,0.2)));
@@ -396,12 +417,30 @@ body:not(.landing) aside section li {
   font-size: 10pt;
 }
 body:not(.landing) aside section li p {
+  display: block;
+  margin: 0 5px 0 25px;
+}
+body:not(.landing) aside section li p input {
   display: inline-block;
-  padding: 0;
-  margin: 0;
+  width: 100%;
+  height: 10px;
+  line-height: 10px;
+  padding: 10px 0;
+  margin: 10px 0;
+  background: transparent;
+  border: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+body:not(.landing) aside section li p input:focus {
+  outline: none;
+  -webkit-box-shadow: 0 0 5px #0cf;
+  box-shadow: 0 0 5px #0cf;
 }
 body:not(.landing) aside section li i {
-  margin-right: 5px;
+  float: left;
+  margin: 20px 0 20px 5px;
+  height: 5px;
 }
 body:not(.landing) article {
   position: fixed;
@@ -433,15 +472,6 @@ body:not(.landing) article article.activated {
 body:not(.landing) article article.deactivated {
   left: -100%;
   right: 100%;
-}
-body:not(.landing) article p {
-  margin-left: 5px;
-  margin-right: 5px;
-}
-body:not(.landing) article *[contenteditable=true] {
-  -webkit-box-shadow: 0 0 15px #3cf;
-  box-shadow: 0 0 15px #3cf;
-  outline: none;
 }
 body:not(.landing) article .dragdropplaceholder {
   position: fixed;
@@ -540,11 +570,21 @@ html:not(.landing) nav li#createOPML i {
 html:not(.landing) nav li#createOPML {
   font-size: 14pt;
 }
-html:not(.landing).mobile.smallscreen li:hover i {
+html:not(.landing).smallscreen li:hover i {
   margin-right: 0;
 }
-html:not(.landing).mobile.smallscreen li:hover p {
+html:not(.landing).smallscreen li:hover p {
   display: none;
+}
+html:not(.landing).avgrund-active body {
+  -webkit-transform: none;
+  -moz-transform: none;
+  -o-transform: none;
+  -ms-transform: none;
+  transform: none;
+}
+html:not(.landing).avgrund-active body .avgrund-popup {
+  position: fixed;
 }
 nav.contextMenu {
   position: absolute;
@@ -593,7 +633,8 @@ html.smallscreen .dragdropplaceholder {
 html.smallscreen body > article {
   left: 0;
 }
-html.smallscreen body > article li#sidebarToggle {
+html.smallscreen body > article li#sidebarToggle,
+html.smallscreen body > article li#uploadButton {
   display: none;
 }
 html.smallscreen body > article li#fullScreenToggle {
@@ -640,6 +681,7 @@ html.smallscreen body aside:before {
   border-left: solid 1px rgba(255,255,255,0.3);
   border-right: solid 1px rgba(255,255,255,0.1);
   font-family: Electrolize;
+  float: left;
 }
 html.smallscreen body aside:before:first-of-type {
   border-top-left-radius: 10px;

@@ -15,7 +15,8 @@
 		"nib": "*",
 		"isf" :  "*",
 		"codo" :  "*",
-		"stitchw" :  "*"
+		"stitchw" :  "*",
+		"pc2cs": "*"
 	},
 	"devDependencies" :  {
 		"jasmine-node" :  "*"

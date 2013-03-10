@@ -1,0 +1,8 @@
+<div class="modal hide fade" id="tip-message">
+    <div class="modal-header">
+    	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    	<h3 id="tip-message-title" <%= _T "Message" %> ></h3>
+    </div>
+    <div class="modal-body" id="tip-message-body">
+    </div>
+</div>

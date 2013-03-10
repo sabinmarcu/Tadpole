@@ -1,0 +1,15 @@
+<div class="modal hide fade" id="editnodemodal">
+    <div class="modal-header">
+    	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    	<h3 id="tip-message-title" <%= _T "Edit Node" %> ></h3>
+    </div>
+    <div class="modal-body">
+    	<label for="text" <%= _T "Text of the node" %>></label>
+    	<input type="text" name="text" <%= _T "Application Error" %> id="text" />
+    	<label for="status" <%= _T "Status of the node (if leaf)" %> ></label>
+    	<input type="checkbox" name="status" checked="false" />
+    	<label for="notes" <%= _T "Notes attached to this node" %>></label>
+    	<textarea id="notes" <%= _T "Application Error" %> ></textarea>
+    </div>
+    
+</div>

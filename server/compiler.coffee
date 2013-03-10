@@ -12,17 +12,24 @@ pack   = stitch.createPackage
 # The Compiler Bootstrap
 class Compiler
 
+	@sources: []
+
 	# Compile the application to its designated location.
 	@compile: (to = "./public/js/g.js", callback = null) ->
 		try
-			pack.compile (err, source) ->
+			pack.compile (err, source) =>
 				if err then return throw CompilerErrorReporter.generate 2, CompilerErrorReporter.wrapCustomError err
+				source += src for src in @sources when src.substr?				
+				source += do src for src in @sources when src.apply?
 				if callback? then callback source
 				else
 					try
 						(require "fs").writeFileSync to.toString(), source, "utf8"
 					catch e then return throw CompilerErrorReporter.generate 3, CompilerErrorReporter.wrapCustomError e
 		catch e then return throw CompilerErrorReporter.generate 1, e
+		
+	@addSource: (source) ->
+		@sources.push source
 
 	@compileStyles: (to = "./public/css/styles.css", callback = null) ->
 		try
