@@ -249,15 +249,6 @@
   module.exports = window.BaseObject = BObject;
 
 }).call(this);
-}, "angular/OPML": function(exports, require, module) {(function() {
-
-  module.exports = function(M) {
-    return window.OPMLController = function($scope) {
-      return $scope.opml = M.activeOPML;
-    };
-  };
-
-}).call(this);
 }, "angular/OPMLController": function(exports, require, module) {(function() {
   var e;
 
@@ -270,6 +261,7 @@
   }
 
   angular.module("Arrow").controller("OPMLController", function($scope, $rootScope, OPML) {
+    var hooked;
     $scope.object = OPML.activeOPML || null;
     $rootScope.$on("opml.change", function(item) {
       return $scope.object = item;
@@ -326,7 +318,52 @@
         return parent.parent.children = null;
       }
     };
-    return jQuery(window).keydown(function(e) {
+    hooked = false;
+    $scope.edit = function(item) {
+      var modal, sts;
+      if (!(typeof modal !== "undefined" && modal !== null)) {
+        modal = jQuery("#editnodemodal");
+      }
+      modal.find("#text").val(item.text);
+      modal.find(".status").show();
+      sts = modal.find("#status");
+      if (item.status === "checked") {
+        sts.prop("checked", true);
+      } else if (item.status === "unchecked") {
+        sts.prop("checked", false);
+      } else {
+        modal.find(".status").hide();
+      }
+      modal.find("#notes").val(item.notes || "");
+      modal.modal("show");
+      $scope.path = item.getPath();
+      if (!hooked) {
+        hooked = true;
+        sts.on("change", function() {
+          console.log(this.checked);
+          this.checked = !this.checked;
+          return false;
+        });
+        return modal.on("hide", function() {
+          var status;
+          sts = modal.find("#status");
+          debugge;
+
+          console.log(status);
+          if (status) {
+            status = "checked";
+          } else {
+            status = "unchecked";
+          }
+          return Client.publish("editoutline", JSON.stringify($scope.path), {
+            "text": modal.find("#text").val(),
+            "status": status,
+            "notes": modal.find("#notes").val()
+          });
+        });
+      }
+    };
+    jQuery(window).keydown(function(e) {
       if (e.ctrlKey || e.metaKey) {
         switch (String.fromCharCode(e.which).toLowerCase()) {
           case 's':
@@ -335,16 +372,19 @@
         }
       }
     });
+    return typeof Client !== "undefined" && Client !== null ? Client.events = {
+      "editoutline": function(path, data) {
+        var item, _ref;
+        item = OPML.activeOPML.findNode(JSON.parse(path));
+        item.text = data.text;
+        if ((_ref = item.status) === "checked" || _ref === "unchecked") {
+          item.status = data.status;
+        }
+        item.notes = data.notes;
+        return $scope.$apply();
+      }
+    } : void 0;
   });
-
-}).call(this);
-}, "angular/OPMLControllre": function(exports, require, module) {(function() {
-
-  module.exports = function(M) {
-    return window.OPMLController = function($scope) {
-      return $scope.opml = M.activeOPML;
-    };
-  };
 
 }).call(this);
 }, "angular/OPMLManager": function(exports, require, module) {(function() {
@@ -11074,6 +11114,8 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
       }
       this["delete"] = __bind(this["delete"], this);
 
+      this.findNode = __bind(this.findNode, this);
+
       this.save = __bind(this.save, this);
 
       this.exportBody = __bind(this.exportBody, this);
@@ -11231,6 +11273,26 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
       return Toast("Saved " + this.title, "<p>OPML Document saved. You can now return to ruining it, without the worry of loosing it</p>");
     };
 
+    OPML.prototype.findNode = function(path, from) {
+      var el, kid, _i, _len, _ref;
+      if (from == null) {
+        from = this.structure;
+      }
+      el = path.shift();
+      _ref = from.topics;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        kid = _ref[_i];
+        if (kid.text === el) {
+          if (path.length > 0) {
+            return this.findNode(path, kid.children);
+          } else {
+            return kid;
+          }
+        }
+      }
+      return null;
+    };
+
     OPML.prototype["delete"] = function() {
       var index, _ref;
       index = JSON.parse(localStorage.getItem("opmls"));
@@ -11300,6 +11362,13 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
       return this.topics.splice(this.topics.indexOf(item), 1);
     };
 
+    OutlineCollection.prototype.getPath = function() {
+      if (!(this.parent != null)) {
+        return [];
+      }
+      return this.parent.getPath();
+    };
+
     return OutlineCollection;
 
   })(BaseObject);
@@ -11333,12 +11402,21 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
 
       this.getData = __bind(this.getData, this);
 
+      this.getPath = __bind(this.getPath, this);
+
       if (xmlDoc == null) {
         xmlDoc = new FakeOutline();
       }
       this.getData(xmlDoc);
       this._map = _map;
     }
+
+    Outline.prototype.getPath = function() {
+      var prev;
+      prev = this.parent.getPath();
+      prev.push(this.text);
+      return prev;
+    };
 
     Outline.prototype.getData = function(xmlDoc) {
       var what, _children, _i, _len;
@@ -11800,7 +11878,7 @@ return buf.join("");
   (function() {
     (function() {
     
-      __out.push('<i class="{{folded(item)}}" ng-click="toggleFold(item)"></i>\n<i class="{{status(item)}}" ng-click="toggleCheck(item)"></i>\n<p><input type=\'text\' ng-model="item.text" /></p>\n<div class="approw bordertop" style="\n\tpadding-left: {{50 * (item.parent.depth + 1)}}px;\n\tmargin-left: -{{50 * (item.parent.depth + 1)}}px;\n">\n\n\t<div class="appcontainer" ng-model="item.children.topics" ng-hide="item.fold">\n\t\t<div ng-repeat="item in item.children.topics" ng-include="\'tree_row.html\'" class="approw {{type(item)}}" style="\n\t\t\tpadding-left: {{50 * (item.parent.depth + 1)}}px;\n\t\t\tmargin-left: -{{50 * item.parent.depth}}px;\n\t\t"></div>\n\t</div>\n</div>\n<nav ng-show="isMobile">\n\t<li ng-click="addChild(item)"><i class="icon-plus"></i></li>\n\t<li ng-click="remove(item)"><i class="icon-remove"></i></li>\t\n</nav>\n');
+      __out.push('<i class="{{folded(item)}}" ng-click="toggleFold(item)"></i>\n<i class="{{status(item)}}" ng-click="toggleCheck(item)"></i>\n<p><input type=\'text\' ng-model="item.text" /></p>\n<div class="approw bordertop" style="\n\tpadding-left: {{50 * (item.parent.depth + 1)}}px;\n\tmargin-left: -{{50 * (item.parent.depth + 1)}}px;\n">\n\n\t<div class="appcontainer" ng-model="item.children.topics" ng-hide="item.fold">\n\t\t<div ng-repeat="item in item.children.topics" ng-include="\'tree_row.html\'" class="approw {{type(item)}}" style="\n\t\t\tpadding-left: {{50 * (item.parent.depth + 1)}}px;\n\t\t\tmargin-left: -{{50 * item.parent.depth}}px;\n\t\t"></div>\n\t</div>\n</div>\n<nav ng-show="isMobile">\n\t<li ng-click="addChild(item)"><i class="icon-plus"></i></li>\n\t<li ng-click="remove(item)"><i class="icon-remove"></i></li>\t\n\t<li ng-click="edit(item)"><i class="icon-wrench"></i></li>\n</nav>\n');
     
     }).call(this);
     
@@ -11846,7 +11924,6 @@ return buf.join("");
   }
   (function() {
     (function() {
-      var lang;
     
       __out.push('<aside></aside>\n<article>\n\t<header>\n\t\t<h1>Arrow</h1> \n\t\t<nav class="left" id="positionNav">\n\t\t\t<li id="sidebarToggle"><i class="icon-align-left"></i></li>\n\t\t\t<li id="fullScreenToggle"><i class="icon-align-center"></i></li> \n\t\t</nav>\n\t\t<nav class="right">\n\t\t\t<li id="downloadButton">\n\t\t\t\t<i class="icon-circle-arrow-down"><p ');
     
@@ -11864,59 +11941,19 @@ return buf.join("");
     
       __out.push(this.copyright);
     
-      __out.push('</h1>\n\t</footer>\n</article>\n\n<div class="modal hide fade" id="settings">\n    <div class="modal-header">\n    \t<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>\n    \t<h3 ');
+      __out.push('</h1>\n\t</footer>\n</article>\n\n');
     
-      __out.push(__sanitize(_T("Settings")));
+      __out.push(DepMan.render("partials/settings"));
     
-      __out.push('></h3>\n    </div>\n    <div class="modal-body" style="text-align: center">\n\n\t\t<ul class="nav nav-pills">\n\t\t  <li class="active"><a data-toggle="pill" data-target="#server" ');
+      __out.push('\n');
     
-      __out.push(__sanitize(_T("Server Settings")));
+      __out.push(DepMan.render("partials/message"));
     
-      __out.push('></a></li>\n\t\t  <li><a data-toggle="pill" data-target="#general" ');
+      __out.push('\n');
     
-      __out.push(__sanitize(_T("General Settings")));
+      __out.push(DepMan.render("partials/editnode"));
     
-      __out.push('></a></li>\n\t\t</ul>\n\t \n\t\t<div class="tab-content">\n\t\t  <div class="tab-pane active" id="server">\n\t\t\t\t<p ');
-    
-      __out.push(__sanitize(_T("To connect to another client, give him the code in the first input box or input his code in the second input box and press enter")));
-    
-      __out.push('></p>\n\t\t\t\t<div><img src="inicaieri" alt="QR Code" id="qrimage" class="hidden" /></div>\n\t\t   \t \t<input type="text" readonly id="connectionidself" value="Not Connected Yet ..." />\n\t\t   \t \t<input type="text" value="" id="connectid" ');
-    
-      __out.push(__sanitize(_T("ID to connect to", "placeholder")));
-    
-      __out.push(' />\n\t\t\t</div>\n\t\t  \t<div class="tab-pane" id="general">\n\t\t\t\t<p ');
-    
-      __out.push(__sanitize(_T("Select your language from the dropdown menu: It will be saved")));
-    
-      __out.push('></p>\n\t\t\t\t<select id="languageSelector">\n\t\t\t\t\t');
-    
-      lang = (localStorage.getItem("lang")) || "en-US";
-    
-      __out.push('\n\t\t\t\t\t<option value="en-US" ');
-    
-      __out.push(__sanitize(_T("US English")));
-    
-      __out.push(' ');
-    
-      if (lang === "en-US") {
-        __out.push(__sanitize("selected"));
-      }
-    
-      __out.push(' ></option>\n\t\t\t\t\t<option value="ro-RO" ');
-    
-      __out.push(__sanitize(_T("Romanian")));
-    
-      __out.push(' ');
-    
-      if (lang === "ro-RO") {
-        __out.push(__sanitize("selected"));
-      }
-    
-      __out.push(' ></option>\n\t\t\t\t</select>\n\t\t\t</div>\n\t\t</div>   \t \t\n\n\n\t\t\n    </div>\n</div>\n\n<div class="modal hide fade" id="tip-message">\n    <div class="modal-header">\n    \t<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>\n    \t<h3 id="tip-message-title" ');
-    
-      __out.push(__sanitize(_T("Message")));
-    
-      __out.push(' ></h3>\n    </div>\n    <div class="modal-body" id="tip-message-body">\n    </div>\n</div>\n');
+      __out.push('\n\n');
     
     }).call(this);
     
@@ -12424,6 +12461,224 @@ return buf.join("");
 } catch (err) {
   rethrow(err, __jade[0].filename, __jade[0].lineno);
 }
+}}, "views/partials/editnode": function(exports, require, module) {module.exports = function(__obj) {
+  if (!__obj) __obj = {};
+  var __out = [], __capture = function(callback) {
+    var out = __out, result;
+    __out = [];
+    callback.call(this);
+    result = __out.join('');
+    __out = out;
+    return __safe(result);
+  }, __sanitize = function(value) {
+    if (value && value.ecoSafe) {
+      return value;
+    } else if (typeof value !== 'undefined' && value != null) {
+      return __escape(value);
+    } else {
+      return '';
+    }
+  }, __safe, __objSafe = __obj.safe, __escape = __obj.escape;
+  __safe = __obj.safe = function(value) {
+    if (value && value.ecoSafe) {
+      return value;
+    } else {
+      if (!(typeof value !== 'undefined' && value != null)) value = '';
+      var result = new String(value);
+      result.ecoSafe = true;
+      return result;
+    }
+  };
+  if (!__escape) {
+    __escape = __obj.escape = function(value) {
+      return ('' + value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    };
+  }
+  (function() {
+    (function() {
+    
+      __out.push('<div class="modal hide fade" id="editnodemodal">\n    <div class="modal-header">\n    \t<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>\n    \t<h3 id="tip-message-title" ');
+    
+      __out.push(__sanitize(_T("Edit Node")));
+    
+      __out.push(' ></h3>\n    </div>\n    <div class="modal-body">\n    \t<label for="text" ');
+    
+      __out.push(__sanitize(_T("Text of the node")));
+    
+      __out.push('></label>\n    \t<input type="text" name="text" ');
+    
+      __out.push(__sanitize(_T("Application Error")));
+    
+      __out.push(' id="text" />\n    \t<label for="status" class="status" ');
+    
+      __out.push(__sanitize(_T("Status of the node (if leaf)")));
+    
+      __out.push(' ></label>\n    \t<input type="checkbox" name="status" class="status" checked="false" id="status" />\n    \t<label for="notes" ');
+    
+      __out.push(__sanitize(_T("Notes attached to this node")));
+    
+      __out.push('></label>\n    \t<textarea id="notes" ');
+    
+      __out.push(__sanitize(_T("Application Error")));
+    
+      __out.push(' ></textarea>\n    </div>\n    \n</div>\n');
+    
+    }).call(this);
+    
+  }).call(__obj);
+  __obj.safe = __objSafe, __obj.escape = __escape;
+  return __out.join('');
+}}, "views/partials/message": function(exports, require, module) {module.exports = function(__obj) {
+  if (!__obj) __obj = {};
+  var __out = [], __capture = function(callback) {
+    var out = __out, result;
+    __out = [];
+    callback.call(this);
+    result = __out.join('');
+    __out = out;
+    return __safe(result);
+  }, __sanitize = function(value) {
+    if (value && value.ecoSafe) {
+      return value;
+    } else if (typeof value !== 'undefined' && value != null) {
+      return __escape(value);
+    } else {
+      return '';
+    }
+  }, __safe, __objSafe = __obj.safe, __escape = __obj.escape;
+  __safe = __obj.safe = function(value) {
+    if (value && value.ecoSafe) {
+      return value;
+    } else {
+      if (!(typeof value !== 'undefined' && value != null)) value = '';
+      var result = new String(value);
+      result.ecoSafe = true;
+      return result;
+    }
+  };
+  if (!__escape) {
+    __escape = __obj.escape = function(value) {
+      return ('' + value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    };
+  }
+  (function() {
+    (function() {
+    
+      __out.push('<div class="modal hide fade" id="tip-message">\n    <div class="modal-header">\n    \t<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>\n    \t<h3 id="tip-message-title" ');
+    
+      __out.push(__sanitize(_T("Message")));
+    
+      __out.push(' ></h3>\n    </div>\n    <div class="modal-body" id="tip-message-body">\n    </div>\n</div>\n');
+    
+    }).call(this);
+    
+  }).call(__obj);
+  __obj.safe = __objSafe, __obj.escape = __escape;
+  return __out.join('');
+}}, "views/partials/settings": function(exports, require, module) {module.exports = function(__obj) {
+  if (!__obj) __obj = {};
+  var __out = [], __capture = function(callback) {
+    var out = __out, result;
+    __out = [];
+    callback.call(this);
+    result = __out.join('');
+    __out = out;
+    return __safe(result);
+  }, __sanitize = function(value) {
+    if (value && value.ecoSafe) {
+      return value;
+    } else if (typeof value !== 'undefined' && value != null) {
+      return __escape(value);
+    } else {
+      return '';
+    }
+  }, __safe, __objSafe = __obj.safe, __escape = __obj.escape;
+  __safe = __obj.safe = function(value) {
+    if (value && value.ecoSafe) {
+      return value;
+    } else {
+      if (!(typeof value !== 'undefined' && value != null)) value = '';
+      var result = new String(value);
+      result.ecoSafe = true;
+      return result;
+    }
+  };
+  if (!__escape) {
+    __escape = __obj.escape = function(value) {
+      return ('' + value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    };
+  }
+  (function() {
+    (function() {
+      var lang;
+    
+      __out.push('<div class="modal hide fade" id="settings">\n    <div class="modal-header">\n    \t<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>\n    \t<h3 ');
+    
+      __out.push(__sanitize(_T("Settings")));
+    
+      __out.push('></h3>\n    </div>\n    <div class="modal-body" style="text-align: center">\n\n\t\t<ul class="nav nav-pills">\n\t\t  <li class="active"><a data-toggle="pill" data-target="#server" ');
+    
+      __out.push(__sanitize(_T("Server Settings")));
+    
+      __out.push('></a></li>\n\t\t  <li><a data-toggle="pill" data-target="#general" ');
+    
+      __out.push(__sanitize(_T("General Settings")));
+    
+      __out.push('></a></li>\n\t\t</ul>\n\t \n\t\t<div class="tab-content">\n\t\t  <div class="tab-pane active" id="server">\n\t\t\t\t<p ');
+    
+      __out.push(__sanitize(_T("To connect to another client, give him the code in the first input box or input his code in the second input box and press enter")));
+    
+      __out.push('></p>\n\t\t\t\t<div><img src="inicaieri" alt="QR Code" id="qrimage" class="hidden" /></div>\n\t\t   \t \t<input type="text" readonly id="connectionidself" value="Not Connected Yet ..." />\n\t\t   \t \t<input type="text" value="" id="connectid" ');
+    
+      __out.push(__sanitize(_T("ID to connect to", "placeholder")));
+    
+      __out.push(' />\n\t\t\t</div>\n\t\t  \t<div class="tab-pane" id="general">\n\t\t\t\t<p ');
+    
+      __out.push(__sanitize(_T("Select your language from the dropdown menu: It will be saved")));
+    
+      __out.push('></p>\n\t\t\t\t<select id="languageSelector">\n\t\t\t\t\t');
+    
+      lang = (localStorage.getItem("lang")) || "en-US";
+    
+      __out.push('\n\t\t\t\t\t<option value="en-US" ');
+    
+      __out.push(__sanitize(_T("US English")));
+    
+      __out.push(' ');
+    
+      if (lang === "en-US") {
+        __out.push(__sanitize("selected"));
+      }
+    
+      __out.push(' ></option>\n\t\t\t\t\t<option value="ro-RO" ');
+    
+      __out.push(__sanitize(_T("Romanian")));
+    
+      __out.push(' ');
+    
+      if (lang === "ro-RO") {
+        __out.push(__sanitize("selected"));
+      }
+    
+      __out.push(' ></option>\n\t\t\t\t</select>\n\t\t\t</div>\n\t\t</div>   \t \t\n    </div>\n</div>');
+    
+    }).call(this);
+    
+  }).call(__obj);
+  __obj.safe = __objSafe, __obj.escape = __escape;
+  return __out.join('');
 }}});
 (function() {
   var Client, ClientErrorReporter,

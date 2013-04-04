@@ -10,7 +10,7 @@ angular.module("Arrow").controller "OPMLController", ($scope, $rootScope, OPML) 
 	$rootScope.$on "opml.change", (item) -> $scope.object = item
 	$scope.isMobile = window.isMobile
 
-	$scope.type = (item) -> 
+	$scope.type = (item) ->
 		if item.children isnt null then "noborder"
 		else ""
 	$scope.hidden = (item) ->
@@ -23,32 +23,50 @@ angular.module("Arrow").controller "OPMLController", ($scope, $rootScope, OPML) 
 		if item.status in ["checked", "unchecked"]
 			if item.status is "checked" then item.status = "unchecked"
 			else item.status = "checked"
-	$scope.addChild = (item) -> item.addChild()
+	$scope.addChild = (item) -> Client.publish "outline.addchild", JSON.stringify do item.getPath
 	$scope.status = (item) -> item.getStatus()
 	$scope.remove = (item) ->
 		parent = item.parent
-		item.parent.remove item 
+		item.parent.remove item
 		if not parent.topics.length then parent.parent.children = null
-		
+	
+	hooked = false
 	$scope.edit = (item) ->
-		currentItem = item
-		modal = jQuery("#editnodemodal")
+		modal = jQuery("#editnodemodal") if not modal?
 		modal.find("#text").val item.text
-		modal.find("#status").show()
-		modal.find("#status").attr "checked", (item.status is "checked")
-		if not(item.status in ["unchecked", "checked"]) then model.find("#status").hide()
+		modal.find(".status").show()
+		sts = modal.find("#status")
+		if item.status is "checked" then sts.prop "checked", true
+		else if item.status is "unchecked" then sts.prop "checked", false
+		else modal.find(".status").hide()
 		modal.find("#notes").val item.notes or ""
-		modal.modal("show").on "hide", ->
-			currentItem.text = do modal.find("#text").val
-			if item.status in ["checked", "unchecked"]
-				if modal.find("#status").attr "checked"
-					currentItem.status = "checked"
-				else currentItem.status = "unchecked" 
-			currentItem.notes = do modal.find("#notes").val
- 
-	jQuery(window).keydown (e) -> 
+		modal.modal("show")
+		$scope.path = do item.getPath
+		if not hooked
+			hooked = true
+			sts.on "change", -> $(@).prop "checked", @checked
+			modal.on "hide", ->
+				status = modal.find("#status").prop "checked"
+				console.log status
+				if status then status = "checked"
+				else status = "unchecked"
+				Client.publish "outline.edit", JSON.stringify($scope.path),
+					"text"   : do modal.find("#text").val
+					"status" : status
+					"notes"  : do modal.find("#notes").val
+	
+	jQuery(window).keydown (e) ->
 		if e.ctrlKey or e.metaKey
 			switch String.fromCharCode(e.which).toLowerCase()
 				when 's'
 					OPML.activeOPML.save()
 					e.preventDefault()
+
+	Client?.events =
+		"outline.addchild": (path) -> item = OPML.activeOPML.findNode JSON.parse path; item.addChild(); do $scope.$apply
+		"outline.edit": (path, data) ->
+			item.text = data.text
+			if item.status in ["checked", "unchecked"]
+				item.status = data.status
+			item.notes = data.notes
+			$scope.$apply()

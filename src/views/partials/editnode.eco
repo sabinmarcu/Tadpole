@@ -6,8 +6,8 @@
     <div class="modal-body">
     	<label for="text" <%= _T "Text of the node" %>></label>
     	<input type="text" name="text" <%= _T "Application Error" %> id="text" />
-    	<label for="status" <%= _T "Status of the node (if leaf)" %> ></label>
-    	<input type="checkbox" name="status" checked="false" />
+    	<label for="status" class="status" <%= _T "Status of the node (if leaf)" %> ></label>
+    	<input type="checkbox" name="status" class="status" checked="false" id="status" />
     	<label for="notes" <%= _T "Notes attached to this node" %>></label>
     	<textarea id="notes" <%= _T "Application Error" %> ></textarea>
     </div>

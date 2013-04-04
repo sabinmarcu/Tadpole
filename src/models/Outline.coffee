@@ -13,6 +13,9 @@ class OutlineCollection extends BaseObject
 		else @topics = do =>
 			new Outline element, @ for element in bodyElement when element.tagName is "outline"
 	remove: (item) -> @topics.splice (@topics.indexOf item), 1
+	getPath: -> 
+		if not @parent? then return []
+		return do @parent.getPath
 
 class FakeOutline
 	constructor: (@text = "New Node", @_status = "unchecked", @childNodes = []) ->
@@ -23,6 +26,11 @@ class Outline
 		xmlDoc ?= new FakeOutline()
 		@getData xmlDoc
 		@_map = _map
+		
+	getPath: =>
+		prev = do @parent.getPath
+		prev.push @text
+		return prev
 
 	getData: (xmlDoc) =>
 		@fold = false

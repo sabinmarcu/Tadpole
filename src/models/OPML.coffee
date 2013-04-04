@@ -78,6 +78,18 @@ class OPML extends BaseObject
 			window.localStorage?.setItem "opmls", ( JSON.stringify storageIndex ).replace /<br\/?>/g, ""
 		Toast "Saved #{@title}", "<p>OPML Document saved. You can now return to ruining it, without the worry of loosing it</p>"
 
+	findNode: (path, from = @structure) =>
+		#alert "Arrived with path #{path}"
+		el = do path.shift
+		for kid in from.topics
+			#alert "Comparing #{el} with #{kid.text}"
+			if kid.text is el
+				if path.length > 0 then return @findNode path, kid.children
+				else return kid
+		return null
+
+
+
 	delete: =>
 		index = JSON.parse localStorage.getItem "opmls"
 		if @title in index
