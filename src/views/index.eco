@@ -1,32 +1,6 @@
-<aside></aside>
+<aside data-role="appmenu">
+	<%- DepMan.render "layout/tabview" %>
+</aside>
 <article>
-	<header>
-		<h1>Arrow</h1> 
-		<nav class="left" id="positionNav">
-			<li id="sidebarToggle"><i class="icon-align-left"></i></li>
-			<li id="fullScreenToggle"><i class="icon-align-center"></i></li> 
-		</nav>
-		<nav class="right">
-			<li id="downloadButton">
-				<i class="icon-circle-arrow-down"><p <%= _T "Download" %> ></p></i>
-			</li>
-			<li id="uploadButton">
-				<i class="icon-circle-arrow-up"><p <%= _T "Upload" %> ></p></i>
-			</li>
-		</nav>
-	</header>
-	<section></section>
-	<footer>
-		<nav>
-			<li id="saveButton" ng-click="save()">
-				<i class="icon-ok"><p <%= _T "Save" %> ></p></i>
-			</li>
-		</nav>
-		<h1><%- @copyright %></h1>
-	</footer>
+	<%- DepMan.render "layout/asidebutton" %>
 </article>
-
-<%- DepMan.render "partials/settings" %>
-<%- DepMan.render "partials/message" %>
-<%- DepMan.render "partials/editnode" %>
-

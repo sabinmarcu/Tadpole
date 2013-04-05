@@ -26,14 +26,6 @@ class Application extends BaseObject
 		#jQuery
 		DepMan.lib "jquery"
 		DepMan.lib "angular.min"
-		DepMan.lib "bootstrap.min"
-
-		# Messaging
-		window.Toast = (title = "Message", body = "")->
-				jQuery("#tip-message-head").html title
-				jQuery("#tip-message-body").html body
-				jQuery("#tip-message").modal("show")
-				setTimeout((-> jQuery("#tip-message").modal("hide")), 1500)
 
 		# Ajustments for Angular
 		window.Arrow = angular.module "Arrow", []
@@ -41,8 +33,6 @@ class Application extends BaseObject
 
 		# FontAwesome
 		DepMan.stylesheet "font-awesome"
-		DepMan.stylesheet "bootstrap.min"
-		DepMan.stylesheet "bootstrap-responsive.min"
 
 		# Fonts
 		DepMan.googleFont "Electrolize", [400]
@@ -59,31 +49,52 @@ class Application extends BaseObject
 		window.addEventListener "resize", _resize
 		do _resize
 
-		if document.body.className.indexOf("landing") >= 0
-			sections = [
-				"intro"
-				"description"
-			]
-			data = ""
-			for section in sections
-				data += DepMan.render "landing.article", data: ( DepMan.doc section ), title: section
-			$("section").html data
-			$("#ff").click =>
-				req = window.navigator.mozApps?.install "#{window.location}manifest.webapp"
-				req.onsuccess = => alert "App Installed!"
-				req.onerror = => alert "App failed to install!\n Data in console"; console.log req.error.name
-			$("#run").click =>
-				window.location = "index.app.html"
-			return
-
 		document.body.innerHTML = DepMan.render "index", title:"Arrow", copyright: "&copy; Sabin Marcu 2013"
-		
-		jQuery("#languageSelector").change ->
-			LanguageHelper.switchLanguage @value
+
+		# Aside Handling
+		do ->
+			aside = jQuery "aside"
+			menu = aside.find "nav"
+			content = aside.find "section"
+			variants = ["topVariant", "bottomVariant"]
+			menu.find("li").each (id, el) ->
+				item = content.find "article##{el.dataset["tab"]}"; item = item[0]
+				el.addEventListener "click", ->
+					c = variants[Math.floor(Math.random() * 100) % 2]
+					content.find("article").removeClass "active"
+					$(item).addClass "active #{c}"
+					localStorage.setItem("lastpanel", el.dataset["tab"])
+			x = localStorage.getItem('lastpanel') or "items"
+			menu.find("li[data-tab='#{x}']").click()
+			b = $("body > article")
+			m = $("#showhideappmenu")
+			i = m.find("i")[0]
+			m.click( ->
+				if b.hasClass("sidebaropen") 
+					b.removeClass "sidebaropen"
+					i.className = "icon-chevron-right"
+					localStorage.setItem "sidebarstatus", "closed"
+				else 
+					b.addClass "sidebaropen"
+					i.className = "icon-chevron-left"
+					localStorage.setItem "sidebarstatus", "open"
+			)
+			x = localStorage.getItem("sidebarstatus") or "closed"
+			if x is "open" then m.click()
 
 		# DnD API
 		root.DnD = ( DepMan.controller "DragAndDrop" )
 		root.DnD.init()
+		
+		jQuery("#languageSelector").change ->
+			LanguageHelper.switchLanguage @value
+		x = (localStorage.getItem "theme") or "bluetheme"
+		jQuery("body").addClass x
+		jQuery("#themeSelector").change ->
+			jQuery("body").removeClass x
+			x = @value
+			localStorage.setItem "theme", x
+			jQuery("body").addClass x
 
 		root.isMobile = true
 		if window.orientation? or document.orientation?
@@ -102,9 +113,6 @@ class Application extends BaseObject
 			html = document.querySelector("html")
 			if html.className.indexOf(mode) >= 0 then html.className = html.className.replace (new RegExp("\ ?#{mode}")), ""
 			else html.className += " #{mode}"
-
-		document.getElementById("sidebarToggle").addEventListener "click", -> Client?.publish "switchMode", "sidebaroff"
-		document.getElementById("fullScreenToggle").addEventListener "click", -> Client?.publish "switchMode", "fullscreen"
 		
 		# Grab connectivity drivers
 		DepMan.helper "DataTransfer"
