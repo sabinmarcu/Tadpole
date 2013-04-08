@@ -58,16 +58,12 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
   require("Object");
 
   Application = (function(_super) {
-
     __extends(Application, _super);
 
     function Application() {
       this.decideView = __bind(this.decideView, this);
-
       this.loadApplication = __bind(this.loadApplication, this);
-
-      this.firstTimeInclude = __bind(this.firstTimeInclude, this);
-      this.baseSetup();
+      this.firstTimeInclude = __bind(this.firstTimeInclude, this);      this.baseSetup();
       this.firstTimeInclude();
       this.loadApplication();
     }
@@ -77,6 +73,7 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
       document.title = "Arrow Brainstorming";
       return (function() {
         var meta;
+
         meta = document.createElement("meta");
         meta.setAttribute("name", "viewport");
         meta.setAttribute("content", "width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1");
@@ -99,6 +96,21 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
 
     Application.prototype.loadApplication = function() {
       var LoadProgress;
+
+      window.Toast = function(title, body) {
+        if (title == null) {
+          title = "Message";
+        }
+        if (body == null) {
+          body = "";
+        }
+        jQuery("#tip-message-head").html(title);
+        jQuery("#tip-message-body").html(body);
+        jQuery("#tip-message").modal("show");
+        return setTimeout((function() {
+          return jQuery("#tip-message").modal("hide");
+        }), 1500);
+      };
       this.LoadProgress = LoadProgress = new IS.Promise();
       this.LoadProgress.then((function() {
         Loading.start();
@@ -109,8 +121,9 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
 
     Application.prototype.decideView = function() {
       var landing;
+
       landing = localStorage.getItem("landing");
-      if (!(landing != null)) {
+      if (landing == null) {
         landing = true;
         localStorage.setItem("landing", false);
       }
@@ -130,6 +143,7 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
     Application.prototype.renderLandingPage = function() {
       var f,
         _this = this;
+
       f = jQuery("body > div")[0];
       this.progress(45);
       f.parentNode.removeChild(f);
@@ -155,6 +169,7 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
     Application.prototype.loadLibs = function() {
       DepMan.lib("jquery");
       DepMan.lib("angular.min");
+      DepMan.lib("bootstrap.min");
       this.progress(3);
       DepMan.stylesheet("bootstrap");
       DepMan.stylesheet("font-awesome");
@@ -181,8 +196,10 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
 
     Application.prototype.resizeHook = function() {
       var _resize;
+
       _resize = function() {
         var html;
+
         html = document.querySelector("html");
         if (window.innerWidth <= 1024) {
           if (html.className.indexOf("smallscreen") === -1) {
@@ -203,6 +220,7 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
     Application.prototype.renderBaseline = function() {
       var f,
         _this = this;
+
       DepMan.angular("NGAsideController");
       f = jQuery("body > div")[0];
       this.progress(32);
@@ -229,6 +247,7 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
 
     Application.prototype.mobileHooks = function() {
       var el, els, _i, _len, _ref, _ref1;
+
       window.isMobile = true;
       if ((window.orientation != null) || (document.orientation != null)) {
         window.isMobile = true;
@@ -252,6 +271,7 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
       }
       window.switchMode = function(mode) {
         var html;
+
         html = document.querySelector("html");
         if (html.className.indexOf(mode) >= 0) {
           return html.className = html.className.replace(new RegExp("\ ?" + mode), "");
@@ -264,6 +284,7 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
     };
 
     Application.prototype.opmlBootstrap = function() {
+      DepMan.helper("OPMLManager");
       this.progress(85);
       DepMan.helper("DataTransfer");
       this.progress(100);
@@ -278,7 +299,7 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
 
 }).call(this);
 }, "Object": function(exports, require, module) {(function() {
-  var BObject, _baseObj,
+  var BObject, _baseObj, _ref,
     __slice = [].slice,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -286,6 +307,7 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
   _baseObj = {
     echo: function() {
       var args, owner, _d;
+
       args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
       _d = new Date;
       owner = "<not supported>";
@@ -298,6 +320,7 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
     },
     log: function() {
       var args;
+
       args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
       args.unshift("");
       return this.echo.apply(this, args);
@@ -305,11 +328,11 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
   };
 
   BObject = (function(_super) {
-
     __extends(BObject, _super);
 
     function BObject() {
-      return BObject.__super__.constructor.apply(this, arguments);
+      _ref = BObject.__super__.constructor.apply(this, arguments);
+      return _ref;
     }
 
     BObject.extend(_baseObj);
@@ -324,9 +347,9 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
 
 }).call(this);
 }, "angular/NGAsideController": function(exports, require, module) {(function() {
-
   angular.module("Arrow").controller("NGAsideController", function($scope, $rootScope) {
     var TABS, animationVariants, item, _i, _j, _len, _len1, _ref, _ref1;
+
     TABS = new IS.Enum(["LIST", "SERVER", "GENERAL"]);
     $scope.language = localStorage.getItem("lang") || "en_US";
     $scope.languages = [
@@ -364,6 +387,7 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
     }
     $scope.changedLanguage = function() {
       var _this = this;
+
       Loading.start();
       Loading.progress("Switching language");
       return setTimeout(function() {
@@ -417,6 +441,7 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
 
   angular.module("Arrow").controller("OPMLController", function($scope, $rootScope, OPML) {
     var hooked;
+
     $scope.object = OPML.activeOPML || null;
     $rootScope.$on("opml.change", function(item) {
       return $scope.object = item;
@@ -437,7 +462,7 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
       }
     };
     $scope.folded = function(item) {
-      if (!(item.children != null)) {
+      if (item.children == null) {
         return "icon-hidden";
       } else {
         return "icon-custom";
@@ -451,6 +476,7 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
     };
     $scope.toggleCheck = function(item) {
       var _ref;
+
       if ((_ref = item.status) === "checked" || _ref === "unchecked") {
         if (item.status === "checked") {
           return item.status = "unchecked";
@@ -467,6 +493,7 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
     };
     $scope.remove = function(item) {
       var parent;
+
       parent = item.parent;
       item.parent.remove(item);
       if (!parent.topics.length) {
@@ -476,7 +503,8 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
     hooked = false;
     $scope.edit = function(item) {
       var modal, sts;
-      if (!(typeof modal !== "undefined" && modal !== null)) {
+
+      if (typeof modal === "undefined" || modal === null) {
         modal = jQuery("#editnodemodal");
       }
       modal.find("#text").val(item.text);
@@ -499,6 +527,7 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
         });
         return modal.on("hide", function() {
           var status;
+
           status = modal.find("#status").prop("checked");
           console.log(status);
           if (status) {
@@ -526,12 +555,14 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
     return typeof Client !== "undefined" && Client !== null ? Client.events = {
       "outline.addchild": function(path) {
         var item;
+
         item = OPML.activeOPML.findNode(JSON.parse(path));
         item.addChild();
         return $scope.$apply();
       },
       "outline.edit": function(path, data) {
         var _ref;
+
         item.text = data.text;
         if ((_ref = item.status) === "checked" || _ref === "unchecked") {
           item.status = data.status;
@@ -544,7 +575,6 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
 
 }).call(this);
 }, "angular/OPMLManager": function(exports, require, module) {(function() {
-
   angular.module("Arrow").controller("OPMLManager", function($scope, $rootScope, OPML) {
     $scope.opmls = OPML.OPMLs;
     $scope.isactive = function(el) {
@@ -589,6 +619,8 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
     return $scope.activate(OPML.OPMLs[localStorage.getItem("lastOPML") || 0], true);
   });
 
+  console.log("OPMLManager should be available now");
+
 }).call(this);
 }, "controllers/ContextMenu": function(exports, require, module) {(function() {
   var ContextMenuController,
@@ -597,14 +629,13 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   ContextMenuController = (function(_super) {
-
     __extends(ContextMenuController, _super);
 
     function ContextMenuController(data, event) {
       this.deactivate = __bind(this.deactivate, this);
-
       var handler, handlers, items, kid, name, _fn, _i, _len, _ref,
         _this = this;
+
       items = [];
       handlers = [];
       for (name in data) {
@@ -632,6 +663,7 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
       _ref = this.menu.children;
       _fn = function(kid) {
         var id;
+
         id = kid.id.replace("item-", "");
         return kid.addEventListener("click", function() {
           _this.deactivate();
@@ -658,16 +690,16 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
 
 }).call(this);
 }, "controllers/DragAndDrop": function(exports, require, module) {(function() {
-  var DnD,
+  var DnD, _ref,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   DnD = (function(_super) {
-
     __extends(DnD, _super);
 
     function DnD() {
-      return DnD.__super__.constructor.apply(this, arguments);
+      _ref = DnD.__super__.constructor.apply(this, arguments);
+      return _ref;
     }
 
     DnD.ph = null;
@@ -680,6 +712,7 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
 
     DnD.dragEnter = function(e) {
       var span;
+
       this.ph = document.createElement("div");
       this.ph.className = "dragdropplaceholder";
       span = document.createElement("span");
@@ -709,6 +742,7 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
 
     DnD.dragHandler = function(e) {
       var file, files, _i, _len, _results;
+
       e.stopPropagation();
       e.preventDefault();
       DnD.ph.className = DnD.ph.className.replace(/\ ?(hover|active)/, "");
@@ -721,6 +755,7 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
         }
         _results.push((function() {
           var reader;
+
           reader = new FileReader;
           reader.onload = DnD.readHandler;
           return reader.readAsText(file);
@@ -741,38 +776,37 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
 
 }).call(this);
 }, "controllers/OPML": function(exports, require, module) {(function() {
-  var ER, OPMLController, OPMLControllerErrorReporter,
+  var ER, OPMLController, OPMLControllerErrorReporter, _ref,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   OPMLController = (function(_super) {
-
     __extends(OPMLController, _super);
 
     function OPMLController(model) {
       this.model = model;
       this.deactivate = __bind(this.deactivate, this);
-
       this.activate = __bind(this.activate, this);
-
       this.e = document.createElement("article");
       this.e.innerHTML = DepMan.render("_outline");
     }
 
     OPMLController.prototype.activate = function() {
       var _this = this;
+
       console.log("activating");
-      $("article section")[0].appendChild(this.e);
+      $("body > article section")[0].appendChild(this.e);
       this.e.className = "activating";
       return setTimeout(function() {
         _this.e.className = "activated";
-        return angular.bootstrap($("article section")[0], ["Arrow"]);
+        return angular.bootstrap($("body > article section")[0], ["Arrow"]);
       }, 50);
     };
 
     OPMLController.prototype.deactivate = function() {
       var _this = this;
+
       console.log("deactivating");
       this.e.className = "deactivated";
       return setTimeout(function() {
@@ -787,11 +821,11 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
   })(BaseObject);
 
   OPMLControllerErrorReporter = (function(_super) {
-
     __extends(OPMLControllerErrorReporter, _super);
 
     function OPMLControllerErrorReporter() {
-      return OPMLControllerErrorReporter.__super__.constructor.apply(this, arguments);
+      _ref = OPMLControllerErrorReporter.__super__.constructor.apply(this, arguments);
+      return _ref;
     }
 
     OPMLControllerErrorReporter.extend(IS.ErrorReporter);
@@ -806,13 +840,12 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
 
 }).call(this);
 }, "controllers/Outline": function(exports, require, module) {(function() {
-  var ER, FakeOutline, OutlineController, OutlineControllerErrorReporter,
+  var ER, FakeOutline, OutlineController, OutlineControllerErrorReporter, _ref,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   FakeOutline = (function() {
-
     function FakeOutline() {
       this.text = "New Node";
       this._status = "unchecked";
@@ -828,28 +861,23 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
   })();
 
   OutlineController = (function(_super) {
-
     __extends(OutlineController, _super);
 
     function OutlineController(e, model) {
       var kid, kids, _fn, _i, _len,
         _this = this;
+
       this.e = e;
       this.model = model;
       this.fold = __bind(this.fold, this);
-
       this.del = __bind(this.del, this);
-
       this.add = __bind(this.add, this);
-
       this.blur = __bind(this.blur, this);
-
       this.doubleClick = __bind(this.doubleClick, this);
-
-      if (!(this.e != null) || !(this.e.tagName != null)) {
+      if ((this.e == null) || (this.e.tagName == null)) {
         throw ER.generate(1);
       }
-      if (!(this.model != null)) {
+      if (this.model == null) {
         throw ER.generate(2);
       }
       this.e.controller = this;
@@ -904,6 +932,7 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
 
     OutlineController.prototype.doubleClick = function() {
       var _this = this;
+
       this.p.setAttribute("contenteditable", true);
       return $("*").each(function(k, e) {
         return e.addEventListener("click", _this.blur);
@@ -912,6 +941,7 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
 
     OutlineController.prototype.blur = function() {
       var _this = this;
+
       this.p.setAttribute("contenteditable", false);
       this.model.update("text", this.p.innerHTML);
       return $("*").each(function(k, e) {
@@ -921,8 +951,9 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
 
     OutlineController.prototype.add = function() {
       var addition, e, kids;
+
       kids = this.model.children.get();
-      if (!(kids != null)) {
+      if (kids == null) {
         this.model.children.set(new (DepMan.model("Outline")).Collection([], this.model, this.model.parent.depth + 1));
         e = document.createElement("div");
         e.setAttribute("class", "row bordertop");
@@ -959,6 +990,7 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
 
     OutlineController.prototype.refreshParents = function(el) {
       var kid, valid, _i, _len, _ref, _ref1;
+
       valid = true;
       _ref = el.model.children.get().topics;
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
@@ -985,11 +1017,11 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
   })(BaseObject);
 
   OutlineControllerErrorReporter = (function(_super) {
-
     __extends(OutlineControllerErrorReporter, _super);
 
     function OutlineControllerErrorReporter() {
-      return OutlineControllerErrorReporter.__super__.constructor.apply(this, arguments);
+      _ref = OutlineControllerErrorReporter.__super__.constructor.apply(this, arguments);
+      return _ref;
     }
 
     OutlineControllerErrorReporter.errors = {
@@ -1007,20 +1039,19 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
   module.exports = OutlineController;
 
 }).call(this);
-}, "docs/description": function(exports, require, module) {module.exports = "<h1>What the hell is this?</h1>\n\n<p>Arrow is a web application. That's the first thing. <br />\nIt's an ideea. It's a concept. It's a revolution.    </p>\n\n<h2>It's almost native.</h2>\n\n<p>It is built in such a way that it blends in the operating system, no matter which one it is. <br />\nIt's built ontop of modern web technologies, and is integrated with regular desktop browsers (<em>no IE</em>) and FirefoxOS.    </p>\n\n<p>It's an application you can take with you in the same shape and form everywhere. There are no different applications for different terminals.</p>\n\n<h2>It's just one</h2>\n\n<p>And on top of that, it's live and in the cloud.</p>"}, "docs/intro": function(exports, require, module) {module.exports = "<h1>How to get it?</h1>\n\n<p>Download it from here: \n<button id=\"run\" class=\"install run\">Run it in this browser</button>\n<button class=\"ff install\" id=\"ff\">Install it on FirefoxOS</button></p>"}, "helpers/DataTransfer": function(exports, require, module) {(function() {
+}, "helpers/DataTransfer": function(exports, require, module) {(function() {
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   (function() {
     var Client;
-    Client = (function(_super) {
 
+    Client = (function(_super) {
       __extends(Client, _super);
 
       function Client() {
-        this.init = __bind(this.init, this);
-        Client.__super__.constructor.call(this);
+        this.init = __bind(this.init, this);        Client.__super__.constructor.call(this);
       }
 
       Client.prototype.connected = function(id) {
@@ -1041,6 +1072,7 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
 
       Client.prototype.init = function() {
         var _this = this;
+
         jQuery("#connectionidself").val(this.id);
         jQuery("#connectid").keypress(function(e) {
           _this.connect(jQuery("#connectid").val());
@@ -1060,39 +1092,28 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
 
 }).call(this);
 }, "helpers/DependenciesManager": function(exports, require, module) {(function() {
-  var DepErr, DepMan,
+  var DepErr, DepMan, _ref,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     __slice = [].slice;
 
   DepMan = (function(_super) {
-
     __extends(DepMan, _super);
 
     function DepMan(basePrefix, deps) {
       this.basePrefix = basePrefix != null ? basePrefix : "";
       this.deps = deps != null ? deps : [];
       this.googleFont = __bind(this.googleFont, this);
-
       this.angular = __bind(this.angular, this);
-
       this.lib = __bind(this.lib, this);
-
       this.model = __bind(this.model, this);
-
       this.controller = __bind(this.controller, this);
-
       this.helper = __bind(this.helper, this);
-
       this.stylesheet = __bind(this.stylesheet, this);
-
       this.doc = __bind(this.doc, this);
-
       this.render = __bind(this.render, this);
-
       this._require = __bind(this._require, this);
-
       this.echo("Activated DependenciesManager!");
     }
 
@@ -1106,6 +1127,7 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
 
     DepMan.prototype.render = function() {
       var args, module;
+
       module = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
       return (this._require(module, "views/")).apply(this, args);
     };
@@ -1140,6 +1162,7 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
 
     DepMan.prototype.googleFont = function(font, sizes, subsets) {
       var names, string, _s;
+
       if (subsets == null) {
         subsets = null;
       }
@@ -1161,11 +1184,11 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
   })(BaseObject);
 
   DepErr = (function(_super) {
-
     __extends(DepErr, _super);
 
     function DepErr() {
-      return DepErr.__super__.constructor.apply(this, arguments);
+      _ref = DepErr.__super__.constructor.apply(this, arguments);
+      return _ref;
     }
 
     DepErr.errors = {
@@ -1188,20 +1211,16 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   LanguageHelper = (function(_super) {
-
     __extends(LanguageHelper, _super);
 
     function LanguageHelper(language) {
       this._translateAll = __bind(this._translateAll, this);
-
       this._hook = __bind(this._hook, this);
-
       this._translate = __bind(this._translate, this);
-
       this.switchLanguage = __bind(this.switchLanguage, this);
-
       var lang,
         _this = this;
+
       lang = localStorage.getItem("lang");
       language = lang || "en-US";
       this.timer = setTimeout((function() {
@@ -1211,13 +1230,16 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
     }
 
     LanguageHelper.prototype.switchLanguage = function(language) {
+      var e;
+
       this.language = language;
       try {
         require("languages/" + this.language);
         this._language = JSONImport["" + this.language];
         localStorage.setItem("lang", this.language);
         return this._translateAll();
-      } catch (e) {
+      } catch (_error) {
+        e = _error;
         return this.log("Error Encountered", e);
       }
     };
@@ -1228,6 +1250,7 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
 
     LanguageHelper.prototype._hook = function(text, area) {
       var string;
+
       if (area == null) {
         area = null;
       }
@@ -1242,9 +1265,11 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
 
     LanguageHelper.prototype._translateAll = function() {
       var me;
+
       me = this;
       return jQuery("*[data-translate]").each(function(element) {
         var target;
+
         if (this.tagName === "INPUT") {
           target = this.dataset["target"] || "value";
           return this[target] = me._translate(this.dataset["translate"]);
@@ -1268,7 +1293,7 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
 
 }).call(this);
 }, "helpers/LinkManager": function(exports, require, module) {(function() {
-  var LinkErrorReporter, LinkManager, _first,
+  var LinkErrorReporter, LinkManager, _first, _ref,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
@@ -1276,23 +1301,18 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
   _first = true;
 
   LinkManager = (function(_super) {
-
     __extends(LinkManager, _super);
 
     function LinkManager(history, routes) {
       var _this = this;
+
       this.history = history != null ? history : [];
       this.routes = routes != null ? routes : [];
       this.linkAllAnchors = __bind(this.linkAllAnchors, this);
-
       this.getParentAnchor = __bind(this.getParentAnchor, this);
-
       this.link = __bind(this.link, this);
-
       this.checkRoute = __bind(this.checkRoute, this);
-
       this.setRoutes = __bind(this.setRoutes, this);
-
       window.addEventListener("popstate", (function(e) {
         if (_first) {
           return _first = false;
@@ -1304,6 +1324,7 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
 
     LinkManager.prototype.setRoutes = function(routePatterns) {
       var handler, route;
+
       for (route in routePatterns) {
         handler = routePatterns[route];
         this.routes.push({
@@ -1316,6 +1337,7 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
 
     LinkManager.prototype.checkRoute = function(after) {
       var args, l, loc, r, res, route, routeSet, _baseLoc, _i, _len, _loc, _ref;
+
       if (after == null) {
         after = "";
       }
@@ -1370,6 +1392,7 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
 
     LinkManager.prototype.link = function(e) {
       var el;
+
       el = this.getParentAnchor(e.srcElement);
       if (this.checkRoute(el.getAttribute("href"))) {
         history.pushState(null, null, el.href);
@@ -1378,7 +1401,7 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
     };
 
     LinkManager.prototype.getParentAnchor = function(e) {
-      if (!(e != null)) {
+      if (e == null) {
         return null;
       }
       if (e.tagName === "A") {
@@ -1389,6 +1412,7 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
 
     LinkManager.prototype.linkAllAnchors = function() {
       var anchor, anchors, _i, _len, _results;
+
       anchors = document.querySelectorAll("a");
       _results = [];
       for (_i = 0, _len = anchors.length; _i < _len; _i++) {
@@ -1403,11 +1427,11 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
   })(BaseObject);
 
   LinkErrorReporter = (function(_super) {
-
     __extends(LinkErrorReporter, _super);
 
     function LinkErrorReporter() {
-      return LinkErrorReporter.__super__.constructor.apply(this, arguments);
+      _ref = LinkErrorReporter.__super__.constructor.apply(this, arguments);
+      return _ref;
     }
 
     LinkErrorReporter.errorGroups = [];
@@ -1432,7 +1456,6 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   LoadingHelper = (function(_super) {
-
     __extends(LoadingHelper, _super);
 
     LoadingHelper.extend(IS.Modules.Overload);
@@ -1441,12 +1464,10 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
 
     function LoadingHelper() {
       this.progress = __bind(this.progress, this);
-
       this.end = __bind(this.end, this);
-
       this.start = __bind(this.start, this);
-
       var f;
+
       f = document.createElement("div");
       f.innerHTML = DepMan.render("loadingscreen");
       document.body.appendChild(f);
@@ -1482,19 +1503,15 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
     __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
   OPMLManager = (function(_super) {
-
     __extends(OPMLManager, _super);
 
     function OPMLManager() {
       this["delete"] = __bind(this["delete"], this);
-
       this["new"] = __bind(this["new"], this);
-
       this.openOPML = __bind(this.openOPML, this);
-
       this.open = __bind(this.open, this);
-
       var index, item, key, _i, _len, _ref, _ref1;
+
       this.OPMLs = [];
       this.activeOPML = null;
       index = JSON.parse((_ref = window.localStorage) != null ? _ref.getItem("opmls") : void 0);
@@ -1509,11 +1526,12 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
 
     OPMLManager.prototype.bootstrap = function() {
       DepMan.angular("OPMLController");
-      $("aside").html(DepMan.render("_list"));
-      $("aside").attr("ng-controller", "OPMLManager");
-      $("article > section").attr("ng-controller", "OPMLController");
-      angular.bootstrap($("article section")[0], ["Arrow"]);
-      return DepMan.angular("OPMLManager");
+      $("article#list").html(DepMan.render("_list"));
+      $("article#list").attr("ng-controller", "OPMLManager");
+      $("body > article section").attr("ng-controller", "OPMLController");
+      angular.bootstrap($("body > article section")[0], ["Arrow"]);
+      DepMan.angular("OPMLManager");
+      return angular.bootstrap($("article#list")[0], ["Arrow"]);
     };
 
     OPMLManager.prototype.open = function(file, silent) {
@@ -1536,10 +1554,11 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
 
     OPMLManager.prototype.openOPML = function(opml, override) {
       var le, les, _i, _len;
+
       if (override == null) {
         override = false;
       }
-      if (!(opml != null)) {
+      if (opml == null) {
         return;
       }
       les = document.querySelectorAll(".dragdropplaceholder");
@@ -1549,7 +1568,7 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
           le.parentNode.removeChild(le);
         }
       }
-      if (!(this.activeOPML != null) || (opml !== this.activeOPML) || override) {
+      if ((this.activeOPML == null) || (opml !== this.activeOPML) || override) {
         if (this.activeOPML != null) {
           this.activeOPML.controller.deactivate();
         }
@@ -11312,7 +11331,6 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
     __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
   OPML = (function(_super) {
-
     __extends(OPML, _super);
 
     function OPML(text) {
@@ -11320,23 +11338,14 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
         text = null;
       }
       this["delete"] = __bind(this["delete"], this);
-
       this.findNode = __bind(this.findNode, this);
-
       this.save = __bind(this.save, this);
-
       this.exportBody = __bind(this.exportBody, this);
-
       this["export"] = __bind(this["export"], this);
-
       this.download = __bind(this.download, this);
-
       this.find = __bind(this.find, this);
-
       this.JSONize = __bind(this.JSONize, this);
-
       this.parse = __bind(this.parse, this);
-
       if (text != null) {
         this.parse(text);
       }
@@ -11344,6 +11353,7 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
 
     OPML.prototype.parse = function(text) {
       var parser, xml;
+
       this.controller = new (DepMan.controller("OPML"))(this);
       parser = new DOMParser;
       xml = parser.parseFromString(text, "text/xml");
@@ -11357,6 +11367,7 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
 
     OPML.prototype.find = function(search, start) {
       var el, kid, next, _i, _len, _ref;
+
       if (search == null) {
         search = [];
       }
@@ -11382,7 +11393,7 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
       if (search.length === 0) {
         return el;
       }
-      if (!(el != null) || !(el.children != null)) {
+      if ((el == null) || (el.children == null)) {
         return null;
       }
       return this.find(search, el.children);
@@ -11390,6 +11401,7 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
 
     OPML.prototype.checkProp = function(into, from, prop) {
       var aux;
+
       aux = from.getAttribute(prop);
       if (aux != null) {
         return into[prop.substr(1)].set(aux);
@@ -11398,6 +11410,7 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
 
     OPML.prototype.download = function() {
       var form, input;
+
       form = document.createElement("form");
       form.setAttribute("action", "/echo/" + (encodeURI(this.title)) + ".opml");
       form.setAttribute("method", "POST");
@@ -11416,6 +11429,7 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
 
     OPML.prototype.exportBody = function(tree) {
       var kid, kids, newkid, string, valid, _i, _j, _len, _len1, _ref, _ref1;
+
       if (tree == null) {
         tree = this.structure;
       }
@@ -11458,6 +11472,7 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
 
     OPML.prototype.save = function() {
       var storageIndex, _ref, _ref1, _ref2, _ref3, _ref4;
+
       if ((_ref = window.localStorage) != null) {
         _ref.setItem("opmls." + this.title, this["export"]());
       }
@@ -11468,7 +11483,7 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
         }
       } else if (!(_ref3 = this.title, __indexOf.call(storageIndex, _ref3) >= 0)) {
         if (this.pastTitle != null) {
-          storageIndex.splzice(storageIndex.indexOf(this.pastTitle), 1);
+          storageIndex.splice(storageIndex.indexOf(this.pastTitle), 1);
           localStorage.removeItem("opmls." + this.pastTitle);
           delete this.pastTitle;
         }
@@ -11482,6 +11497,7 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
 
     OPML.prototype.findNode = function(path, from) {
       var el, kid, _i, _len, _ref;
+
       if (from == null) {
         from = this.structure;
       }
@@ -11502,6 +11518,7 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
 
     OPML.prototype["delete"] = function() {
       var index, _ref;
+
       index = JSON.parse(localStorage.getItem("opmls"));
       if (_ref = this.title, __indexOf.call(index, _ref) >= 0) {
         this.controller.deactivate();
@@ -11519,7 +11536,7 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
 
 }).call(this);
 }, "models/Outline": function(exports, require, module) {(function() {
-  var ER, FakeOutline, Outline, OutlineCollection, OutlineErrorReporter, _checkParam, _map, _params,
+  var ER, FakeOutline, Outline, OutlineCollection, OutlineErrorReporter, _checkParam, _map, _params, _ref,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
@@ -11538,11 +11555,11 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
   };
 
   OutlineCollection = (function(_super) {
-
     __extends(OutlineCollection, _super);
 
     function OutlineCollection(bodyElement, parent, depth) {
       var _this = this;
+
       if (bodyElement == null) {
         bodyElement = null;
       }
@@ -11553,6 +11570,7 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
       } else {
         this.topics = (function() {
           var element, _i, _len, _results;
+
           _results = [];
           for (_i = 0, _len = bodyElement.length; _i < _len; _i++) {
             element = bodyElement[_i];
@@ -11570,7 +11588,7 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
     };
 
     OutlineCollection.prototype.getPath = function() {
-      if (!(this.parent != null)) {
+      if (this.parent == null) {
         return [];
       }
       return this.parent.getPath();
@@ -11581,7 +11599,6 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
   })(BaseObject);
 
   FakeOutline = (function() {
-
     function FakeOutline(text, _status, childNodes) {
       this.text = text != null ? text : "New Node";
       this._status = _status != null ? _status : "unchecked";
@@ -11597,20 +11614,15 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
   })();
 
   Outline = (function() {
-
     function Outline(xmlDoc, parent) {
       if (xmlDoc == null) {
         xmlDoc = null;
       }
       this.parent = parent;
       this.addChild = __bind(this.addChild, this);
-
       this.getStatus = __bind(this.getStatus, this);
-
       this.getData = __bind(this.getData, this);
-
       this.getPath = __bind(this.getPath, this);
-
       if (xmlDoc == null) {
         xmlDoc = new FakeOutline();
       }
@@ -11620,6 +11632,7 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
 
     Outline.prototype.getPath = function() {
       var prev;
+
       prev = this.parent.getPath();
       prev.push(this.text);
       return prev;
@@ -11627,6 +11640,7 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
 
     Outline.prototype.getData = function(xmlDoc) {
       var what, _children, _i, _len;
+
       this.fold = false;
       for (_i = 0, _len = _params.length; _i < _len; _i++) {
         what = _params[_i];
@@ -11646,6 +11660,7 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
 
     Outline.prototype.getStatus = function() {
       var done, kid, _i, _len, _ref, _ref1, _ref2;
+
       if ((this.children != null) && this.children.topics.length) {
         done = 1;
         _ref = this.children.topics;
@@ -11667,7 +11682,7 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
     };
 
     Outline.prototype.addChild = function() {
-      if (!(this.children != null)) {
+      if (this.children == null) {
         this.children = new OutlineCollection(false, this, this.parent.depth + 1);
       }
       return this.children.topics.push(new Outline(null, this.children));
@@ -11678,11 +11693,11 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
   })();
 
   OutlineErrorReporter = (function(_super) {
-
     __extends(OutlineErrorReporter, _super);
 
     function OutlineErrorReporter() {
-      return OutlineErrorReporter.__super__.constructor.apply(this, arguments);
+      _ref = OutlineErrorReporter.__super__.constructor.apply(this, arguments);
+      return _ref;
     }
 
     OutlineErrorReporter.errors = {
@@ -11743,12 +11758,11 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
   }
   (function() {
     (function() {
-    
       __out.push('<header>\n\t<h1 ');
     
       __out.push(__sanitize(_T("Files")));
     
-      __out.push('></h1>\n</header>\n<section>\n\t<li id="{{item.title}}" ng-repeat="item in opmls" ng-click="activate(item)">\n\t\t<i class="icon-{{isactive(item)}}"></i>\n\t\t<p><input \n\t\t\ttype="text" \n\t\t\tid="opml-{{item.index}}" \n\t\t\tvalue="{{item.title}}" \n\t\t\tng-model="item.title" \n\t\t\tng-dblclick="edit(item)" \n\t\t\tng-change="(item)"\n\t\t/></p>\n\t</li>\n</section>\n<footer>\n\t<nav class="left">\n\t\t<li ng-click="new()">\n\t\t\t<i class=\'icon-plus\'><p>Add</p></i>\n\t\t</li>\n\t\t<li ng-click="delete()">\n\t\t\t<i class=\'icon-trash\'><p>Delete</p></i>\n\t\t</li>\n\t\t<li ng-click="save()">\n\t\t\t<i class=\'icon-save\'><p>Save</p></i>\n\t\t</li>\n\t</nav>\n\t<nav>\n\t\t<li data-toggle="modal" data-target="#settings">\n\t\t\t<i class="icon-wrench"><p>Settings</p></i>\n\t\t</li>\n\t</nav>\n</footer>    ');
+      __out.push('></h1>\n</header>\n<section>\n\t<li id="{{item.title}}" ng-repeat="item in opmls" ng-click="activate(item)">\n\t\t<i class="icon-{{isactive(item)}}"></i>\n\t\t<input \n\t\t\ttype="text" \n\t\t\tid="opml-{{item.index}}" \n\t\t\tvalue="{{item.title}}" \n\t\t\tng-model="item.title" \n\t\t\tng-dblclick="edit(item)" \n\t\t\tng-change="(item)"\n\t\t/>\n\t</li>\n</section>\n<footer>\n\t<nav class="btn-group">\n\t\t<li ng-click="new()" class="btn">\n\t\t\t<i class=\'icon-plus\'><p>Add</p></i>\n\t\t</li>\n\t\t<li ng-click="save()" class="btn">\n\t\t\t<i class=\'icon-save\'><p>Save</p></i>\n\t\t</li>\n\t\t<li ng-click="delete()" class="btn">\n\t\t\t<i class=\'icon-trash\'><p>Delete</p></i>\n\t\t</li>\n\t</nav>\n</footer>    \n');
     
     }).call(this);
     
@@ -11794,8 +11808,7 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
   }
   (function() {
     (function() {
-    
-      __out.push('<div class="appcontainer" ng-model="object.structure.topics">\n\t<div class="approw {{type(item)}}" style="\n\tpadding-left: {{50 * (item.parent.depth + 1)}}px;\n\tmargin-left: -{{50 * item.parent.depth}}px;\n" ng-repeat="item in object.structure.topics" ng-include="\'tree_row.html\'"/></div>\n</div>\n');
+      __out.push('<div class="appcontainer" ng-model="object.structure.topics">\n\t<div class="approw {{type(item)}}" style="\n\tpadding-left: 20px;\n\tmargin-left: 0px;\n" ng-repeat="item in object.structure.topics" ng-include="\'tree_row.html\'"/></div>\n</div>\n');
     
     }).call(this);
     
@@ -11841,8 +11854,7 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
   }
   (function() {
     (function() {
-    
-      __out.push('<i class="{{folded(item)}}" ng-click="toggleFold(item)"></i>\n<i class="{{status(item)}}" ng-click="toggleCheck(item)"></i>\n<p><input type=\'text\' ng-model="item.text" /></p>\n<div class="approw bordertop" style="\n\tpadding-left: {{50 * (item.parent.depth + 1)}}px;\n\tmargin-left: -{{50 * (item.parent.depth + 1)}}px;\n">\n\n\t<div class="appcontainer" ng-model="item.children.topics" ng-hide="item.fold">\n\t\t<div ng-repeat="item in item.children.topics" ng-include="\'tree_row.html\'" class="approw {{type(item)}}" style="\n\t\t\tpadding-left: {{50 * (item.parent.depth + 1)}}px;\n\t\t\tmargin-left: -{{50 * item.parent.depth}}px;\n\t\t"></div>\n\t</div>\n</div>\n<nav ng-show="isMobile">\n\t<li ng-click="addChild(item)"><i class="icon-plus"></i></li>\n\t<li ng-click="remove(item)"><i class="icon-remove"></i></li>\t\n\t<li ng-click="edit(item)"><i class="icon-wrench"></i></li>\n</nav>\n');
+      __out.push('<i class="{{folded(item)}}" ng-click="toggleFold(item)"></i>\n<i class="{{status(item)}}" ng-click="toggleCheck(item)"></i>\n<p><input type=\'text\' ng-model="item.text" /></p>\n<div class="approw bordertop" style="\n\tpadding-left: {{20 * (item.parent.depth + 1)}}px;\n\tmargin-left: -{{20 * (item.parent.depth + 1)}}px;\n">\n\n\t<div class="appcontainer" ng-model="item.children.topics" ng-hide="item.fold">\n\t\t<div ng-repeat="item in item.children.topics" ng-include="\'tree_row.html\'" class="approw {{type(item)}}" style="\n\t\t\tpadding-left: {{20 * (item.parent.depth + 1)}}px;\n\t\t\tmargin-left: -{{20 * item.parent.depth}}px;\n\t\t"></div>\n\t</div>\n</div>\n<nav class="btn-group" ng-show="isMobile">\n\t<li class="btn" ng-click="addChild(item)"><i class="icon-plus"></i></li>\n\t<li class="btn" ng-click="remove(item)"><i class="icon-remove"></i></li>\t\n\t<li class="btn" ng-click="edit(item)"><i class="icon-wrench"></i></li>\n</nav>\n');
     
     }).call(this);
     
@@ -11888,7 +11900,6 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
   }
   (function() {
     (function() {
-    
       __out.push('<aside>\n\t');
     
       __out.push(DepMan.render("layout/tabview"));
@@ -11897,7 +11908,11 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
     
       __out.push(DepMan.render("layout/asidebutton"));
     
-      __out.push('\n</article>\n');
+      __out.push('\n\t<section></section>\n</article>\n');
+    
+      __out.push(DepMan.render("partials/message"));
+    
+      __out.push('\n');
     
     }).call(this);
     
@@ -11943,8 +11958,7 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
   }
   (function() {
     (function() {
-    
-      __out.push('<header>\n\t<div class="container">\n\t\t<article><img src="images/NoteTaking.jpg" alt="" /></article>\n\t\t<article><img src="images/neuralNetwork.jpg" alt="" /></article>\n\t</div>\n\t<a href="/" id="startapp" class="btn">Start the App</a>\n</header>\n<aside></aside>\n<section></section>\n');
+      __out.push('<header>\n\t<div class="container">\n\t\t<article><img src="images/NoteTaking.jpg" alt="" /></article>\n\t\t<article><img src="images/neuralNetwork.jpg" alt="" /></article>\n\t</div>\n\t<a href="/" id="startapp" class="btn">Start the App</a>\n</header>\n<div class="container rest">\n\t<aside>\n\t\t<a href="/" class="btn btn-large btn-warning firefox">Add to Firefox / FirefoxOS</a>\n\t\t<a href="/" class="btn btn-large btn-success chrome">Add to Chrome / ChromeOS</a>\n\t\t<a href="/" class="btn btn-large btn-info iexplorer">Add to IE / Windows8</a>\n\t</aside>\n\t<section>\n\t\t<div class="page-header">\n\t\t\t<h1>Arrow Application</h1>\n\t\t</div>\n\t\t<p>\n\t\t\tEver needed to think fast, and document all the thinking, but you had no whiteboard, notebook, or anything but your smartphone, or your tablet, or your PC, or even your SmartTV? Well, to solve all those problems, there is now Arrow, the brainstorming application.\n\t\t</p>\n\t</section>\n</div>\n');
     
     }).call(this);
     
@@ -11990,7 +12004,6 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
   }
   (function() {
     (function() {
-    
       __out.push('<div id="showhideappmenu" ng-click="togglesidebar()"><i ng-class="{open: \'icon-chevron-left\', closed: \'icon-chevron-right\'}[sidebarstatus]"></i></div>\n');
     
     }).call(this);
@@ -12037,7 +12050,6 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
   }
   (function() {
     (function() {
-    
       __out.push('<nav data-role=\'tablist\'>\n\t<li data-tab=\'list\' ng-click="asidetab(\'LIST\')"><i class="icon-tasks"></i><span ');
     
       __out.push(__sanitize(_T("Documents")));
@@ -12112,7 +12124,6 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
   }
   (function() {
     (function() {
-    
       __out.push('<section id="loadingscreen">\n\t<article>\n\t\t<span id="loading"><i class="icon-spin icon-spinner"></i></span>\n\t\t<span id="loadingmessage"></span>\t\n\t</article>\n</section>\n');
     
     }).call(this);
@@ -12159,7 +12170,6 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
   }
   (function() {
     (function() {
-    
       __out.push('<form>\n\t<p ');
     
       __out.push(__sanitize(_T("Select your language from the dropdown menu: It will be saved")));
@@ -12218,7 +12228,6 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
   }
   (function() {
     (function() {
-    
       __out.push('<p ');
     
       __out.push(__sanitize(_T("To connect to another client, give him the code in the first input box or input his code in the second input box and press enter")));
@@ -12273,7 +12282,6 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
   }
   (function() {
     (function() {
-    
       __out.push('<div class="modal hide fade" id="editnodemodal">\n    <div class="modal-header">\n    \t<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>\n    \t<h3 id="tip-message-title" ');
     
       __out.push(__sanitize(_T("Edit Node")));
@@ -12344,7 +12352,6 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
   }
   (function() {
     (function() {
-    
       __out.push('<div class="modal hide fade" id="tip-message">\n    <div class="modal-header">\n    \t<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>\n    \t<h3 id="tip-message-title" ');
     
       __out.push(__sanitize(_T("Message")));
@@ -12454,27 +12461,23 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
   return __out.join('');
 }}});
 (function() {
-  var Client, ClientErrorReporter,
+  var Client, ClientErrorReporter, _ref,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
     __slice = [].slice;
 
   Client = (function(_super) {
-
     __extends(Client, _super);
 
     function Client() {
       this.connect = __bind(this.connect, this);
-
       this.dataReceived = __bind(this.dataReceived, this);
-
       this.loadEvents = __bind(this.loadEvents, this);
-
       this.log = __bind(this.log, this);
-
       var script,
         _this = this;
+
       this.online = false;
       script = document.createElement("script");
       script.src = "/socket.io/socket.io.js";
@@ -12483,6 +12486,7 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
         _this.socket = io.connect();
         return _this.socket.on("auth", function(id) {
           var ev, handler, me, _ref;
+
           _this.id = id;
           _this.online = true;
           console.log("Connected! ID: " + _this.id);
@@ -12492,6 +12496,7 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
             handler = _ref[ev];
             _this.socket.on(ev, function() {
               var args;
+
               args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
               return handler.apply(me, args);
             });
@@ -12522,6 +12527,7 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
 
     Client.prototype.log = function() {
       var args, _ref;
+
       args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
       args.unshift("log");
       return (_ref = this.socket) != null ? _ref.emit.apply(this.socket, args) : void 0;
@@ -12530,10 +12536,12 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
     Client.prototype.loadEvents = function() {
       var event, handler, _fn, _ref,
         _this = this;
+
       _ref = this.events;
       _fn = function(event, handler) {
         return _this.subscribe(event, function() {
           var args, isntfromserver, test, _ref1;
+
           args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
           test = args.pop();
           isntfromserver = test !== "fromserver";
@@ -12557,6 +12565,7 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
 
     Client.prototype.dataReceived = function() {
       var data, event;
+
       event = arguments[0], data = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
       data.unshift(event);
       return this.publish.apply(this, data);
@@ -12573,11 +12582,11 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
   })(IS.Object);
 
   ClientErrorReporter = (function(_super) {
-
     __extends(ClientErrorReporter, _super);
 
     function ClientErrorReporter() {
-      return ClientErrorReporter.__super__.constructor.apply(this, arguments);
+      _ref = ClientErrorReporter.__super__.constructor.apply(this, arguments);
+      return _ref;
     }
 
     ClientErrorReporter.errors = {

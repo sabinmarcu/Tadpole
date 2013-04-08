@@ -9,14 +9,14 @@ body {
   font-family: "Open Sans", sans-serif;
   color: #242424;
 }
-body:not(.landing) aside nav {
+body:not(.landing) aside> nav {
   position: absolute;
   left: 0;
   right: 0;
   bottom: 0;
   height: 75px;
 }
-body:not(.landing) aside nav li {
+body:not(.landing) aside> nav li {
   width: 81.33333333333333px;
   height: 75px;
   background: -webkit-gradient(linear, left top, left bottom, color-stop(0, rgba(255,255,255,0.2)), color-stop(1, rgba(255,255,255,0.1)));
@@ -32,15 +32,15 @@ body:not(.landing) aside nav li {
   text-align: center;
   position: relative;
 }
-body:not(.landing) aside nav li:first-child {
+body:not(.landing) aside> nav li:first-child {
   width: 82.33333333333333px;
   border-left: none;
 }
-body:not(.landing) aside nav li:last-child {
+body:not(.landing) aside> nav li:last-child {
   width: 82.33333333333333px;
   border-right: none;
 }
-body:not(.landing) aside nav li i {
+body:not(.landing) aside> nav li i {
   line-height: 75px !important;
   width: 100% !important;
   height: 100% !important;
@@ -56,7 +56,7 @@ body:not(.landing) aside nav li i {
   transition: all 0.2s ease-in-out;
   cursor: pointer;
 }
-body:not(.landing) aside nav li span {
+body:not(.landing) aside> nav li span {
   position: absolute;
   left: 0;
   right: 0;
@@ -69,16 +69,16 @@ body:not(.landing) aside nav li span {
   -ms-transition: all 0.5s ease-in-out;
   transition: all 0.5s ease-in-out;
 }
-body:not(.landing) aside nav li:hover i {
+body:not(.landing) aside> nav li:hover i {
   opacity: 0.7;
   filter: alpha(opacity=70);
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=70)";
   text-shadow: 0 0 25px #666;
 }
-body:not(.landing) aside nav li:hover span {
+body:not(.landing) aside> nav li:hover span {
   top: 66%;
 }
-body:not(.landing) aside section {
+body:not(.landing) aside> section {
   background: #000;
   position: absolute;
   left: 0;
@@ -92,7 +92,7 @@ body:not(.landing) aside section {
   -ms-transform-origin: 50% 100%;
   transform-origin: 50% 100%;
 }
-body:not(.landing) aside section article {
+body:not(.landing) aside> section> article {
   display: block;
   background: -webkit-gradient(linear, left top, right top, color-stop(0, rgba(0,0,0,0)), color-stop(0.66, rgba(0,0,0,0)), color-stop(1, rgba(0,0,0,0.2))) #001a33;
   background: -webkit-linear-gradient(left, rgba(0,0,0,0) 0, rgba(0,0,0,0) 66%, rgba(0,0,0,0.2) 100%) #001a33;
@@ -114,11 +114,15 @@ body:not(.landing) aside section article {
   -ms-animation: paneLeft 0.5s forwards ease-out 0.5s;
   animation: paneLeft 0.5s forwards ease-out 0.5s;
 }
-body:not(.landing) aside section article#server div {
+body:not(.landing) aside> section> article h1 {
+  font-size: 30px;
+  margin-bottom: 25px;
+}
+body:not(.landing) aside> section> article#server div {
   text-align: center;
   margin: 25px 0;
 }
-body:not(.landing) aside section article.active.bottomVariant {
+body:not(.landing) aside> section> article.active.bottomVariant {
   top: -100%;
   bottom: 100%;
   -webkit-animation: paneDown 0.5s forwards ease-in 0.5s;
@@ -127,7 +131,7 @@ body:not(.landing) aside section article.active.bottomVariant {
   -ms-animation: paneDown 0.5s forwards ease-in 0.5s;
   animation: paneDown 0.5s forwards ease-in 0.5s;
 }
-body:not(.landing) aside section article.active.topVariant {
+body:not(.landing) aside> section> article.active.topVariant {
   top: 100%;
   bottom: -100%;
   -webkit-animation: paneUp 0.5s forwards ease-in 0.5s;
@@ -136,8 +140,8 @@ body:not(.landing) aside section article.active.topVariant {
   -ms-animation: paneUp 0.5s forwards ease-in 0.5s;
   animation: paneUp 0.5s forwards ease-in 0.5s;
 }
-body:not(.landing) aside section article.active + article,
-body:not(.landing) aside section article.active + article + article {
+body:not(.landing) aside> section> article.active + article,
+body:not(.landing) aside> section> article.active + article + article {
   -webkit-animation: paneRight 0.5s forwards ease-out 0.5s;
   -moz-animation: paneRight 0.5s forwards ease-out 0.5s;
   -o-animation: paneRight 0.5s forwards ease-out 0.5s;
@@ -1064,6 +1068,64 @@ body:not(.landing) aside section article.active + article + article {
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
   }
 }
+body:not(.landing) aside article#list header,
+body:not(.landing) aside article#list section,
+body:not(.landing) aside article#list footer {
+  position: absolute;
+  left: 0;
+  right: 0;
+}
+body:not(.landing) aside article#list header,
+body:not(.landing) aside article#list footer {
+  height: 45px;
+}
+body:not(.landing) aside article#list header {
+  font-family: Electrolize;
+  top: 0;
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0, rgba(255,255,255,0.4)), color-stop(1, rgba(255,255,255,0.2)));
+  background: -webkit-linear-gradient(top, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.2) 100%);
+  background: -moz-linear-gradient(top, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.2) 100%);
+  background: -o-linear-gradient(top, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.2) 100%);
+  background: -ms-linear-gradient(top, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.2) 100%);
+  background: linear-gradient(top, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0.2) 100%);
+  border-bottom: solid 1px #000;
+}
+body:not(.landing) aside article#list header h1 {
+  line-height: 45px;
+  padding: 0 0 0 25px;
+  margin: 0;
+}
+body:not(.landing) aside article#list footer {
+  bottom: 0;
+  text-align: center;
+}
+body:not(.landing) aside article#list footer p {
+  display: none;
+}
+body:not(.landing) aside article#list section {
+  top: 45px;
+  bottom: 45px;
+}
+body:not(.landing) aside article#list section li {
+  list-style: none;
+  line-height: 45px;
+  height: 35px;
+  padding: 5px 0;
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0, rgba(255,255,255,0.2)), color-stop(1, rgba(255,255,255,0)));
+  background: -webkit-linear-gradient(top, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 100%);
+  background: -moz-linear-gradient(top, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 100%);
+  background: -o-linear-gradient(top, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 100%);
+  background: -ms-linear-gradient(top, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 100%);
+  background: linear-gradient(top, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 100%);
+}
+body:not(.landing) aside article#list section li p {
+  width: 200px;
+  display: inline-block;
+}
+body:not(.landing) aside article#list section li p input {
+  width: 200px;
+  margin: 0;
+}
 body:not(.landing) aside {
   background: -webkit-gradient(linear, left top, right top, color-stop(0, rgba(0,0,0,0.2)), color-stop(0.66, rgba(0,0,0,0.2)), color-stop(1, rgba(0,0,0,0.6))) #001a33;
   background: -webkit-linear-gradient(left, rgba(0,0,0,0.2) 0, rgba(0,0,0,0.2) 66%, rgba(0,0,0,0.6) 100%) #001a33;
@@ -1096,7 +1158,7 @@ body:not(.landing) > article {
   -o-transition: all 0.5s ease-in-out;
   -ms-transition: all 0.5s ease-in-out;
   transition: all 0.5s ease-in-out;
-  overflow: hidden;
+  overflow: auto;
 }
 body:not(.landing) > article.sidebaropen {
   left: 250px;
@@ -1125,6 +1187,7 @@ body:not(.landing) > article #showhideappmenu {
   -o-transition: all 0.3s ease-in-out;
   -ms-transition: all 0.3s ease-in-out;
   transition: all 0.3s ease-in-out;
+  z-index: 9;
 }
 body:not(.landing) > article #showhideappmenu:hover {
   opacity: 1;
@@ -1133,6 +1196,50 @@ body:not(.landing) > article #showhideappmenu:hover {
 }
 body:not(.landing) > article #showhideappmenu i {
   margin-left: 14px;
+}
+body:not(.landing) > article section.ng-scope .appcontainer {
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+body:not(.landing) > article section.ng-scope .approw {
+  display: block;
+  position: relative;
+}
+body:not(.landing) > article section.ng-scope .approw.bordertop {
+  border-top: solid 1px #999;
+}
+body:not(.landing) > article section.ng-scope .approw p {
+  display: block;
+  margin: 0 120px 0 35px;
+}
+body:not(.landing) > article section.ng-scope .approw p input {
+  padding: 10px 0;
+  margin: 10px 0;
+  height: 10px;
+  line-height: 10px;
+  width: 100%;
+  text-indent: 10px;
+}
+body:not(.landing) > article section.ng-scope .approw > i {
+  cursor: pointer;
+  float: left;
+  margin: 20px 0;
+  height: 10px;
+}
+body:not(.landing) > article section.ng-scope .approw > i.icon-custom {
+  margin-right: 5px;
+}
+body:not(.landing) > article section.ng-scope .approw > i.icon-custom:before {
+  content: "\f078";
+}
+body:not(.landing) > article section.ng-scope .approw nav {
+  position: absolute;
+  right: 5px;
+  top: 10px;
+}
+body:not(.landing) > article section.ng-scope .approw nav li {
+  list-style: none;
 }
 body:not(.landing) #loadingscreen {
   position: fixed;
@@ -1199,6 +1306,7 @@ body.landing header .container {
   margin: 0 auto;
   -webkit-box-shadow: 0 0 15px rgba(255,255,255,0.1);
   box-shadow: 0 0 15px rgba(255,255,255,0.1);
+  overflow: hidden;
 }
 body.landing header article {
   float: left;
@@ -1270,7 +1378,7 @@ body.landing header a {
   -ms-transition: all 0.5s ease-in-out;
   transition: all 0.5s ease-in-out;
   line-height: 50px;
-  font-size: 24pt;
+  font-size: 20pt;
   font-weight: bold;
   text-shadow: 0 1px 1px #fff;
   color: rgba(0,0,0,0.4);
@@ -1286,4 +1394,97 @@ body.landing header:hover a {
   opacity: 1;
   -ms-filter: none;
   filter: none;
+}
+body.landing .container.rest {
+  width: 1000px;
+  position: absolute;
+  top: 300px;
+  left: 50%;
+  margin-left: -500px;
+}
+body.landing .container.rest section,
+body.landing .container.rest aside {
+  float: left;
+  display: inline-block;
+}
+body.landing .container.rest section {
+  width: 749px;
+}
+body.landing .container.rest section p {
+  padding: 25px;
+}
+body.landing .container.rest aside {
+  float: right;
+  width: 250px;
+  text-align: center;
+  background: rgba(0,0,0,0.4);
+  -webkit-box-shadow: inset 0 0 150px #000;
+  box-shadow: inset 0 0 150px #000;
+  padding: 25px 0;
+  border-bottom-right-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+body.landing .container.rest aside a {
+  width: 75%;
+  margin: 5px 0;
+}
+@media (max-width:770px) {
+  body.landing header {
+    height: 200px;
+    text-align: center;
+    line-height: 200px;
+  }
+  body.landing header .container {
+    width: 700px;
+  }
+  body.landing header a {
+    opacity: 1;
+    -ms-filter: none;
+    filter: none;
+  }
+  body.landing .container.rest {
+    overflow: auto;
+    top: 200px;
+    width: 700px;
+    margin-left: -350px;
+  }
+  body.landing .container.rest section {
+    width: 499px;
+  }
+  body.landing .container.rest aside {
+    width: 200px;
+  }
+}
+@media (max-width:360px) {
+  body.landing header {
+    height: 150px;
+    text-align: center;
+    line-height: 150px;
+  }
+  body.landing header .container {
+    width: 360px;
+  }
+  body.landing header a {
+    opacity: 1;
+    -ms-filter: none;
+    filter: none;
+  }
+  body.landing .container.rest {
+    overflow: auto;
+    top: 150px;
+    width: 360px;
+    margin-left: -180px;
+  }
+  body.landing .container.rest section {
+    width: 360px;
+    display: block;
+    float: none;
+  }
+  body.landing .container.rest aside {
+    width: 360px;
+    display: block;
+    float: none;
+    -webkit-border-radius: 0;
+    border-radius: 0;
+  }
 }
