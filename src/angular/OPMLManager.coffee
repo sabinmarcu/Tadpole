@@ -22,3 +22,4 @@ angular.module("Arrow").controller "OPMLManager", ($scope, $rootScope, OPML) ->
 	# jQuery("#uploadButton").click $scope.upload
 
 	$scope.activate OPML.OPMLs[localStorage.getItem("lastOPML") or 0], true
+console.log "OPMLManager should be available now"

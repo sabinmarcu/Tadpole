@@ -1,6 +1,8 @@
-<aside data-role="appmenu">
+<aside>
 	<%- DepMan.render "layout/tabview" %>
 </aside>
-<article>
+<article ng-class="{open: 'sidebaropen', closed: ''}[sidebarstatus]">
 	<%- DepMan.render "layout/asidebutton" %>
+	<section></section>
 </article>
+<%- DepMan.render "partials/message" %>

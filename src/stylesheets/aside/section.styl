@@ -1,0 +1,146 @@
+@keyframes paneDown {
+	0% { 
+		top -100%
+		bottom 100%
+		left 0
+		right 0
+		opacity 0
+		transform scale(0.6) translateY(0)
+		z-index 2
+	}
+	66% {
+		top -100%
+		bottom 100%
+		left 0
+		right 0
+		opacity 1
+		transform scale(0.6) translateY(140%)
+		z-index 2
+	}
+	100% {
+		top -100%
+		bottom 100%
+		left 0
+		right 0
+		opacity 1
+		z-index 2
+		transform scale(1) translateY(100%)
+	}
+}
+
+@keyframes paneUp {
+	0% { 
+		top 100%
+		bottom -100%
+		left 0
+		right 0
+		opacity 0
+		transform scale(0.6) translateY(0)
+		z-index 2
+	}
+	66% {
+		top 100%
+		bottom -100%
+		left 0
+		right 0
+		opacity 1
+		transform scale(0.6) translateY(-140%)
+		z-index 2
+	}
+	100% {
+		top 100%
+		bottom -100%
+		left 0
+		right 0
+		opacity 1
+		z-index 2
+		transform scale(1) translateY(-100%)
+	}
+}
+@keyframes paneLeft {
+	0% { 
+		z-index 1
+		left -300px
+		right 300px
+		transform scale(1) translateX(100%)
+		opacity 1
+	}
+	66% {
+		left -300px
+		right 300px
+		transform scale(0.6) translateX(80%)
+		opacity 1
+		z-index 1
+	}
+	100% {
+		z-index 1
+		left -300px
+		right 300px
+		transform scale(0.6) translateX(0)
+		opacity 0
+	}
+}
+
+@keyframes paneRight {
+	0% { 
+		z-index 1
+		left 300px
+		right -300px
+		transform scale(1) translateX(-100%)
+		opacity 1
+	}
+	66% {
+		z-index 1
+		left 300px
+		right -300px
+		transform scale(0.6) translateX(-80%)
+		opacity 1
+	}
+	100% {
+		z-index 1
+		left 300px
+		right -300px
+		transform scale(0.6) translateX(0)
+		opacity 0
+	}
+}
+&> section
+	background black
+	position absolute
+	left 0
+	right 0
+	top 0
+	bottom 75px
+	overflow hidden
+	transform-origin 50% 100%
+	&> article
+		display block
+		background linear-gradient(left, rgba(0, 0, 0, 0) 0, rgba(0, 0, 0, 0) 66%, rgba(0, 0, 0, 0.2) 100%) backgroundcolor
+		position absolute
+		top 0
+		bottom 0
+		z-index 0
+		left 0
+		right 0
+		padding 15px
+		color white
+		animation paneLeft 0.5s forwards ease-out 0.5s
+		h1
+			font-size 30px
+			margin-bottom 25px
+		&#server
+			div	
+				text-align center
+				margin 25px 0
+		&.active
+			&.bottomVariant
+				top -100%
+				bottom 100%
+				animation paneDown 0.5s forwards ease-in 0.5s
+			&.topVariant
+				top 100%
+				bottom -100%
+				animation paneUp 0.5s forwards ease-in 0.5s
+			& + article, & + article + article
+				animation paneRight 0.5s forwards ease-out 0.5s
+

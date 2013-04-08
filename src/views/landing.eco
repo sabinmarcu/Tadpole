@@ -1,0 +1,22 @@
+<header>
+	<div class="container">
+		<article><img src="images/NoteTaking.jpg" alt="" /></article>
+		<article><img src="images/neuralNetwork.jpg" alt="" /></article>
+	</div>
+	<a href="/" id="startapp" class="btn">Start the App</a>
+</header>
+<div class="container rest">
+	<aside>
+		<a href="/" class="btn btn-large btn-warning firefox">Add to Firefox / FirefoxOS</a>
+		<a href="/" class="btn btn-large btn-success chrome">Add to Chrome / ChromeOS</a>
+		<a href="/" class="btn btn-large btn-info iexplorer">Add to IE / Windows8</a>
+	</aside>
+	<section>
+		<div class="page-header">
+			<h1>Arrow Application</h1>
+		</div>
+		<p>
+			Ever needed to think fast, and document all the thinking, but you had no whiteboard, notebook, or anything but your smartphone, or your tablet, or your PC, or even your SmartTV? Well, to solve all those problems, there is now Arrow, the brainstorming application.
+		</p>
+	</section>
+</div>

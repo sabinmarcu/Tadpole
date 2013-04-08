@@ -1,0 +1,16 @@
+<nav data-role='tablist'>
+	<li data-tab='list' ng-click="asidetab('LIST')"><i class="icon-tasks"></i><span <%= _T "Documents" %>></span></li>
+	<li data-tab='server' ng-click="asidetab('SERVER')"><i class="icon-comments-alt"></i><span <%= _T "Server" %>></span></li>
+	<li data-tab='global' ng-click="asidetab('GENERAL')"><i class="icon-wrench"></i><span <%= _T "General" %>></span></li>
+</nav>
+<section data-role="tabcontainer">
+	<article id='list' ng-class="{true: 'active ' + getAnim(), false: ''}[tabIsActive('LIST')]"></article>
+	<article id='server' ng-class="{true: 'active ' + getAnim(), false: ''}[tabIsActive('SERVER')]">
+		<h1 <%= _T "Server Settings" %>></h1>
+		<%- DepMan.render "partials/_server_settings" %>
+	</article>
+	<article id='global' ng-class="{true: 'active ' + getAnim(), false: ''}[tabIsActive('GENERAL')]">
+		<h1 <%= _T "General Settings" %>></h1>
+		<%- DepMan.render "partials/_general_settings" %>	
+	</article>
+</section>

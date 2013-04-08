@@ -1,6 +1,6 @@
 <div class="appcontainer" ng-model="object.structure.topics">
 	<div class="approw {{type(item)}}" style="
-	padding-left: {{50 * (item.parent.depth + 1)}}px;
-	margin-left: -{{50 * item.parent.depth}}px;
+	padding-left: 20px;
+	margin-left: 0px;
 " ng-repeat="item in object.structure.topics" ng-include="'tree_row.html'"/></div>
 </div>

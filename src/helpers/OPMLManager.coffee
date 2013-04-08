@@ -14,11 +14,12 @@ class OPMLManager extends IS.Object
 
 		# Binding AngularJS
 		DepMan.angular("OPMLController")
-		$("aside").html DepMan.render "_list"
-		$("aside").attr "ng-controller", "OPMLManager"
-		$("article > section").attr "ng-controller", "OPMLController"
-		angular.bootstrap $("article section")[0], ["Arrow"]
+		$("article#list").html DepMan.render "_list"
+		$("article#list").attr "ng-controller", "OPMLManager"
+		$("body > article section").attr "ng-controller", "OPMLController"
+		angular.bootstrap $("body > article section")[0], ["Arrow"]
 		DepMan.angular("OPMLManager")
+		angular.bootstrap $("article#list")[0], ["Arrow"]
 
 	open: (file, silent = false) =>
 		do @activeOPML.controller.deactivate if @activeOPML? and not silent

@@ -1,0 +1,4 @@
+<p <%= _T "To connect to another client, give him the code in the first input box or input his code in the second input box and press enter" %>></p>
+<div><img src="inicaieri" alt="QR Code" id="qrimage" class="hidden img-circle " /></div>
+<input type="text" readonly id="connectionidself" value="Not Connected Yet ..." />
+<input type="text" value="" id="connectid" <%= _T "ID to connect to", "placeholder" %> />

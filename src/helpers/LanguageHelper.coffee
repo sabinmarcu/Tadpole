@@ -32,3 +32,4 @@ class LanguageHelper extends BaseObject
 window.LanguageHelper = new LanguageHelper
 window.T = window.LanguageHelper._translate
 window._T = window.LanguageHelper._hook
+window.__T = window.LanguageHelper._translateAll

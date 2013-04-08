@@ -16,6 +16,6 @@ do ->
 			jQuery( "#connectionidself" ).val @id
 			jQuery( "#connectid" ).keypress (e) => @connect jQuery("#connectid").val(); jQuery("#connectid").val("") if e.which is 13
 			jQuery("#qrimage").attr "src", "https://chart.googleapis.com/chart?chs=150x150&cht=qr&chl=#{@id}&choe=UTF-8"
-			jQuery("#qrimage").attr "class", ""
+			jQuery("#qrimage").removeClass "hidden"
 
 	window.Client = new Client()

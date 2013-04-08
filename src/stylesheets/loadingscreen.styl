@@ -1,0 +1,29 @@
+#loadingscreen
+	position fixed
+	top 0
+	bottom 0
+	left 0
+	right 0
+	opacity 0
+	background white
+	color basecolor
+	transition all 1s ease-in-out
+	&.active
+		opacity 1
+		z-index 9
+	article
+		position absolute
+		left 50%
+		top 50%
+		width 200px 
+		height 100px
+		margin -50px 0 0 -100px
+		text-align center
+		opacity 0.7
+		span
+			display block
+			&#loading
+				font-size 72pt
+				color white
+				text-shadow 0 0 5px lighten(basecolor, 5)
+

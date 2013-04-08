@@ -9,14 +9,14 @@ body {
   font-family: "Open Sans", sans-serif;
   color: #242424;
 }
-body aside nav {
+body:not(.landing) aside nav {
   position: absolute;
   left: 0;
   right: 0;
   bottom: 0;
   height: 75px;
 }
-body aside nav li {
+body:not(.landing) aside nav li {
   width: 81.33333333333333px;
   height: 75px;
   background: -webkit-gradient(linear, left top, left bottom, color-stop(0, rgba(255,255,255,0.2)), color-stop(1, rgba(255,255,255,0.1)));
@@ -30,16 +30,17 @@ body aside nav li {
   border-right: solid 1px rgba(0,0,0,0.1);
   border-left: solid 1px rgba(255,255,255,0.1);
   text-align: center;
+  position: relative;
 }
-body aside nav li:first-child {
+body:not(.landing) aside nav li:first-child {
   width: 82.33333333333333px;
   border-left: none;
 }
-body aside nav li:last-child {
+body:not(.landing) aside nav li:last-child {
   width: 82.33333333333333px;
   border-right: none;
 }
-body aside nav li i {
+body:not(.landing) aside nav li i {
   line-height: 75px !important;
   width: 100% !important;
   height: 100% !important;
@@ -55,13 +56,30 @@ body aside nav li i {
   transition: all 0.2s ease-in-out;
   cursor: pointer;
 }
-body aside nav li i:hover {
+body:not(.landing) aside nav li span {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 100%;
+  bottom: 0;
+  color: rgba(255,255,255,0.2);
+  -webkit-transition: all 0.5s ease-in-out;
+  -moz-transition: all 0.5s ease-in-out;
+  -o-transition: all 0.5s ease-in-out;
+  -ms-transition: all 0.5s ease-in-out;
+  transition: all 0.5s ease-in-out;
+}
+body:not(.landing) aside nav li:hover i {
   opacity: 0.7;
   filter: alpha(opacity=70);
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=70)";
   text-shadow: 0 0 25px #666;
 }
-body aside section {
+body:not(.landing) aside nav li:hover span {
+  top: 66%;
+}
+body:not(.landing) aside section {
+  background: #000;
   position: absolute;
   left: 0;
   right: 0;
@@ -74,7 +92,7 @@ body aside section {
   -ms-transform-origin: 50% 100%;
   transform-origin: 50% 100%;
 }
-body aside section article {
+body:not(.landing) aside section article {
   display: block;
   background: -webkit-gradient(linear, left top, right top, color-stop(0, rgba(0,0,0,0)), color-stop(0.66, rgba(0,0,0,0)), color-stop(1, rgba(0,0,0,0.2))) #001a33;
   background: -webkit-linear-gradient(left, rgba(0,0,0,0) 0, rgba(0,0,0,0) 66%, rgba(0,0,0,0.2) 100%) #001a33;
@@ -96,7 +114,11 @@ body aside section article {
   -ms-animation: paneLeft 0.5s forwards ease-out 0.5s;
   animation: paneLeft 0.5s forwards ease-out 0.5s;
 }
-body aside section article.active.bottomVariant {
+body:not(.landing) aside section article#server div {
+  text-align: center;
+  margin: 25px 0;
+}
+body:not(.landing) aside section article.active.bottomVariant {
   top: -100%;
   bottom: 100%;
   -webkit-animation: paneDown 0.5s forwards ease-in 0.5s;
@@ -105,7 +127,7 @@ body aside section article.active.bottomVariant {
   -ms-animation: paneDown 0.5s forwards ease-in 0.5s;
   animation: paneDown 0.5s forwards ease-in 0.5s;
 }
-body aside section article.active.topVariant {
+body:not(.landing) aside section article.active.topVariant {
   top: 100%;
   bottom: -100%;
   -webkit-animation: paneUp 0.5s forwards ease-in 0.5s;
@@ -114,8 +136,8 @@ body aside section article.active.topVariant {
   -ms-animation: paneUp 0.5s forwards ease-in 0.5s;
   animation: paneUp 0.5s forwards ease-in 0.5s;
 }
-body aside section article.active + article,
-body aside section article.active + article + article {
+body:not(.landing) aside section article.active + article,
+body:not(.landing) aside section article.active + article + article {
   -webkit-animation: paneRight 0.5s forwards ease-out 0.5s;
   -moz-animation: paneRight 0.5s forwards ease-out 0.5s;
   -o-animation: paneRight 0.5s forwards ease-out 0.5s;
@@ -1042,7 +1064,7 @@ body aside section article.active + article + article {
     -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
   }
 }
-body aside {
+body:not(.landing) aside {
   background: -webkit-gradient(linear, left top, right top, color-stop(0, rgba(0,0,0,0.2)), color-stop(0.66, rgba(0,0,0,0.2)), color-stop(1, rgba(0,0,0,0.6))) #001a33;
   background: -webkit-linear-gradient(left, rgba(0,0,0,0.2) 0, rgba(0,0,0,0.2) 66%, rgba(0,0,0,0.6) 100%) #001a33;
   background: -moz-linear-gradient(left, rgba(0,0,0,0.2) 0, rgba(0,0,0,0.2) 66%, rgba(0,0,0,0.6) 100%) #001a33;
@@ -1056,7 +1078,7 @@ body aside {
   top: 0;
   bottom: 0;
 }
-body > article {
+body:not(.landing) > article {
   position: fixed;
   left: 0;
   right: 0;
@@ -1076,11 +1098,11 @@ body > article {
   transition: all 0.5s ease-in-out;
   overflow: hidden;
 }
-body > article.sidebaropen {
+body:not(.landing) > article.sidebaropen {
   left: 250px;
   right: -asidewidth;
 }
-body > article #showhideappmenu {
+body:not(.landing) > article #showhideappmenu {
   display: inline-block;
   position: absolute;
   left: 0;
@@ -1104,17 +1126,164 @@ body > article #showhideappmenu {
   -ms-transition: all 0.3s ease-in-out;
   transition: all 0.3s ease-in-out;
 }
-body > article #showhideappmenu:hover {
+body:not(.landing) > article #showhideappmenu:hover {
   opacity: 1;
   -ms-filter: none;
   filter: none;
 }
-body > article #showhideappmenu i {
+body:not(.landing) > article #showhideappmenu i {
   margin-left: 14px;
 }
-body.redtheme aside {
+body:not(.landing) #loadingscreen {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  opacity: 0;
+  filter: alpha(opacity=0);
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  background: #fff;
+  color: #0084ff;
+  -webkit-transition: all 1s ease-in-out;
+  -moz-transition: all 1s ease-in-out;
+  -o-transition: all 1s ease-in-out;
+  -ms-transition: all 1s ease-in-out;
+  transition: all 1s ease-in-out;
+}
+body:not(.landing) #loadingscreen.active {
+  opacity: 1;
+  -ms-filter: none;
+  filter: none;
+  z-index: 9;
+}
+body:not(.landing) #loadingscreen article {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 200px;
+  height: 100px;
+  margin: -50px 0 0 -100px;
+  text-align: center;
+  opacity: 0.7;
+  filter: alpha(opacity=70);
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=70)";
+}
+body:not(.landing) #loadingscreen article span {
+  display: block;
+}
+body:not(.landing) #loadingscreen article span#loading {
+  font-size: 72pt;
+  color: #fff;
+  text-shadow: 0 0 5px #1a90ff;
+}
+body:not(.landing).redtheme aside {
   background-color: #440f00;
 }
-body.redtheme aside section article {
+body:not(.landing).redtheme aside section article {
   background-color: #440f00;
+}
+body.landing header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 300px;
+  background: #000;
+  text-align: center;
+}
+body.landing header .container {
+  width: 1000px;
+  position: relative;
+  height: 100%;
+  margin: 0 auto;
+  -webkit-box-shadow: 0 0 15px rgba(255,255,255,0.1);
+  box-shadow: 0 0 15px rgba(255,255,255,0.1);
+}
+body.landing header article {
+  float: left;
+  -webkit-transform: skew(-15deg);
+  -moz-transform: skew(-15deg);
+  -o-transform: skew(-15deg);
+  -ms-transform: skew(-15deg);
+  transform: skew(-15deg);
+  overflow: hidden;
+  position: absolute;
+  left: -85px;
+  right: -85px;
+  top: 0;
+  bottom: 0;
+  -webkit-box-shadow: 0 0 15px #000;
+  box-shadow: 0 0 15px #000;
+}
+body.landing header article img {
+  width: 100%;
+  height: 100%;
+}
+body.landing header article:first-child {
+  right: 50%;
+}
+body.landing header article:first-child img {
+  -webkit-transform: skew(15deg);
+  -moz-transform: skew(15deg);
+  -o-transform: skew(15deg);
+  -ms-transform: skew(15deg);
+  transform: skew(15deg);
+  float: right;
+  margin-right: -85px;
+}
+body.landing header article:last-child {
+  left: 50%;
+}
+body.landing header article:last-child img {
+  -webkit-transform: skew(15deg);
+  -moz-transform: skew(15deg);
+  -o-transform: skew(15deg);
+  -ms-transform: skew(15deg);
+  transform: skew(15deg);
+  float: left;
+  margin-left: -85px;
+}
+body.landing header article:after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  -webkit-box-shadow: inset 0 0 450px #000;
+  box-shadow: inset 0 0 450px #000;
+}
+body.landing header a {
+  opacity: 0;
+  filter: alpha(opacity=0);
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin: -25px 0 0 -100px;
+  width: 200px;
+  height: 50px;
+  -webkit-transition: all 0.5s ease-in-out;
+  -moz-transition: all 0.5s ease-in-out;
+  -o-transition: all 0.5s ease-in-out;
+  -ms-transition: all 0.5s ease-in-out;
+  transition: all 0.5s ease-in-out;
+  line-height: 50px;
+  font-size: 24pt;
+  font-weight: bold;
+  text-shadow: 0 1px 1px #fff;
+  color: rgba(0,0,0,0.4);
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+body.landing header a:active {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  color: rgba(0,0,0,0.8);
+}
+body.landing header:hover a {
+  opacity: 1;
+  -ms-filter: none;
+  filter: none;
 }

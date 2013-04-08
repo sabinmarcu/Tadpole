@@ -7,11 +7,11 @@ class OPMLController extends BaseObject
 		
 	activate: =>
 		console.log "activating"
-		$("article section")[0].appendChild(@e)
+		$("body > article section")[0].appendChild(@e)
 		@e.className = "activating"
 		setTimeout =>
 			@e.className = "activated"
-			angular.bootstrap $("article section")[0], ["Arrow"]
+			angular.bootstrap $("body > article section")[0], ["Arrow"]
 		, 50
 
 	deactivate: =>

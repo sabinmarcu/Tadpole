@@ -71,7 +71,7 @@ class OPML extends BaseObject
 		if not storageIndex then window.localStorage?.setItem "opmls", JSON.stringify [@title]
 		else if not ( @title in storageIndex )
 			if @pastTitle?
-				storageIndex.splzice (storageIndex.indexOf @pastTitle), 1
+				storageIndex.splice (storageIndex.indexOf @pastTitle), 1
 				localStorage.removeItem "opmls.#{@pastTitle}"
 				delete @pastTitle
 			storageIndex.push @title
