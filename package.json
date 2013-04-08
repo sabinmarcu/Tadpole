@@ -8,7 +8,7 @@
   "dependencies": {
     "coffee-script": "*",
     "cliparser": "*",
-    "express": "2.5.0",
+    "express": "*",
     "less": "*",
     "jade": "*",
     "stylus": "*",

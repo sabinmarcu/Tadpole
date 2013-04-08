@@ -43,13 +43,14 @@ class Server
 		return throw ServerErrorReporter.generate 7 if not Express?
 
 		try # Attempt to configure the server and return an error
-			App = do Express.createServer
+			App = do Express
+			Server = require("http").createServer App
 			App.configure =>
 				App.use Express.bodyParser()
 				App.use App.router
 				App.use Express.static((require "path").resolve("#{__dirname}/../public"))
 				try
-					DataServer = new ( require "pc2cs" )(App, @compiler?)
+					DataServer = new ( require "pc2cs" )(App, @compiler?, Server)
 				catch e
 					throw ServerErrorReporter.generate 10, ServerErrorReporter.wrapCustomError e
 				App.post "/echo/:id", (req, res) =>
@@ -62,6 +63,7 @@ class Server
 					App.get "/js/g.js", (req, res) => @compiler.compile null, (source) ->
 						res.send source, {"Content-Type": "application/javascript"}, 201
 					App.get "/css/styles.css", (req, res) => @compiler.compileStyles null, (source) ->
+						res.contentType "text/css"
 						res.send source, {"Content-Type": "text/css"}, 201
 					@compiler.addSources
 				App.get "/font/*", (req, res) => res.sendfile (require "path").resolve "#{__dirname}/../public#{req.url}"
@@ -75,7 +77,7 @@ class Server
 
 		# Finally launch the server
 		try
-			App.listen @port, @address
+			Server.listen @port, @address
 			console.log "Started the static server on address : #{@address}, and port : #{@port}"
 			console.log "Instant compiling is enabled." if @compiler?
 			
