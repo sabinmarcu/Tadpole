@@ -3,7 +3,7 @@ do ->
 		
 		constructor: ->
 			@queue = {}
-			super "http://188.240.47.130:9000/"
+			super "http://arrowpollingserver.herokuapp.com:80"
 		connected: (id) ->
 			jQuery("#tip-message-head").html "Connected to the new ID"
 			jQuery("#tip-message-body").html "<p>You are now connected to #{id}</p><p>Anything that you do will now be visible and mirrored in the other one's screen, and so will his every move in your screen.</p>"

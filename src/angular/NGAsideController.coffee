@@ -37,4 +37,3 @@ angular.module("Arrow").controller "NGAsideController", ($scope, $rootScope) ->
 	storage.getItem "landing", (sets) ->
 		$scope.landingpageactive = sets.landing
 		$scope.activateLanding = -> !$scope.landingpageactive; storage.setItem("landing", $scope.landingpageactive)
-	

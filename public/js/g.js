@@ -1336,7 +1336,7 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
 
       function Client() {
         this.init = __bind(this.init, this);        this.queue = {};
-        Client.__super__.constructor.call(this, "http://188.240.47.130:9000/");
+        Client.__super__.constructor.call(this, "http://arrowpollingserver.herokuapp.com:80");
       }
 
       Client.prototype.connected = function(id) {
