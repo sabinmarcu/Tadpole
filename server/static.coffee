@@ -68,11 +68,12 @@ class Server
 					@compiler.addSources
 				App.get "/font/*", (req, res) => res.sendfile (require "path").resolve "#{__dirname}/../public#{req.url}"
 				App.get "/images/*", (req, res) => res.sendfile (require "path").resolve "#{__dirname}/../public#{req.url}"
-				App.get "/index.app.html", (req, res)  => res.sendfile (require "path").resolve "#{__dirname}/../public#{req.url}"
 				App.get "/manifest.webapp", (req, res)  => res.sendfile (require "path").resolve "#{__dirname}/../public#{req.url}"
 				App.get "/arrow_up_1.png", (req, res)  => res.sendfile (require "path").resolve "#{__dirname}/../public#{req.url}"
 				App.get "*", (req, res) =>
-					res.sendfile (require "path").resolve("#{__dirname}/../public/index.html")
+					(require "fs").exists ((require "path").resolve "#{__dirname}/../public#{req.url}"), (exists) ->
+						if exists then res.sendfile ((require "path").resolve "#{__dirname}/../public#{req.url}")
+						else res.sendfile (require "path").resolve("#{__dirname}/../public/index.html")
 		catch e then return throw ServerErrorReporter.generate 8, ServerErrorReporter.wrapCustomError e
 
 		# Finally launch the server

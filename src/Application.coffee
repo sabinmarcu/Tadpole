@@ -9,6 +9,15 @@ class Application extends BaseObject
 	baseSetup: ->
 		window.echo = ( require "Object" ).echo
 		document.title = "Arrow Brainstorming"
+		window.storage =
+			"setItem": (key, value) ->
+				if chrome? and chrome.storage? then chrome.storage.sync.set key: value
+				else window.localStorage.setItem key, value
+			"getItem": (item, callback) ->
+				if chrome? and chrome.storage? then chrome.storage.sync.get item, callback
+				else
+					res = {}; res[item] = window.localStorage.getItem item
+					callback res
 		do ->
 			meta = document.createElement "meta"
 			meta.setAttribute "name", "viewport"
@@ -37,12 +46,18 @@ class Application extends BaseObject
 
 	# LANDING PAGE
 	decideView: =>
-		landing = localStorage.getItem("landing")
-		if not landing? then landing = true; localStorage.setItem("landing", false)
-		@LoadProgress.progress 31
-		if landing isnt "false" then @LoadProgress.then(@renderLandingPage, null, Loading.progress).then(@hookLandingPageStuff, null, Loading.progress).then((-> Loading.end()), null, null)
-		else @LoadProgress.then(@renderBaseline, null, Loading.progress).then(@dragAndDropHooks, null, Loading.progress).then(@mobileHooks, null, Loading.progress).then(@opmlBootstrap, null, Loading.progress).then(( -> Loading.end() ), null, null)
-		@LoadProgress.resolve true
+		storage.getItem "landing", (set) =>
+			landing = set.landing
+			if chrome? and chrome.storage? then landing = "false"
+			@log chrome?, chrome.storage?, landing
+			if not landing? then landing = true; storage.setItem("landing", false)
+			landing = landing.toString()
+			@log landing, set
+			@LoadProgress.progress 31
+			if landing isnt "false" then @LoadProgress.then(@renderLandingPage, null, Loading.progress).then(@hookLandingPageStuff, null, Loading.progress).then((-> Loading.end()), null, null)
+			else @LoadProgress.then(@dataTransferBootstrap, null, Loading.progress).then(@renderBaseline, null, Loading.progress).then(@dragAndDropHooks, null, Loading.progress).then(@mobileHooks, null, Loading.progress).then(@opmlBootstrap, null, Loading.progress).then(@extras, null, Loading.progress).then(@finish, null, null)
+			@LoadProgress.resolve true
+
 	renderLandingPage: ->
 		f = jQuery("body > div")[0]
 		@progress 45
@@ -56,25 +71,28 @@ class Application extends BaseObject
 			@resolve true
 		, 1000
 	hookLandingPageStuff: ->
-		jQuery("#startapp").click -> localStorage.setItem "landing", false
+		jQuery("#startapp").click -> storage.setItem "landing", false
 
 	# FULL APP
 	loadLibs: ->
 		DepMan.lib "jquery"
 		DepMan.lib "angular.min"
 		DepMan.lib "bootstrap.min"
+		DepMan.lib "QRCodeDraw"
 		@progress 3
 		DepMan.stylesheet "bootstrap"
 		DepMan.stylesheet "font-awesome"
 		@progress 5
-		DepMan.googleFont "Electrolize", [400]
-		DepMan.googleFont "Open Sans", [400, 300], ["latin", "latin-ext"]
+		DepMan.stylesheet "ElectrolizeFont"
+		DepMan.stylesheet "OpenSansFont"
 		@progress 7
 		@resolve true
 	bootStrapAngular: ->
 		window.Arrow = angular.module "Arrow", []
 		DepMan.angular "NGAsideController"
-		$("body").addClass("{{theme.mime}}").attr("ng-app", "Arrow").attr("ng-controller", "NGAsideController")
+		document.childNodes[1].setAttribute("ng-csp", "")
+		document.body.className += " {{theme.mime}}"
+		document.body.setAttribute("ng-controller", "NGAsideController")
 		@progress 10
 		@resolve true
 	loadLanguage: ->
@@ -130,9 +148,21 @@ class Application extends BaseObject
 	opmlBootstrap: ->
 		( DepMan.helper "OPMLManager" )
 		@progress 85
-		( DepMan.helper "DataTransfer" )
 		@progress 100
 		@resolve true
+	dataTransferBootstrap: ->
+		( DepMan.helper "DataTransfer")
+		@resolve true
+	extras: ->
+		DepMan.angular "ChromeFrameController"
+		if chrome? and chrome.app.window?
+			d = document.createElement "div"
+			d.innerHTML = DepMan.render "chromehandler"
+			document.body.appendChild d
+		@resolve true
+	finish: ->
+		angular.bootstrap document, ["Arrow"]
+		Loading.end()
 
 
 module.exports = Application

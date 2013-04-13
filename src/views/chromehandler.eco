@@ -1,0 +1,6 @@
+<nav id="chromepanel" ng-controller="ChromeFrameController">
+    <i class="icon-remove" ng-click="close()"></i>
+    <i class="icon-credit-card" ng-click="maximise()"></i>
+    <i class="icon-minus" ng-click="minimise()"></i>
+    <div class="dragger"></div>
+</nav>

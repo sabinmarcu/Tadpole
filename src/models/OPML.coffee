@@ -1,9 +1,15 @@
 class OPML extends BaseObject
 
-	constructor: (text = null) -> @parse text if text?
+	constructor: (@text = null, @manager) ->
+		@parse @text if @text?
+		@events = {}
+		@events["outline.#{@title}.addChild"] = @_addChild
+		@events["outline.#{@title}.edit"] = @_modify
+		@events["outline.#{@title}.removeChild"] = @_removeChild
+		Client?.events = @events
+		Client?.loadEvents()
 
 	parse: (text) =>
-		@controller = new (DepMan.controller "OPML")( @ )
 		parser = new DOMParser
 		xml = parser.parseFromString text, "text/xml"
 		@JSONize xml
@@ -11,6 +17,7 @@ class OPML extends BaseObject
 	JSONize: (xml) =>
 		@title = xml.getElementsByTagName("title")[0].childNodes[0].nodeValue
 		@structure = (DepMan.model "Outline").generate xml
+		@controller = new (DepMan.controller "OPML")( @ )
 
 	find: (search = [], start = null) =>
 
@@ -66,17 +73,18 @@ class OPML extends BaseObject
 		string.replace "\n", ""
 
 	save: =>
-		window.localStorage?.setItem "opmls.#{@title}", do @export
-		storageIndex = JSON.parse window.localStorage?.getItem "opmls"
-		if not storageIndex then window.localStorage?.setItem "opmls", JSON.stringify [@title]
-		else if not ( @title in storageIndex )
-			if @pastTitle?
-				storageIndex.splice (storageIndex.indexOf @pastTitle), 1
-				localStorage.removeItem "opmls.#{@pastTitle}"
-				delete @pastTitle
-			storageIndex.push @title
-			window.localStorage?.setItem "opmls", ( JSON.stringify storageIndex ).replace /<br\/?>/g, ""
-		Toast "Saved #{@title}", "<p>OPML Document saved. You can now return to ruining it, without the worry of loosing it</p>"
+		window.storage?.setItem "opmls.#{@title}", do @export
+		window.storage.getItem "opmls", (sets) =>
+			storageIndex = JSON.parse sets.opmls
+			if not storageIndex then window.storage.setItem "opmls", JSON.stringify [@title]
+			else if not ( @title in storageIndex )
+				if @pastTitle?
+					storageIndex.splice (storageIndex.indexOf @pastTitle), 1
+					storage.removeItem "opmls.#{@pastTitle}"
+					delete @pastTitle
+				storageIndex.push @title
+				window.storage?.setItem "opmls", ( JSON.stringify storageIndex ).replace /<br\/?>/g, ""
+			Toast "Saved #{@title}", "<p>OPML Document saved. You can now return to ruining it, without the worry of loosing it</p>"
 
 	findNode: (path, from = @structure) =>
 		#alert "Arrived with path #{path}"
@@ -88,14 +96,55 @@ class OPML extends BaseObject
 				else return kid
 		return null
 
+	modify: (path, data) => Client.publish "outline.#{@title}.edit", path, data
+	addChild: (path) => Client.publish "outline.#{@title}.addChild", path
+	rename: (title) => Client.publish "outline.#{@title}.rename", title
+	removeChild: (path) => Client.publish "outline.#{@title}.removeChild", path
+
+	_modify: (path, data) =>
+		item = @findNode JSON.parse path
+		console.log path, item, data
+		item.text = data.text if data.text?
+		item._text = data.text if data.text?
+		if data.status?
+			if item.status in ["checked", "unchecked"]
+				item.status = data.status
+		item.note = data.note if data.note?
+		do @refreshView
+
+	_addChild: (path) =>
+		item = @findNode JSON.parse path
+		item.addChild()
+		do @refreshView
+
+	_rename: (title) =>
+		Client.queue["outline.#{@title}.addChild"] = null
+		Client.queue["outline.#{@title}.edit"] = null
+		Client.queue["outline.#{@title}.removeChild"] = null
+		@events = {}
+		@events["outline.#{title}.addChild"] = @events["outline.#{@title}.addChild"]
+		@events["outline.#{title}.edit"] = @events["outline.#{@title}.edit"]
+		@events["outline.#{title}.removeChlid"] = @events["outline.#{@title}.removeChlid"]
+		Client?.events = @events
+		Client?.loadEvents()
+		@title = title
+		do @refreshView
+
+	_removeChild: (path) =>
+		item = @findNode JSON.parse path
+		parent = item.parent
+		item.parent.remove item
+		if not parent.topics.length then parent.parent.children = null
+		do @refreshView
 
 
 	delete: =>
-		index = JSON.parse localStorage.getItem "opmls"
-		if @title in index
-			do @controller.deactivate
-			localStorage.removeItem "opmls.#{@title}"
-			index.splice (index.indexOf @title), 1
-			localStorage.setItem "opmls", JSON.stringify index
+		JSON.parse storage.getItem "opmls", (sets) =>
+			index = sets.index
+			if @title in index
+				do @controller.deactivate
+				storage.removeItem "opmls.#{@title}"
+				index.splice (index.indexOf @title), 1
+				storage.setItem "opmls", JSON.stringify index
 
 module.exports = OPML

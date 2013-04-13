@@ -1,4 +1,24 @@
-&.ng-scope
+article
+	transition all 1s ease-in-out
+	position absolute
+	left 0
+	right 0
+	top 0
+	background white
+	transform-style preserve-3d
+	backface-visibility hidden
+	perspective 500
+	&.activating
+		z-index 2
+		box-shadow 0 0 15px black
+		transform rotateY(180deg)
+	&.activated
+		z-index 2
+		box-shadow 0 0 15px black
+		transform rotateY(0)
+	&.deactivated
+		z-index -1
+		transform rotateY(180deg)
 	.appcontainer
 		margin 0
 		padding 0

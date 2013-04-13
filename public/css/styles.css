@@ -92,6 +92,10 @@ body:not(.landing) aside> section {
   -ms-transform-origin: 50% 100%;
   transform-origin: 50% 100%;
 }
+body:not(.landing) aside> section #qrimage {
+  -webkit-border-radius: 100%;
+  border-radius: 100%;
+}
 body:not(.landing) aside> section> article {
   display: block;
   background: -webkit-gradient(linear, left top, right top, color-stop(0, rgba(0,0,0,0)), color-stop(0.66, rgba(0,0,0,0)), color-stop(1, rgba(0,0,0,0.2))) #001a33;
@@ -1197,23 +1201,76 @@ body:not(.landing) > article #showhideappmenu:hover {
 body:not(.landing) > article #showhideappmenu i {
   margin-left: 14px;
 }
-body:not(.landing) > article section.ng-scope .appcontainer {
+body:not(.landing) > article section article {
+  -webkit-transition: all 1s ease-in-out;
+  -moz-transition: all 1s ease-in-out;
+  -o-transition: all 1s ease-in-out;
+  -ms-transition: all 1s ease-in-out;
+  transition: all 1s ease-in-out;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  background: #fff;
+  -webkit-transform-style: preserve-3d;
+  -moz-transform-style: preserve-3d;
+  -o-transform-style: preserve-3d;
+  -ms-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+  -webkit-backface-visibility: hidden;
+  -moz-backface-visibility: hidden;
+  -ms-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-perspective: 500;
+  -moz-perspective: 500;
+  -ms-perspective: 500;
+  perspective: 500;
+}
+body:not(.landing) > article section article.activating {
+  z-index: 2;
+  -webkit-box-shadow: 0 0 15px #000;
+  box-shadow: 0 0 15px #000;
+  -webkit-transform: rotateY(180deg);
+  -moz-transform: rotateY(180deg);
+  -o-transform: rotateY(180deg);
+  -ms-transform: rotateY(180deg);
+  transform: rotateY(180deg);
+}
+body:not(.landing) > article section article.activated {
+  z-index: 2;
+  -webkit-box-shadow: 0 0 15px #000;
+  box-shadow: 0 0 15px #000;
+  -webkit-transform: rotateY(0);
+  -moz-transform: rotateY(0);
+  -o-transform: rotateY(0);
+  -ms-transform: rotateY(0);
+  transform: rotateY(0);
+}
+body:not(.landing) > article section article.deactivated {
+  z-index: -1;
+  -webkit-transform: rotateY(180deg);
+  -moz-transform: rotateY(180deg);
+  -o-transform: rotateY(180deg);
+  -ms-transform: rotateY(180deg);
+  transform: rotateY(180deg);
+}
+body:not(.landing) > article section article .appcontainer {
   margin: 0;
   padding: 0;
   position: relative;
 }
-body:not(.landing) > article section.ng-scope .approw {
+body:not(.landing) > article section article .approw {
   display: block;
   position: relative;
 }
-body:not(.landing) > article section.ng-scope .approw.bordertop {
+body:not(.landing) > article section article .approw.bordertop {
   border-top: solid 1px #999;
 }
-body:not(.landing) > article section.ng-scope .approw p {
+body:not(.landing) > article section article .approw p {
   display: block;
   margin: 0 120px 0 35px;
 }
-body:not(.landing) > article section.ng-scope .approw p input {
+body:not(.landing) > article section article .approw p input {
   padding: 10px 0;
   margin: 10px 0;
   height: 10px;
@@ -1221,24 +1278,24 @@ body:not(.landing) > article section.ng-scope .approw p input {
   width: 100%;
   text-indent: 10px;
 }
-body:not(.landing) > article section.ng-scope .approw > i {
+body:not(.landing) > article section article .approw > i {
   cursor: pointer;
   float: left;
   margin: 20px 0;
   height: 10px;
 }
-body:not(.landing) > article section.ng-scope .approw > i.icon-custom {
+body:not(.landing) > article section article .approw > i.icon-custom {
   margin-right: 5px;
 }
-body:not(.landing) > article section.ng-scope .approw > i.icon-custom:before {
+body:not(.landing) > article section article .approw > i.icon-custom:before {
   content: "\f078";
 }
-body:not(.landing) > article section.ng-scope .approw nav {
+body:not(.landing) > article section article .approw nav {
   position: absolute;
   right: 5px;
   top: 10px;
 }
-body:not(.landing) > article section.ng-scope .approw nav li {
+body:not(.landing) > article section article .approw nav li {
   list-style: none;
 }
 body:not(.landing) #loadingscreen {
@@ -1289,6 +1346,46 @@ body:not(.landing).redtheme aside {
 }
 body:not(.landing).redtheme aside section article {
   background-color: #440f00;
+}
+#chromepanel {
+  display: inline-block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 25px;
+  z-index: 10;
+}
+#chromepanel * {
+  opacity: 0;
+  filter: alpha(opacity=0);
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  -webkit-transition: all 0.25s ease-in-out;
+  -moz-transition: all 0.25s ease-in-out;
+  -o-transition: all 0.25s ease-in-out;
+  -ms-transition: all 0.25s ease-in-out;
+  transition: all 0.25s ease-in-out;
+}
+#chromepanel:hover {
+  background: rgba(255,255,255,0.2);
+}
+#chromepanel:hover * {
+  opacity: 1;
+  -ms-filter: none;
+  filter: none;
+}
+#chromepanel i {
+  float: right;
+  height: 25px !important;
+  width: 25px !important;
+  line-height: 25px !important;
+}
+#chromepanel dragger {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 45px;
 }
 body.landing header {
   position: absolute;

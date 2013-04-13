@@ -36,6 +36,7 @@ class Outline
 		@fold = false
 		@[what] = null for what in _params
 		_checkParam @, "text", "text", xmlDoc
+		@_text = @text
 		_checkParam @, "status", "_status", xmlDoc
 		_checkParam @, "note", "_note", xmlDoc
 		_children = new OutlineCollection xmlDoc.childNodes, @, @parent.depth + 1

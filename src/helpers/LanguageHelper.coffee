@@ -1,15 +1,16 @@
 class LanguageHelper extends BaseObject
 	constructor: (language) ->
-		lang = localStorage.getItem "lang"
-		language = lang or "en-US"
-		@timer = setTimeout((=> @log "Initialized"), 0)
-		@switchLanguage language
+		storage.getItem "lang", (sets) =>
+			lang = sets.lang
+			language = lang or "en-US"
+			@timer = setTimeout((=> @log "Initialized"), 0)
+			@switchLanguage language
 		
 	switchLanguage: (@language) =>
 		try
 			require "languages/#{@language}"
 			@_language = JSONImport["#{@language}"]
-			localStorage.setItem "lang", @language
+			storage.setItem "lang", @language
 			do @_translateAll
 		catch e
 			@log "Error Encountered", e

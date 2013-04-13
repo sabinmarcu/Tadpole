@@ -1,6 +1,6 @@
 <i class="{{folded(item)}}" ng-click="toggleFold(item)"></i>
 <i class="{{status(item)}}" ng-click="toggleCheck(item)"></i>
-<p><input type='text' ng-model="item.text" /></p>
+<p><input type='text' ng-model="item._text" ng-change="updateNetwork(item, item.getPath())" /></p>
 <div class="approw bordertop" style="
 	padding-left: {{20 * (item.parent.depth + 1)}}px;
 	margin-left: -{{20 * (item.parent.depth + 1)}}px;

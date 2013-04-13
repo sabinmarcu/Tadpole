@@ -5,7 +5,7 @@ stylus = require "stylus"
 nib    = require "nib"
 base   = (require "path").resolve "@{__dirname}/../src/stylesheets"
 pack   = stitch.createPackage
-	"dependencies": ["./node_modules/isf/lib/isf.min.js"]
+	"dependencies": ["./node_modules/isf/lib/isf.min.js", "./node_modules/pc2cs/src/ClientClient.coffee"]
 	"paths": ["./src"]
 
 
@@ -21,11 +21,12 @@ class Compiler
 				if err then return throw CompilerErrorReporter.generate 2, CompilerErrorReporter.wrapCustomError err
 				source += src for src in @sources when src.substr?				
 				source += do src for src in @sources when src.apply?
+				source += "\n\nwindow.onload = function() {new (require(\"Application\"))()}"
 				if callback? then callback source
-				else
-					try
-						(require "fs").writeFileSync to.toString(), source, "utf8"
-					catch e then return throw CompilerErrorReporter.generate 3, CompilerErrorReporter.wrapCustomError e
+				try
+					(require "fs").writeFileSync to.toString(), source, "utf8"
+					console.log "Wrote sources to file"
+				catch e then return throw CompilerErrorReporter.generate 3, CompilerErrorReporter.wrapCustomError e
 		catch e then return throw CompilerErrorReporter.generate 1, e
 		
 	@addSource: (source) ->
@@ -40,10 +41,9 @@ class Compiler
 			stylus(sty).set("filename", "#{base}/index.styl").set("paths", paths).use(do nib).import("nib").render (err, css) ->
 				if err then return throw CompilerErrorReporter.generate 4, CompilerErrorReporter.wrapCustomError err
 				if callback? then callback css
-				else
-					try
-						( require "fs" ).writeFileSync to.toString(), css, "utf8"
-					catch e then return throw CompilerErrorReporter.generate 6, CompilerErrorReporter.wrapCustomError e
+				try
+					( require "fs" ).writeFileSync to.toString(), css, "utf8"
+				catch e then return throw CompilerErrorReporter.generate 6, CompilerErrorReporter.wrapCustomError e
 		catch e
 			throw CompilerErrorReporter.generate 5, CompilerErrorReporter.wrapCustomError e
 

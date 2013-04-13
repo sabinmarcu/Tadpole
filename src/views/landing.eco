@@ -7,7 +7,7 @@
 </header>
 <div class="container rest">
 	<aside>
-		<a href="/" class="btn btn-large btn-warning firefox">Add to Firefox / FirefoxOS</a>
+		<a href="/" class="btn btn-large btn-warning firefox" onclick="navigator.mozApps.install(window.location + 'manifest.webapp')">Add to Firefox / FirefoxOS</a>
 		<a href="/" class="btn btn-large btn-success chrome">Add to Chrome / ChromeOS</a>
 		<a href="/" class="btn btn-large btn-info iexplorer">Add to IE / Windows8</a>
 	</aside>

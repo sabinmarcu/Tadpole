@@ -1,7 +1,7 @@
 {
   "name": "Arrow",
   "description": "Brainstorming app usable even in sleep",
-  "launch_path": "/index.app.html",
+  "launch_path": "/index.html",
   "icons": {
     "128": "/arrow_up_1.png"
   },
