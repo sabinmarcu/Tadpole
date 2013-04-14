@@ -49,7 +49,6 @@ class Application extends BaseObject
 		storage.getItem "landing", (set) =>
 			landing = set.landing
 			if chrome? and chrome.storage? then landing = "false"
-			@log chrome?, chrome.storage?, landing
 			if not landing? then landing = true; storage.setItem("landing", false)
 			landing = landing.toString()
 			@log landing, set

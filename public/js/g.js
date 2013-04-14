@@ -296,7 +296,6 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
         if ((typeof chrome !== "undefined" && chrome !== null) && (chrome.storage != null)) {
           landing = "false";
         }
-        _this.log(typeof chrome !== "undefined" && chrome !== null, chrome.storage != null, landing);
         if (landing == null) {
           landing = true;
           storage.setItem("landing", false);
