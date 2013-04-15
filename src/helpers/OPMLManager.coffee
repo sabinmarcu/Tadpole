@@ -23,7 +23,7 @@ class OPMLManager extends IS.Object
 
 	open: (file, silent) =>	Client.publish "opml.open", file, silent; @refreshView?()
 
-	openOPML: (opml, override = false) => Client.publish "opml.openOPML", (@OPMLs.indexOf opml), override, opml.text, Client.id; @refreshView?()
+	openOPML: (opml, override = false) => if opml? then Client.publish "opml.openOPML", (@OPMLs.indexOf opml), override, opml.text, Client.id; @refreshView?()
 
 	_open: (file, silent = false) =>
 		do @activeOPML.controller.deactivate if @activeOPML? and not silent

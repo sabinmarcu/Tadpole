@@ -17,6 +17,8 @@ class OPML extends BaseObject
 	JSONize: (xml) =>
 		@title = xml.getElementsByTagName("title")[0].childNodes[0].nodeValue
 		@structure = (DepMan.model "Outline").generate xml
+		@locationService = new (DepMan.helper "Locations")(@)
+		console.log @structure
 		@controller = new (DepMan.controller "OPML")( @ )
 
 	find: (search = [], start = null) =>
@@ -43,14 +45,14 @@ class OPML extends BaseObject
 		form.setAttribute "method", "POST"
 		input = document.createElement "input"
 		input.setAttribute "name", "content"
-		input.value = ( do @export ).replace /["']/g, "\""
+		input.value = ( do @Export ).replace /["']/g, "\""
 		form.appendChild input
 		document.body.appendChild form
 		form.submit()
 		document.body.removeChild form
 
 
-	export: => "<opml version='1.0'><head><title>#{@title}</title></head><body>#{do @exportBody}</body></opml>"
+	Export: => "<opml version='1.0'><head><title>#{@title}</title></head><body>#{do @exportBody}</body></opml>"
 
 	exportBody: (tree = @structure) =>
 		string = ""
@@ -73,7 +75,7 @@ class OPML extends BaseObject
 		string.replace "\n", ""
 
 	save: =>
-		window.storage?.setItem "opmls.#{@title}", do @export
+		window.storage?.setItem "opmls.#{@title}", do @Export
 		window.storage.getItem "opmls", (sets) =>
 			storageIndex = JSON.parse sets.opmls
 			if not storageIndex then window.storage.setItem "opmls", JSON.stringify [@title]

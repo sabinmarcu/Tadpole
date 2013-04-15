@@ -4,25 +4,79 @@ article
 	left 0
 	right 0
 	top 0
+	bottom 0
 	background white
 	transform-style preserve-3d
 	backface-visibility hidden
-	perspective 500
+	perspective 1600
+	canvas
+		display block
+		font-family "Open Sans"
+		font-size 24pt
+	> nav
+		display block
+		position fixed
+		width 150px
+		height 50px
+		right -150px
+		bottom 50px
+		z-index 3
+		transition all 1s ease-in-out
+		li
+			width 50px
+			height 50px
+			background linear-gradient(top, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.4) 100%)
+			display inline-block
+			list-style none
+			float left
+			line-height 50px
+			text-align center
+			background-color white
+			box-shadow 0 0 25px rgba(0, 0, 0, 0.2) inset
+			color black
+			&.selected 
+				box-shadow 0 0 25px rgba(0, 0, 0, 0.3) inset
+				background-color darken(white, 80)
+				color white
+			&:first-child
+				background linear-gradient(right, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.4) 100%)
+				background-color basecolor
+				box-shadow 15px 0 25px rgba(0, 0, 0, 0.2) inset
 	&.activating
 		z-index 2
-		box-shadow 0 0 15px black
-		transform rotateY(180deg)
+		transform translateX(100%)
 	&.activated
 		z-index 2
-		box-shadow 0 0 15px black
-		transform rotateY(0)
+		transform translateX(0)
+		> nav
+			right -140px
+			&:hover
+				right 0
+
 	&.deactivated
 		z-index -1
+		transform translateX(-100%)
+
+	& > div
 		transform rotateY(180deg)
-	.appcontainer
-		margin 0
-		padding 0
-		position relative
+		transform-style preserve-3d
+		backface-visibility hidden
+		transition all 1s ease-in-out
+		position absolute
+		top 0
+		right 0
+		left 0
+		bottom 0
+		z-index -1
+		box-shadow none
+		background white
+		overflow-y auto
+		&:first-child
+			transform rotateY(-180deg)
+		&.active
+			transform rotateY(0)
+			z-index 1
+			box-shadow 0 0 15px black
 
 	.approw
 		display block

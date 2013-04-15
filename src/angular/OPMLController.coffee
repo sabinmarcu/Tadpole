@@ -11,6 +11,7 @@ angular.module("Arrow").controller "OPMLController", ($scope, $rootScope, OPML) 
 	OPML.activateControllerFunctions.push (obj) ->
 		obj.refreshView = $scope.safeApply
 		$scope.object = obj
+		$scope.view = "outline"
 
 		$scope.isMobile = window.isMobile
 
@@ -59,6 +60,11 @@ angular.module("Arrow").controller "OPMLController", ($scope, $rootScope, OPML) 
 						"status" : status
 						"notes"  : do modal.find("#notes").val
 					$scope.safeApply()
+
+		$scope.changeView = (to) ->
+			$scope.view = to
+			if to is "mindmap" then do $scope.object.controller.frameBuffer.start
+			else do $scope.object.controller.frameBuffer.end
 
 		jQuery(window).keydown (e) ->
 			if e.ctrlKey or e.metaKey

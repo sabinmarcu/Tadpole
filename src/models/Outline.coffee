@@ -39,6 +39,8 @@ class Outline
 		@_text = @text
 		_checkParam @, "status", "_status", xmlDoc
 		_checkParam @, "note", "_note", xmlDoc
+		_checkParam @, "x", "_x", xmlDoc
+		_checkParam @, "y", "_y", xmlDoc
 		_children = new OutlineCollection xmlDoc.childNodes, @, @parent.depth + 1
 		@children = (if _children.topics.length then _children else null)
 		if @status is ""

@@ -712,6 +712,7 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
 
       obj.refreshView = $scope.safeApply;
       $scope.object = obj;
+      $scope.view = "outline";
       $scope.isMobile = window.isMobile;
       $scope.type = function(item) {
         if (item.children !== null) {
@@ -812,6 +813,14 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
           });
         }
       };
+      $scope.changeView = function(to) {
+        $scope.view = to;
+        if (to === "mindmap") {
+          return $scope.object.controller.frameBuffer.start();
+        } else {
+          return $scope.object.controller.frameBuffer.end();
+        }
+      };
       jQuery(window).keydown(function(e) {
         if (e.ctrlKey || e.metaKey) {
           switch (String.fromCharCode(e.which).toLowerCase()) {
@@ -891,6 +900,267 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
   });
 
   console.log("OPMLManager should be available now");
+
+}).call(this);
+}, "classes/FrameBuffer": function(exports, require, module) {(function() {
+  var FrameBuffer,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  window.requestAnimFrame = (function() {
+    return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || function(callback) {
+      return window.setTimeout(callback, 1000 / 60);
+    };
+  })();
+
+  Object.getPrototypeOf(document.createElement("canvas").getContext("2d")).fillRectR = function(x, y, w, h, r) {
+    if (typeof r === "undefined") {
+      r = 5;
+    }
+    this.beginPath();
+    this.moveTo(x + r, y);
+    this.lineTo(x + w - r, y);
+    this.quadraticCurveTo(x + w, y, x + w, y + r);
+    this.lineTo(x + w, y + h - r);
+    this.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    this.lineTo(x + r, y + h);
+    this.quadraticCurveTo(x, y + h, x, y + h - r);
+    this.lineTo(x, y + r);
+    this.quadraticCurveTo(x, y, x + r, y);
+    this.closePath();
+    return this.fill();
+  };
+
+  Object.getPrototypeOf(document.createElement("canvas").getContext("2d")).strokeRectR = function(x, y, w, h, r) {
+    if (typeof r === "undefined") {
+      r = 5;
+    }
+    this.beginPath();
+    this.moveTo(x + r, y);
+    this.lineTo(x + w - r, y);
+    this.quadraticCurveTo(x + w, y, x + w, y + r);
+    this.lineTo(x + w, y + h - r);
+    this.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    this.lineTo(x + r, y + h);
+    this.quadraticCurveTo(x, y + h, x, y + h - r);
+    this.lineTo(x, y + r);
+    this.quadraticCurveTo(x, y, x + r, y);
+    this.closePath();
+    return this.stroke();
+  };
+
+  FrameBuffer = (function(_super) {
+    __extends(FrameBuffer, _super);
+
+    function FrameBuffer(buffer) {
+      var _ref;
+
+      this.buffer = buffer;
+      this.sequence = __bind(this.sequence, this);
+      this.tick = __bind(this.tick, this);
+      this.end = __bind(this.end, this);
+      this.start = __bind(this.start, this);
+      this._sizeModif = __bind(this._sizeModif, this);
+      this._hookSizeModif = __bind(this._hookSizeModif, this);
+      if ((_ref = this.buffer) == null) {
+        this.buffer = document.createElement("canvas");
+      }
+      this.context = this.buffer.getContext("2d");
+      this._hookSizeModif();
+      this.echo("FrameBuffer Ready");
+    }
+
+    FrameBuffer.prototype._hookSizeModif = function() {
+      window.addEventListener("resize", this._sizeModif);
+      return this._sizeModif();
+    };
+
+    FrameBuffer.prototype._sizeModif = function() {
+      this.buffer.width = window.innerWidth;
+      return this.buffer.height = window.innerHeight;
+    };
+
+    FrameBuffer.prototype.start = function() {
+      if (typeof this._start === "function") {
+        this._start();
+      }
+      this.running = true;
+      return this.tick();
+    };
+
+    FrameBuffer.prototype.end = function() {
+      return this.running = false;
+    };
+
+    FrameBuffer.prototype.tick = function() {
+      this.sequence();
+      if (this.running) {
+        return requestAnimationFrame(this.tick);
+      } else {
+        if (typeof this._end === "function") {
+          this._end();
+        }
+        return this.context.clearRect(0, 0, this.buffer.width, this.buffer.height);
+      }
+    };
+
+    FrameBuffer.prototype.sequence = function() {
+      return console.log("Tick width: " + this.buffer.width + ", height: " + this.buffer.height);
+    };
+
+    return FrameBuffer;
+
+  })(BaseObject);
+
+  module.exports = FrameBuffer;
+
+}).call(this);
+}, "classes/GuguFrameBuffer": function(exports, require, module) {(function() {
+  var GuguFrameBuffer,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  GuguFrameBuffer = (function(_super) {
+    __extends(GuguFrameBuffer, _super);
+
+    function GuguFrameBuffer(model) {
+      this.model = model;
+      GuguFrameBuffer.__super__.constructor.call(this);
+      this.context.textAlign = "center";
+      this.context.textBaseline = "middle";
+    }
+
+    GuguFrameBuffer.prototype.sequence = function() {
+      return this.drawGugus(this.model.structure);
+    };
+
+    GuguFrameBuffer.prototype.drawGugus = function(set) {
+      var item, _i, _len, _ref, _results;
+
+      _ref = set.topics;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        item = _ref[_i];
+        this.drawGugu(item);
+        if (item.children) {
+          _results.push(this.drawGugus(item.children));
+        } else {
+          _results.push(void 0);
+        }
+      }
+      return _results;
+    };
+
+    GuguFrameBuffer.prototype.drawGugu = function(item) {
+      var gradient;
+
+      gradient = this.context.createLinearGradient(item.x, item.y, item.x + 300, item.y + 50);
+      gradient.addColorStop(0, "white");
+      gradient.addColorStop(0.3, "#eee");
+      gradient.addColorStop(1, "#eee");
+      this.context.fillStyle = gradient;
+      this.context.fillRectR(item.x, item.y, 300, 50);
+      this.context.fillStyle = "black";
+      return this.context.fillText(item.text, item.x + 75, item.y + 25);
+    };
+
+    return GuguFrameBuffer;
+
+  })(DepMan.classes("FrameBuffer"));
+
+  module.exports = GuguFrameBuffer;
+
+}).call(this);
+}, "classes/LinesFrameBuffer": function(exports, require, module) {(function() {
+  var LinesFrameBuffer,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  LinesFrameBuffer = (function(_super) {
+    __extends(LinesFrameBuffer, _super);
+
+    function LinesFrameBuffer(model) {
+      this.model = model;
+      LinesFrameBuffer.__super__.constructor.call(this);
+      this.context.strokeStyle = "#444";
+    }
+
+    LinesFrameBuffer.prototype.sequence = function() {
+      return this.drawLines(this.model.structure);
+    };
+
+    LinesFrameBuffer.prototype.drawLines = function(set) {
+      var item, kid, _i, _j, _len, _len1, _ref, _ref1, _results;
+
+      _ref = set.topics;
+      _results = [];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        item = _ref[_i];
+        if (item.children) {
+          _ref1 = item.children.topics;
+          for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+            kid = _ref1[_j];
+            this.drawLine(item, kid);
+          }
+          _results.push(this.drawLines(item.children));
+        } else {
+          _results.push(void 0);
+        }
+      }
+      return _results;
+    };
+
+    LinesFrameBuffer.prototype.drawLine = function(from, to) {
+      this.context.beginPath();
+      this.context.moveTo(from.x + 150, from.y + 25);
+      this.context.lineTo(to.x + 150, to.y + 25);
+      return this.context.stroke();
+    };
+
+    return LinesFrameBuffer;
+
+  })(DepMan.classes("FrameBuffer"));
+
+  module.exports = LinesFrameBuffer;
+
+}).call(this);
+}, "classes/MainFrameBuffer": function(exports, require, module) {(function() {
+  var MainFrameBuffer,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  MainFrameBuffer = (function(_super) {
+    __extends(MainFrameBuffer, _super);
+
+    function MainFrameBuffer(buffer, model) {
+      this.Gugu = new (DepMan.classes("GuguFrameBuffer"))(model);
+      this.Line = new (DepMan.classes("LinesFrameBuffer"))(model);
+      MainFrameBuffer.__super__.constructor.call(this, buffer);
+    }
+
+    MainFrameBuffer.prototype.sequence = function() {
+      this.context.fillStyle = "black";
+      this.context.fillRect(0, 0, this.buffer.width, this.buffer.height);
+      this.context.drawImage(this.Line.context.canvas, 0, 0);
+      return this.context.drawImage(this.Gugu.context.canvas, 0, 0);
+    };
+
+    MainFrameBuffer.prototype._start = function() {
+      this.Line.start();
+      return this.Gugu.start();
+    };
+
+    MainFrameBuffer.prototype._end = function() {
+      this.Line.end();
+      return this.Gugu.end();
+    };
+
+    return MainFrameBuffer;
+
+  })(DepMan.classes("FrameBuffer"));
+
+  module.exports = MainFrameBuffer;
 
 }).call(this);
 }, "controllers/ContextMenu": function(exports, require, module) {(function() {
@@ -1073,6 +1343,9 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
       this.e.appendChild(e);
       angular.bootstrap(this.e, ["Arrow"]);
       this.je = $(this.e);
+      this.canvas = this.je.find("canvas")[0];
+      this.frameBuffer = new (DepMan.classes("MainFrameBuffer"))(this.canvas, this.model);
+      this.log(this);
     }
 
     OPMLController.prototype.activate = function() {
@@ -1395,6 +1668,7 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
       this.basePrefix = basePrefix != null ? basePrefix : "";
       this.deps = deps != null ? deps : [];
       this.googleFont = __bind(this.googleFont, this);
+      this.classes = __bind(this.classes, this);
       this.angular = __bind(this.angular, this);
       this.lib = __bind(this.lib, this);
       this.model = __bind(this.model, this);
@@ -1448,6 +1722,10 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
 
     DepMan.prototype.angular = function(module) {
       return this._require(module, "angular/");
+    };
+
+    DepMan.prototype.classes = function(module) {
+      return this._require(module, "classes/");
     };
 
     DepMan.prototype.googleFont = function(font, sizes, subsets) {
@@ -1788,6 +2066,63 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
   })(BaseObject);
 
 }).call(this);
+}, "helpers/Locations": function(exports, require, module) {(function() {
+  var LocationsService,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  LocationsService = (function(_super) {
+    var levels;
+
+    __extends(LocationsService, _super);
+
+    levels = [];
+
+    function LocationsService(model) {
+      this.model = model;
+      this.generate = __bind(this.generate, this);
+      this._firstTimeSetup = __bind(this._firstTimeSetup, this);
+      this.levels = [];
+      this._firstTimeSetup();
+    }
+
+    LocationsService.prototype._firstTimeSetup = function() {
+      return this.generate(this.model.structure, 0);
+    };
+
+    LocationsService.prototype.generate = function(list, depth) {
+      var item, levelX, _base, _i, _len, _ref, _ref1, _results;
+
+      if ((_ref = (_base = this.levels)[depth]) == null) {
+        _base[depth] = 30;
+      }
+      levelX = depth * 350 + 50;
+      _ref1 = list.topics;
+      _results = [];
+      for (_i = 0, _len = _ref1.length; _i < _len; _i++) {
+        item = _ref1[_i];
+        if (item.children) {
+          this.generate(item.children, depth + 1);
+        }
+        if (item.x === "" || item.y === "") {
+          item.y = this.levels[depth];
+          item.x = levelX;
+          _results.push(this.levels[depth] += 75);
+        } else {
+          _results.push(void 0);
+        }
+      }
+      return _results;
+    };
+
+    return LocationsService;
+
+  })(BaseObject);
+
+  module.exports = LocationsService;
+
+}).call(this);
 }, "helpers/OPMLManager": function(exports, require, module) {(function() {
   var OPMLManager, _inst,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
@@ -1850,8 +2185,10 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
       if (override == null) {
         override = false;
       }
-      Client.publish("opml.openOPML", this.OPMLs.indexOf(opml), override, opml.text, Client.id);
-      return typeof this.refreshView === "function" ? this.refreshView() : void 0;
+      if (opml != null) {
+        Client.publish("opml.openOPML", this.OPMLs.indexOf(opml), override, opml.text, Client.id);
+        return typeof this.refreshView === "function" ? this.refreshView() : void 0;
+      }
     };
 
     OPMLManager.prototype._open = function(file, silent) {
@@ -11969,7 +12306,7 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
       this.findNode = __bind(this.findNode, this);
       this.save = __bind(this.save, this);
       this.exportBody = __bind(this.exportBody, this);
-      this["export"] = __bind(this["export"], this);
+      this.Export = __bind(this.Export, this);
       this.download = __bind(this.download, this);
       this.find = __bind(this.find, this);
       this.JSONize = __bind(this.JSONize, this);
@@ -12000,6 +12337,8 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
     OPML.prototype.JSONize = function(xml) {
       this.title = xml.getElementsByTagName("title")[0].childNodes[0].nodeValue;
       this.structure = (DepMan.model("Outline")).generate(xml);
+      this.locationService = new (DepMan.helper("Locations"))(this);
+      console.log(this.structure);
       return this.controller = new (DepMan.controller("OPML"))(this);
     };
 
@@ -12054,14 +12393,14 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
       form.setAttribute("method", "POST");
       input = document.createElement("input");
       input.setAttribute("name", "content");
-      input.value = (this["export"]()).replace(/["']/g, "\"");
+      input.value = (this.Export()).replace(/["']/g, "\"");
       form.appendChild(input);
       document.body.appendChild(form);
       form.submit();
       return document.body.removeChild(form);
     };
 
-    OPML.prototype["export"] = function() {
+    OPML.prototype.Export = function() {
       return "<opml version='1.0'><head><title>" + this.title + "</title></head><body>" + (this.exportBody()) + "</body></opml>";
     };
 
@@ -12113,7 +12452,7 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
         _this = this;
 
       if ((_ref = window.storage) != null) {
-        _ref.setItem("opmls." + this.title, this["export"]());
+        _ref.setItem("opmls." + this.title, this.Export());
       }
       return window.storage.getItem("opmls", function(sets) {
         var storageIndex, _ref1, _ref2;
@@ -12371,6 +12710,8 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
       this._text = this.text;
       _checkParam(this, "status", "_status", xmlDoc);
       _checkParam(this, "note", "_note", xmlDoc);
+      _checkParam(this, "x", "_x", xmlDoc);
+      _checkParam(this, "y", "_y", xmlDoc);
       _children = new OutlineCollection(xmlDoc.childNodes, this, this.parent.depth + 1);
       this.children = (_children.topics.length ? _children : null);
       if (this.status === "") {
@@ -13745,7 +14086,7 @@ QRBitBuffer.prototype = {
   }
   (function() {
     (function() {
-      __out.push('<input type="hidden" ng-model="object.title">\n<div class="appcontainer" ng-model="object.structure.topics">\n\t<div class="approw {{type(item)}}" style="\n\tpadding-left: 20px;\n\tmargin-left: 0px;\n" ng-repeat="item in object.structure.topics" ng-include="\'tree_row.html\'"/></div>\n</div>\n');
+      __out.push('<div id="outline" ng-class="{outline: \'active\'}[view]" ng-model="object.structure.topics">\n\t<div class="approw {{type(item)}}" style="\n\tpadding-left: 20px;\n\tmargin-left: 0px;\n" ng-repeat="item in object.structure.topics" ng-include="\'tree_row.html\'"/></div>\n</div>\n<div id="canvas" ng-class="{mindmap: \'active\'}[view]">\n    <canvas></canvas>\n</div>\n<nav>\n\t<li></li>\n    <li ng-class="{\'outline\': \'selected\'}[view]" ng-click="changeView(\'outline\')"><i class="icon-list"></i></li>\n    <li ng-class="{\'mindmap\': \'selected\'}[view]" ng-click="changeView(\'mindmap\')"><i class="icon-sitemap"></i></li>\n</nav>');
     
     }).call(this);
     

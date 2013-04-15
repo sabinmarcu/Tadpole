@@ -14,9 +14,10 @@ class OPMLController extends BaseObject
 		@e.appendChild e
 		angular.bootstrap @e, ["Arrow"]
 		@je = $(@e)
+		@canvas = @je.find("canvas")[0]
+		@frameBuffer = new (DepMan.classes "MainFrameBuffer")(@canvas, @model)
+		@log @
 
-
-		
 	activate: =>
 		console.log "activating"
 		@je.addClass 'activating'
