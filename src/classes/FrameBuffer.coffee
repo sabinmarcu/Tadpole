@@ -50,7 +50,7 @@ class FrameBuffer extends BaseObject
 
 	tick: => 
 		do @sequence 
-		if @running then requestAnimationFrame(@tick) 
+		if @running then requestAnimFrame(@tick) 
 		else 
 			@_end?()
 			@context.clearRect 0, 0, @buffer.width, @buffer.height

@@ -996,7 +996,7 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
     FrameBuffer.prototype.tick = function() {
       this.sequence();
       if (this.running) {
-        return requestAnimationFrame(this.tick);
+        return requestAnimFrame(this.tick);
       } else {
         if (typeof this._end === "function") {
           this._end();
