@@ -1,6 +1,12 @@
 angular.module("Arrow").controller "NGAsideController", ($scope, $rootScope) ->
 	TABS = new IS.Enum([ "LIST", "SERVER", "GENERAL" ])
-	console.log $scope, @, @ is $scope
+	$scope.safeApply = (fn) ->
+		phase = $scope.$parent.$$phase
+		console.log phase
+		if phase is '$apply' or phase is '$digest'
+			if fn and (typeof(fn) is 'function')
+				do fn
+		else $scope.$apply(fn)
 	storage.getItem "lang", (sets) =>
 		$scope.language = sets.language or "en_US"
 		$scope.languages = [
@@ -29,11 +35,20 @@ angular.module("Arrow").controller "NGAsideController", ($scope, $rootScope) ->
 		if $scope.sidebarstatus is "closed" then $scope.sidebarstatus = 'open' else $scope.sidebarstatus = 'closed'
 		storage.setItem("sidebarstatus", $scope.sidebarstatus)
 	storage.getItem "lastpanel", (sets) ->
-		$scope.activeTab = sets.lastpanel or TABS.LIST
-		$scope.asidetab = (whom) -> $scope.activeTab = TABS[whom]; storage.setItem("lastpanel", TABS[whom])
+		$scope.asidetab = (whom = null, step = 1) ->
+			if not whom?
+				whom = $scope.activeTab + step
+				if whom > 2 then whom = 2
+				if whom < 0 then whom = 0
+			else whom = TABS[whom]
+			$scope.activeTab = whom; storage.setItem("lastpanel", whom)
 		animationVariants = ["topVariant", "bottomVariant"]
 		$scope.getAnim = -> animationVariants[Math.floor(Math.random() * animationVariants.length)]
-		$scope.tabIsActive = (whom) -> TABS[whom] is $scope.activeTab
+		$scope.tabIsActive = (whom) ->  TABS[whom].toString() is $scope.activeTab.toString()
+		$scope.activeTab = sets.lastpanel or TABS.LIST
+		console.log $scope.tabIsActive("LIST")
+		console.log $scope.tabIsActive("SERVER")
+		console.log $scope.tabIsActive("GENERAL")
 	storage.getItem "landing", (sets) ->
 		$scope.landingpageactive = sets.landing
 		$scope.activateLanding = -> !$scope.landingpageactive; storage.setItem("landing", $scope.landingpageactive)

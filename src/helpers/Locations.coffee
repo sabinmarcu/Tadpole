@@ -2,10 +2,10 @@ class LocationsService extends BaseObject
 
 	levels = []
 	constructor: (@model) ->
-		@levels = []
-		do @_firstTimeSetup
+		do @generateLocations
 
-	_firstTimeSetup: =>
+	generateLocations: =>
+		@levels = []
 		@generate @model.structure, 0
 
 	generate: (list, depth) =>
@@ -17,6 +17,8 @@ class LocationsService extends BaseObject
 				item.y = @levels[depth]
 				item.x = levelX
 				@levels[depth] += 75
+
+	getNextChild: (level) => @levels[level] ?= 0; @levels[level] += 75; x: level * 350 + 50 , y: @levels[level] - 75
 
 
 module.exports = LocationsService

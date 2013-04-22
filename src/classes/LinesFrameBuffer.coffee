@@ -1,17 +1,19 @@
 class LinesFrameBuffer extends DepMan.classes("FrameBuffer")
-	constructor: (@model) -> super(); @context.strokeStyle = "#444"
-	sequence: -> @drawLines @model.structure
-	drawLines: (set) ->
+	constructor: (@model, @parent) -> super(); @context.strokeStyle = "#444"
+	sequence: => 
+		@context.clearRect 0, 0, @buffer.width, @buffer.height
+		@context.beginPath()
+		@drawLines @model.structure
+		@context.stroke()
+	drawLines: (set) =>
 		for item in set.topics
 			if item.children
 				for kid in item.children.topics
 					@drawLine item, kid
 				@drawLines item.children
-	drawLine: (from, to) ->
-		@context.beginPath()
-		@context.moveTo from.x + 150, from.y + 25
-		@context.lineTo to.x + 150, to.y + 25
-		@context.stroke()
+	drawLine: (from, to) =>
+		@context.moveTo (@getX from) + 150, (@getY from) + 25
+		@context.lineTo (@getX to) + 150, (@getY to) + 25
 
 
 module.exports = LinesFrameBuffer

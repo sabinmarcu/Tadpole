@@ -6,6 +6,7 @@ class OPML extends BaseObject
 		@events["outline.#{@title}.addChild"] = @_addChild
 		@events["outline.#{@title}.edit"] = @_modify
 		@events["outline.#{@title}.removeChild"] = @_removeChild
+		@events["outline.#{@title}.move"] = @_move
 		Client?.events = @events
 		Client?.loadEvents()
 
@@ -59,6 +60,7 @@ class OPML extends BaseObject
 		for kid in tree.topics
 			string += "<outline text='#{kid.text.replace("\"", "&#34;").replace("'", "&#39;")}' "
 			string += "_note='#{kid.note.replace("\"", "&#34;").replace("'", "&#39;").replace("\n", " ")}' " if kid.note?
+			string += "_x='#{kid.x}' _y='#{kid.y}' "
 			if kid.status? then string += "_status='#{kid.status}'"
 			else if kid.children?
 				kids = kid.children.topics
@@ -102,6 +104,7 @@ class OPML extends BaseObject
 	addChild: (path) => Client.publish "outline.#{@title}.addChild", path
 	rename: (title) => Client.publish "outline.#{@title}.rename", title
 	removeChild: (path) => Client.publish "outline.#{@title}.removeChild", path
+	move: (path, to) => @log path; Client.publish "outline.#{@title}.move", ( JSON.stringify path ), ( JSON.stringify to )
 
 	_modify: (path, data) =>
 		item = @findNode JSON.parse path
@@ -116,17 +119,19 @@ class OPML extends BaseObject
 
 	_addChild: (path) =>
 		item = @findNode JSON.parse path
-		item.addChild()
+		item.addChild(@locationService.getNextChild path.length)
 		do @refreshView
 
 	_rename: (title) =>
 		Client.queue["outline.#{@title}.addChild"] = null
 		Client.queue["outline.#{@title}.edit"] = null
 		Client.queue["outline.#{@title}.removeChild"] = null
+		Client.queue["outline.#{@title}.move"] = null
 		@events = {}
 		@events["outline.#{title}.addChild"] = @events["outline.#{@title}.addChild"]
 		@events["outline.#{title}.edit"] = @events["outline.#{@title}.edit"]
 		@events["outline.#{title}.removeChlid"] = @events["outline.#{@title}.removeChlid"]
+		@events["outline.#{title}.move"] = @events["outline.#{@title}.move"]
 		Client?.events = @events
 		Client?.loadEvents()
 		@title = title
@@ -138,6 +143,12 @@ class OPML extends BaseObject
 		item.parent.remove item
 		if not parent.topics.length then parent.parent.children = null
 		do @refreshView
+
+	_move: (path, to) =>
+		item = @findNode JSON.parse path
+		to = JSON.parse to
+		item.x = to.x
+		item.y = to.y
 
 
 	delete: =>

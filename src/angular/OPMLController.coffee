@@ -12,6 +12,7 @@ angular.module("Arrow").controller "OPMLController", ($scope, $rootScope, OPML) 
 		obj.refreshView = $scope.safeApply
 		$scope.object = obj
 		$scope.view = "outline"
+		#$scope.view = "mindmap"; do $scope.object.controller.frameBuffer.sequence
 
 		$scope.isMobile = window.isMobile
 
@@ -61,10 +62,14 @@ angular.module("Arrow").controller "OPMLController", ($scope, $rootScope, OPML) 
 						"notes"  : do modal.find("#notes").val
 					$scope.safeApply()
 
-		$scope.changeView = (to) ->
+		views = ["mindmap", "outline"]
+		$scope.changeView = (to = null) ->
+			if not to?
+				if $scope.view is views[0] then to = views[1]
+				else to = views[0]
 			$scope.view = to
-			if to is "mindmap" then do $scope.object.controller.frameBuffer.start
-			else do $scope.object.controller.frameBuffer.end
+			if to is "mindmap" then do $scope.object.controller.frameBuffer.sequence
+			$scope.safeApply()
 
 		jQuery(window).keydown (e) ->
 			if e.ctrlKey or e.metaKey

@@ -8,6 +8,7 @@ body {
   font-size: 10pt;
   font-family: "Open Sans", sans-serif;
   color: #242424;
+  background: #000;
 }
 body:not(.landing) aside> nav {
   position: absolute;
@@ -114,6 +115,19 @@ body:not(.landing) aside> section> article {
   color: #fff;
   overflow-y: auto;
   overflow-x: hidden;
+  -webkit-transform: translateX(-110%);
+  -moz-transform: translateX(-110%);
+  -o-transform: translateX(-110%);
+  -ms-transform: translateX(-110%);
+  transform: translateX(-110%);
+  -webkit-transition: all 1s ease;
+  -moz-transition: all 1s ease;
+  -o-transition: all 1s ease;
+  -ms-transition: all 1s ease;
+  transition: all 1s ease;
+  opacity: 0;
+  filter: alpha(opacity=0);
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
 }
 body:not(.landing) aside> section> article h1 {
   font-size: 30px;
@@ -123,31 +137,23 @@ body:not(.landing) aside> section> article#server div {
   text-align: center;
   margin: 25px 0;
 }
-body:not(.landing) aside> section> article.active.bottomVariant {
-  top: -100%;
-  bottom: 100%;
-  -webkit-animation: paneDown 0.5s forwards ease-in 0.5s;
-  -moz-animation: paneDown 0.5s forwards ease-in 0.5s;
-  -o-animation: paneDown 0.5s forwards ease-in 0.5s;
-  -ms-animation: paneDown 0.5s forwards ease-in 0.5s;
-  animation: paneDown 0.5s forwards ease-in 0.5s;
-}
-body:not(.landing) aside> section> article.active.topVariant {
-  top: 100%;
-  bottom: -100%;
-  -webkit-animation: paneUp 0.5s forwards ease-in 0.5s;
-  -moz-animation: paneUp 0.5s forwards ease-in 0.5s;
-  -o-animation: paneUp 0.5s forwards ease-in 0.5s;
-  -ms-animation: paneUp 0.5s forwards ease-in 0.5s;
-  animation: paneUp 0.5s forwards ease-in 0.5s;
+body:not(.landing) aside> section> article.active {
+  opacity: 1;
+  -ms-filter: none;
+  filter: none;
+  -webkit-transform: translateX(0);
+  -moz-transform: translateX(0);
+  -o-transform: translateX(0);
+  -ms-transform: translateX(0);
+  transform: translateX(0);
 }
 body:not(.landing) aside> section> article.active + article,
 body:not(.landing) aside> section> article.active + article + article {
-  -webkit-animation: paneRight 0.5s forwards ease-out 0.5s;
-  -moz-animation: paneRight 0.5s forwards ease-out 0.5s;
-  -o-animation: paneRight 0.5s forwards ease-out 0.5s;
-  -ms-animation: paneRight 0.5s forwards ease-out 0.5s;
-  animation: paneRight 0.5s forwards ease-out 0.5s;
+  -webkit-transform: translateX(110%);
+  -moz-transform: translateX(110%);
+  -o-transform: translateX(110%);
+  -ms-transform: translateX(110%);
+  transform: translateX(110%);
 }
 @-moz-keyframes paneDown {
   0% {
@@ -1160,10 +1166,18 @@ body:not(.landing) > article {
   -ms-transition: all 0.5s ease-in-out;
   transition: all 0.5s ease-in-out;
   overflow: hidden;
+  -webkit-transform: translateX(0);
+  -moz-transform: translateX(0);
+  -o-transform: translateX(0);
+  -ms-transform: translateX(0);
+  transform: translateX(0);
 }
 body:not(.landing) > article.sidebaropen {
-  left: 250px;
-  right: -250px;
+  -webkit-transform: translateX(250px);
+  -moz-transform: translateX(250px);
+  -o-transform: translateX(250px);
+  -ms-transform: translateX(250px);
+  transform: translateX(250px);
 }
 body:not(.landing) > article #showhideappmenu {
   display: inline-block;
@@ -1219,10 +1233,10 @@ body:not(.landing) > article section article {
   -moz-backface-visibility: hidden;
   -ms-backface-visibility: hidden;
   backface-visibility: hidden;
-  -webkit-perspective: 1600;
-  -moz-perspective: 1600;
-  -ms-perspective: 1600;
-  perspective: 1600;
+  -webkit-perspective: 1600px;
+  -moz-perspective: 1600px;
+  -ms-perspective: 1600px;
+  perspective: 1600px;
 }
 body:not(.landing) > article section article canvas {
   display: block;
@@ -1395,6 +1409,31 @@ body:not(.landing) > article section article .approw nav {
 }
 body:not(.landing) > article section article .approw nav li {
   list-style: none;
+}
+body:not(.landing) > article section .dragdropplaceholder {
+  position: fixed;
+  top: 25px;
+  left: 25px;
+  right: 25px;
+  bottom: 25px;
+  -webkit-border-radius: 25px;
+  border-radius: 25px;
+  border: dashed 2px #fff;
+  background: rgba(0,0,0,0.4);
+  z-index: 99;
+}
+body:not(.landing) > article section .dragdropplaceholder span {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  left: 0;
+  margin: -15px 0 0 0;
+  height: 30px;
+  line-height: 30px;
+  font-size: 18pt;
+  color: #fff;
+  text-shadow: 0 0 2px #000;
+  text-align: center;
 }
 body:not(.landing) #loadingscreen {
   position: fixed;

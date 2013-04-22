@@ -8,9 +8,9 @@
 	background linear-gradient(top, white 0, white 98%, #eee 100%) #eee
 	transition all 0.5s ease-in-out
 	overflow hidden
+	transform translateX(0)
 	&.sidebaropen
-		left asidewidth
-		right -(asidewidth)
+		transform translateX(asidewidth)
 	#showhideappmenu
 		display inline-block
 		position absolute

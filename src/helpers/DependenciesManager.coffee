@@ -14,6 +14,7 @@ class DepMan extends BaseObject
 	lib        : (module) => @_require module, "libs/"
 	angular    : (module) => @_require module, "angular/"
 	classes    : (module) => @_require module, "classes/"
+	gesture    : (module) => @_require module, "gestures/"
 	googleFont : (font, sizes, subsets = null) =>
 		names = font.split " "
 

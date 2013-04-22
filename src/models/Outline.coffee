@@ -18,14 +18,20 @@ class OutlineCollection extends BaseObject
 		return do @parent.getPath
 
 class FakeOutline
-	constructor: (@text = "New Node", @_status = "unchecked", @childNodes = []) ->
+	constructor: (length) ->
+		@text = "New Node"
+		@_status = "unchecked"
+		@childNodes = []
+		@x = length.x
+		@y = length.y
 	getAttribute: (attr) -> @[attr] or null
 
 class Outline
-	constructor: (xmlDoc = null, @parent) ->
-		xmlDoc ?= new FakeOutline()
+	constructor: (xmlDoc = null, @parent, length) ->
+		xmlDoc ?= new FakeOutline(length)
 		@getData xmlDoc
 		@_map = _map
+		console.log @
 		
 	getPath: =>
 		prev = do @parent.getPath
@@ -41,6 +47,7 @@ class Outline
 		_checkParam @, "note", "_note", xmlDoc
 		_checkParam @, "x", "_x", xmlDoc
 		_checkParam @, "y", "_y", xmlDoc
+		@x = parseInt(@x); @y = parseInt(@y)
 		_children = new OutlineCollection xmlDoc.childNodes, @, @parent.depth + 1
 		@children = (if _children.topics.length then _children else null)
 		if @status is ""
@@ -58,9 +65,10 @@ class Outline
 		else if @status in ["determinate", "indeterminate"] then @status = "unchecked"
 		_map[@status]
 
-	addChild: =>
+	addChild: (length) =>
 		if not @children? then @children = new OutlineCollection false, @, @parent.depth + 1
-		@children.topics.push new Outline null, @children
+		@children.topics.push new Outline null, @children, length
+		
 
 class OutlineErrorReporter extends BaseObject
 

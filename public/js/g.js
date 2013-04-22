@@ -10,22 +10,20 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
   Client = (function(_super) {
     __extends(Client, _super);
 
-    function Client(server) {
-      var script,
-        _this = this;
-
-      this.server = server != null ? server : window.location.origin;
+    function Client() {
       this.connect = __bind(this.connect, this);
       this.dataReceived = __bind(this.dataReceived, this);
       this.loadEvents = __bind(this.loadEvents, this);
       this.log = __bind(this.log, this);
+      var script,
+        _this = this;
+
       this.online = false;
       script = document.createElement("script");
-      script.src = "socket.io/socket.io.js";
+      script.src = "/socket.io/socket.io.js";
       window.Client = this;
       script.onload = function() {
-        console.log("loaded socket.io");
-        _this.socket = io.connect(_this.server);
+        _this.socket = io.connect();
         return _this.socket.on("auth", function(id) {
           var ev, handler, me, _ref;
 
@@ -243,10 +241,10 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
 
         meta = document.createElement("meta");
         meta.setAttribute("name", "viewport");
-        meta.setAttribute("content", "width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1");
+        meta.setAttribute("content", "width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1");
         document.head.appendChild(meta);
         meta = document.createElement("link");
-        meta.setAttribute("rel", "applie-touch-icon");
+        meta.setAttribute("rel", "apple-touch-icon");
         meta.setAttribute("href", "arrow_up_1.png");
         document.head.appendChild(meta);
         meta = document.createElement("meta");
@@ -419,6 +417,8 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
       this.progress(60);
       window.DnD = DepMan.controller("DragAndDrop");
       window.DnD.init();
+      this.progress(62);
+      window.Swype = new (DepMan.controller("Swype"))();
       return this.resolve(true);
     };
 
@@ -463,7 +463,6 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
     Application.prototype.opmlBootstrap = function() {
       DepMan.helper("OPMLManager");
       this.progress(85);
-      this.progress(100);
       return this.resolve(true);
     };
 
@@ -475,17 +474,20 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
     Application.prototype.extras = function() {
       var d;
 
-      DepMan.angular("ChromeFrameController");
-      if ((typeof chrome !== "undefined" && chrome !== null) && (chrome.app.window != null)) {
+      if ((typeof chrome !== "undefined" && chrome !== null) && (chrome.app != null) && (chrome.app.storage != null)) {
+        DepMan.angular("ChromeFrameController");
         d = document.createElement("div");
         d.innerHTML = DepMan.render("chromehandler");
         document.body.appendChild(d);
+        this.progress(90);
       }
       return this.resolve(true);
     };
 
     Application.prototype.finish = function() {
+      this.progress(95);
       angular.bootstrap(document, ["Arrow"]);
+      this.progress(100);
       return Loading.end();
     };
 
@@ -594,7 +596,19 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
       _this = this;
 
     TABS = new IS.Enum(["LIST", "SERVER", "GENERAL"]);
-    console.log($scope, this, this === $scope);
+    $scope.safeApply = function(fn) {
+      var phase;
+
+      phase = $scope.$parent.$$phase;
+      console.log(phase);
+      if (phase === '$apply' || phase === '$digest') {
+        if (fn && (typeof fn === 'function')) {
+          return fn();
+        }
+      } else {
+        return $scope.$apply(fn);
+      }
+    };
     storage.getItem("lang", function(sets) {
       var item, _i, _len, _ref, _results;
 
@@ -669,18 +683,38 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
     storage.getItem("lastpanel", function(sets) {
       var animationVariants;
 
-      $scope.activeTab = sets.lastpanel || TABS.LIST;
-      $scope.asidetab = function(whom) {
-        $scope.activeTab = TABS[whom];
-        return storage.setItem("lastpanel", TABS[whom]);
+      $scope.asidetab = function(whom, step) {
+        if (whom == null) {
+          whom = null;
+        }
+        if (step == null) {
+          step = 1;
+        }
+        if (whom == null) {
+          whom = $scope.activeTab + step;
+          if (whom > 2) {
+            whom = 2;
+          }
+          if (whom < 0) {
+            whom = 0;
+          }
+        } else {
+          whom = TABS[whom];
+        }
+        $scope.activeTab = whom;
+        return storage.setItem("lastpanel", whom);
       };
       animationVariants = ["topVariant", "bottomVariant"];
       $scope.getAnim = function() {
         return animationVariants[Math.floor(Math.random() * animationVariants.length)];
       };
-      return $scope.tabIsActive = function(whom) {
-        return TABS[whom] === $scope.activeTab;
+      $scope.tabIsActive = function(whom) {
+        return TABS[whom].toString() === $scope.activeTab.toString();
       };
+      $scope.activeTab = sets.lastpanel || TABS.LIST;
+      console.log($scope.tabIsActive("LIST"));
+      console.log($scope.tabIsActive("SERVER"));
+      return console.log($scope.tabIsActive("GENERAL"));
     });
     return storage.getItem("landing", function(sets) {
       $scope.landingpageactive = sets.landing;
@@ -708,7 +742,7 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
       }
     };
     return OPML.activateControllerFunctions.push(function(obj) {
-      var hooked;
+      var hooked, views;
 
       obj.refreshView = $scope.safeApply;
       $scope.object = obj;
@@ -813,13 +847,23 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
           });
         }
       };
+      views = ["mindmap", "outline"];
       $scope.changeView = function(to) {
+        if (to == null) {
+          to = null;
+        }
+        if (to == null) {
+          if ($scope.view === views[0]) {
+            to = views[1];
+          } else {
+            to = views[0];
+          }
+        }
         $scope.view = to;
         if (to === "mindmap") {
-          return $scope.object.controller.frameBuffer.start();
-        } else {
-          return $scope.object.controller.frameBuffer.end();
+          $scope.object.controller.frameBuffer.sequence();
         }
+        return $scope.safeApply();
       };
       jQuery(window).keydown(function(e) {
         if (e.ctrlKey || e.metaKey) {
@@ -902,6 +946,75 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
   console.log("OPMLManager should be available now");
 
 }).call(this);
+}, "classes/AuxFrameBuffer": function(exports, require, module) {(function() {
+  var AuxFrameBuffer, COLORS, _ref,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  COLORS = new IS.Enum(["R", "G", "B"]);
+
+  AuxFrameBuffer = (function(_super) {
+    __extends(AuxFrameBuffer, _super);
+
+    function AuxFrameBuffer() {
+      this.getLink = __bind(this.getLink, this);
+      this.scan = __bind(this.scan, this);
+      this.upColor = __bind(this.upColor, this);
+      this.sequence = __bind(this.sequence, this);      _ref = AuxFrameBuffer.__super__.constructor.apply(this, arguments);
+      return _ref;
+    }
+
+    AuxFrameBuffer.prototype.sequence = function() {
+      this.linkBack = {};
+      this.lastColor = [0, 0, 1];
+      this.context.clearRect(0, 0, this.buffer.width, this.buffer.height);
+      this.context.fillStyle = "black";
+      this.context.fillRect(0, 0, this.buffer.width, this.buffer.height);
+      return this.drawGugus(this.model.structure);
+    };
+
+    AuxFrameBuffer.prototype.drawGugu = function(item) {
+      var code, path;
+
+      path = item.getPath();
+      code = "" + this.lastColor[COLORS.R] + ", " + this.lastColor[COLORS.G] + ", " + this.lastColor[COLORS.B];
+      this.linkBack[code] = path;
+      this.context.fillStyle = "rgb(" + code + ")";
+      this.upColor();
+      return this.context.fillRectR(this.getX(item), this.getY(item), 300, 50);
+    };
+
+    AuxFrameBuffer.prototype.upColor = function() {
+      this.lastColor[COLORS.B] += 1;
+      if (this.lastColor[COLORS.B] > 255) {
+        this.lastColor[COLORS.B] = 0;
+        this.lastColor[COLORS.G] += 1;
+      }
+      if (this.lastColor[COLORS.G] > 255) {
+        this.lastColor[COLORS.G] = 0;
+        return this.lastColor[COLORS.R] += 1;
+      }
+    };
+
+    AuxFrameBuffer.prototype.scan = function(pos) {
+      var img;
+
+      img = (this.context.getImageData(pos.x, pos.y, 1, 1)).data;
+      return this.getLink("" + img[0] + ", " + img[1] + ", " + img[2], this.linkBack);
+    };
+
+    AuxFrameBuffer.prototype.getLink = function(which) {
+      return this.linkBack[which] || null;
+    };
+
+    return AuxFrameBuffer;
+
+  })(DepMan.classes("GuguFrameBuffer"));
+
+  module.exports = AuxFrameBuffer;
+
+}).call(this);
 }, "classes/FrameBuffer": function(exports, require, module) {(function() {
   var FrameBuffer,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
@@ -957,6 +1070,8 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
       var _ref;
 
       this.buffer = buffer;
+      this.getY = __bind(this.getY, this);
+      this.getX = __bind(this.getX, this);
       this.sequence = __bind(this.sequence, this);
       this.tick = __bind(this.tick, this);
       this.end = __bind(this.end, this);
@@ -998,15 +1113,20 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
       if (this.running) {
         return requestAnimFrame(this.tick);
       } else {
-        if (typeof this._end === "function") {
-          this._end();
-        }
-        return this.context.clearRect(0, 0, this.buffer.width, this.buffer.height);
+        return typeof this._end === "function" ? this._end() : void 0;
       }
     };
 
     FrameBuffer.prototype.sequence = function() {
       return console.log("Tick width: " + this.buffer.width + ", height: " + this.buffer.height);
+    };
+
+    FrameBuffer.prototype.getX = function(from) {
+      return (from.x || 0) + (this.parent.offsets.x || 0);
+    };
+
+    FrameBuffer.prototype.getY = function(from) {
+      return (from.y || 0) + (this.parent.offsets.y || 0);
     };
 
     return FrameBuffer;
@@ -1024,14 +1144,16 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
   GuguFrameBuffer = (function(_super) {
     __extends(GuguFrameBuffer, _super);
 
-    function GuguFrameBuffer(model) {
+    function GuguFrameBuffer(model, parent) {
       this.model = model;
+      this.parent = parent;
       GuguFrameBuffer.__super__.constructor.call(this);
-      this.context.textAlign = "center";
       this.context.textBaseline = "middle";
+      this.context.font = "normal 12pt Verdana";
     }
 
     GuguFrameBuffer.prototype.sequence = function() {
+      this.buffer.width = this.buffer.width;
       return this.drawGugus(this.model.structure);
     };
 
@@ -1053,16 +1175,42 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
     };
 
     GuguFrameBuffer.prototype.drawGugu = function(item) {
-      var gradient;
+      var gradient, texStrokeColor, texcolor, text;
 
-      gradient = this.context.createLinearGradient(item.x, item.y, item.x + 300, item.y + 50);
-      gradient.addColorStop(0, "white");
-      gradient.addColorStop(0.3, "#eee");
-      gradient.addColorStop(1, "#eee");
-      this.context.fillStyle = gradient;
-      this.context.fillRectR(item.x, item.y, 300, 50);
-      this.context.fillStyle = "black";
-      return this.context.fillText(item.text, item.x + 75, item.y + 25);
+      gradient = this.context.createLinearGradient(this.getX(item), this.getY(item), this.getX(item), (this.getY(item)) + 50);
+      switch (item.status) {
+        case "checked":
+          this.context.fillStyle = "rgb(0, 135, 255)";
+          texcolor = "black";
+          texStrokeColor = "rgba(0, 0, 0, 0)";
+          break;
+        case "unchecked":
+          this.context.fillStyle = "rgb(255, 67, 16)";
+          texcolor = "black";
+          texStrokeColor = "rgba(0, 0 ,0 ,0)";
+          break;
+        case "determinate":
+          this.context.fillStyle = "white";
+          texcolor = "black";
+          texStrokeColor = "white";
+          break;
+        default:
+          this.context.fillStyle = "black";
+          texcolor = "white";
+          texStrokeColor = "black";
+      }
+      this.context.fillRectR(this.getX(item), this.getY(item), 300, 50);
+      this.context.lineWidth = 1;
+      this.context.strokeStyle = "white";
+      this.context.strokeRectR(this.getX(item), this.getY(item), 300, 50);
+      text = item.text;
+      if (text.length > 40) {
+        text = text.substr(0, 37) + "...";
+      }
+      this.context.strokeStyle = texStrokeColor;
+      this.context.strokeText(text, (this.getX(item)) + 25, (this.getY(item)) + 25);
+      this.context.fillStyle = texcolor;
+      return this.context.fillText(text, (this.getX(item)) + 25, (this.getY(item)) + 25);
     };
 
     return GuguFrameBuffer;
@@ -1074,20 +1222,28 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
 }).call(this);
 }, "classes/LinesFrameBuffer": function(exports, require, module) {(function() {
   var LinesFrameBuffer,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
   LinesFrameBuffer = (function(_super) {
     __extends(LinesFrameBuffer, _super);
 
-    function LinesFrameBuffer(model) {
+    function LinesFrameBuffer(model, parent) {
       this.model = model;
+      this.parent = parent;
+      this.drawLine = __bind(this.drawLine, this);
+      this.drawLines = __bind(this.drawLines, this);
+      this.sequence = __bind(this.sequence, this);
       LinesFrameBuffer.__super__.constructor.call(this);
       this.context.strokeStyle = "#444";
     }
 
     LinesFrameBuffer.prototype.sequence = function() {
-      return this.drawLines(this.model.structure);
+      this.context.clearRect(0, 0, this.buffer.width, this.buffer.height);
+      this.context.beginPath();
+      this.drawLines(this.model.structure);
+      return this.context.stroke();
     };
 
     LinesFrameBuffer.prototype.drawLines = function(set) {
@@ -1112,10 +1268,8 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
     };
 
     LinesFrameBuffer.prototype.drawLine = function(from, to) {
-      this.context.beginPath();
-      this.context.moveTo(from.x + 150, from.y + 25);
-      this.context.lineTo(to.x + 150, to.y + 25);
-      return this.context.stroke();
+      this.context.moveTo((this.getX(from)) + 150, (this.getY(from)) + 25);
+      return this.context.lineTo((this.getX(to)) + 150, (this.getY(to)) + 25);
     };
 
     return LinesFrameBuffer;
@@ -1127,6 +1281,7 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
 }).call(this);
 }, "classes/MainFrameBuffer": function(exports, require, module) {(function() {
   var MainFrameBuffer,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -1134,26 +1289,103 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
     __extends(MainFrameBuffer, _super);
 
     function MainFrameBuffer(buffer, model) {
-      this.Gugu = new (DepMan.classes("GuguFrameBuffer"))(model);
-      this.Line = new (DepMan.classes("LinesFrameBuffer"))(model);
+      this.model = model;
+      this.getPos = __bind(this.getPos, this);
+      this.move = __bind(this.move, this);
+      this.up = __bind(this.up, this);
+      this.down = __bind(this.down, this);
+      this.Gugu = new (DepMan.classes("GuguFrameBuffer"))(model, this);
+      this.Aux = new (DepMan.classes("AuxFrameBuffer"))(model, this);
+      this.Line = new (DepMan.classes("LinesFrameBuffer"))(model, this);
+      this.renderers = [this.Gugu, this.Line];
+      this.offsets = {
+        x: 0,
+        y: 0
+      };
       MainFrameBuffer.__super__.constructor.call(this, buffer);
+      this.buffer.addEventListener("mousedown", this.down);
+      this.buffer.addEventListener("mouseup", this.up);
+      this.buffer.addEventListener("mousemove", this.move);
+      this.buffer.addEventListener("touchstart", this.down);
+      this.buffer.addEventListener("touchend", this.up);
+      this.buffer.addEventListener("touchmove", this.move);
+      $(this.buffer).css("background", "black");
     }
 
+    MainFrameBuffer.prototype.down = function(e) {
+      var item, node, _i, _len, _ref;
+
+      this.init = this.getPos(e);
+      this.Aux.sequence();
+      this.node = this.Aux.scan(this.init);
+      if (!this.node) {
+        this.initOffset = {
+          x: this.offsets.x,
+          y: this.offsets.y
+        };
+      } else {
+        node = [];
+        _ref = this.node;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          item = _ref[_i];
+          node.push(item);
+        }
+        node = this.model.findNode(node);
+        this.initOffset = {
+          x: node.x,
+          y: node.y
+        };
+      }
+      return this.start();
+    };
+
+    MainFrameBuffer.prototype.up = function(e) {
+      this.init = null;
+      this.node = null;
+      return this.end();
+    };
+
+    MainFrameBuffer.prototype.move = function(e) {
+      var pos;
+
+      if (this.init == null) {
+        return null;
+      }
+      pos = this.getPos(e);
+      if (this.node) {
+        return this.model.move(this.node, {
+          x: this.initOffset.x + pos.x - this.init.x,
+          y: this.initOffset.y + pos.y - this.init.y
+        });
+      } else {
+        return this.offsets = {
+          x: pos.x - this.init.x + this.initOffset.x,
+          y: pos.y - this.init.y + this.initOffset.y
+        };
+      }
+    };
+
+    MainFrameBuffer.prototype.getPos = function(e) {
+      if (e.touches) {
+        e = e.touches[0];
+      }
+      return {
+        x: e.pageX,
+        y: e.pageY
+      };
+    };
+
     MainFrameBuffer.prototype.sequence = function() {
-      this.context.fillStyle = "black";
-      this.context.fillRect(0, 0, this.buffer.width, this.buffer.height);
+      var renderer, _i, _len, _ref;
+
+      this.buffer.width = this.buffer.width;
+      _ref = this.renderers;
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        renderer = _ref[_i];
+        renderer.sequence();
+      }
       this.context.drawImage(this.Line.context.canvas, 0, 0);
       return this.context.drawImage(this.Gugu.context.canvas, 0, 0);
-    };
-
-    MainFrameBuffer.prototype._start = function() {
-      this.Line.start();
-      return this.Gugu.start();
-    };
-
-    MainFrameBuffer.prototype._end = function() {
-      this.Line.end();
-      return this.Gugu.end();
     };
 
     return MainFrameBuffer;
@@ -1232,6 +1464,7 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
 }).call(this);
 }, "controllers/DragAndDrop": function(exports, require, module) {(function() {
   var DnD, _ref,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -1239,19 +1472,22 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
     __extends(DnD, _super);
 
     function DnD() {
-      _ref = DnD.__super__.constructor.apply(this, arguments);
+      this.readHandler = __bind(this.readHandler, this);
+      this.dragHandler = __bind(this.dragHandler, this);
+      this.dragOver = __bind(this.dragOver, this);
+      this.dragExit = __bind(this.dragExit, this);
+      this.dragEnter = __bind(this.dragEnter, this);
+      this.init = __bind(this.init, this);      _ref = DnD.__super__.constructor.apply(this, arguments);
       return _ref;
     }
 
-    DnD.ph = null;
-
-    DnD.init = function() {
+    DnD.prototype.init = function() {
       document.addEventListener("dragenter", this.proxy(this.dragEnter, this), true);
       document.addEventListener("dragexit", this.proxy(this.dragExit, this), true);
       return document.addEventListener("dragleave", this.proxy(this.dragExit, this), true);
     };
 
-    DnD.dragEnter = function(e) {
+    DnD.prototype.dragEnter = function(e) {
       var span;
 
       this.ph = document.createElement("div");
@@ -1259,7 +1495,7 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
       span = document.createElement("span");
       span.innerHTML = "Drop file over here";
       this.ph.appendChild(span);
-      document.querySelector("article section").appendChild(this.ph);
+      document.querySelector("body > article section").appendChild(this.ph);
       this.ph.className += " active";
       this.ph.addEventListener("dragover", this.proxy(this.dragOver, this), true);
       this.ph.addEventListener("drop", this.proxy(this.dragHandler, this), true);
@@ -1267,13 +1503,13 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
       return e.preventDefault();
     };
 
-    DnD.dragExit = function(e) {
+    DnD.prototype.dragExit = function(e) {
       this.ph.parentNode.removeChild(this.ph);
       e.stopPropagation();
       return e.preventDefault();
     };
 
-    DnD.dragOver = function(e) {
+    DnD.prototype.dragOver = function(e) {
       this.ph.className = this.ph.className.replace(/\ ?hover/, "");
       this.ph.className += " hover";
       e.dataTransfer.dropEffect = "copy";
@@ -1281,39 +1517,43 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
       return e.preventDefault();
     };
 
-    DnD.dragHandler = function(e) {
-      var file, files, _i, _len, _results;
+    DnD.prototype.dragHandler = function(e) {
+      var file, files, _fn, _i, _len,
+        _this = this;
 
       e.stopPropagation();
       e.preventDefault();
-      DnD.ph.className = DnD.ph.className.replace(/\ ?(hover|active)/, "");
+      this.ph.className = this.ph.className.replace(/\ ?(hover|active)/, "");
+      console.log(e);
       files = e.dataTransfer.files || e.target.files;
-      _results = [];
+      console.log(files, this.ph);
+      _fn = function() {
+        var reader;
+
+        reader = new FileReader;
+        reader.onload = _this.readHandler;
+        return reader.readAsText(file);
+      };
       for (_i = 0, _len = files.length; _i < _len; _i++) {
         file = files[_i];
         if (!file.name.match(/.*opml/)) {
           continue;
         }
-        _results.push((function() {
-          var reader;
-
-          reader = new FileReader;
-          reader.onload = DnD.readHandler;
-          return reader.readAsText(file);
-        })());
+        _fn();
       }
-      return _results;
+      return $(".dragdropplaceholder").remove();
     };
 
-    DnD.readHandler = function(file) {
+    DnD.prototype.readHandler = function(file) {
+      console.log("READING");
       return DepMan.helper("OPMLManager").open(file.target.result);
     };
 
     return DnD;
 
-  }).call(this, BaseObject);
+  })(BaseObject);
 
-  module.exports = DnD;
+  module.exports = new DnD();
 
 }).call(this);
 }, "controllers/OPML": function(exports, require, module) {(function() {
@@ -1595,6 +1835,175 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
   module.exports = OutlineController;
 
 }).call(this);
+}, "controllers/Swype": function(exports, require, module) {(function() {
+  var GESTURES, Swype, gest, _gestures, _i, _len,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; },
+    __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+
+  Swype = (function(_super) {
+    __extends(Swype, _super);
+
+    function Swype() {
+      this.getParams = __bind(this.getParams, this);
+      this.start = __bind(this.start, this);      window.addEventListener("touchstart", this.start);
+    }
+
+    Swype.prototype.start = function(e) {
+      var pos, scope, _i, _ref, _results;
+
+      pos = this.getParams(e);
+      scope = angular.element("[ng-controller='NGAsideController']").scope();
+      if (pos.x <= 50) {
+        return this.gesture = new GESTURES.SWYPELEFT(pos);
+      } else if ((_ref = pos.x, __indexOf.call((function() {
+        _results = [];
+        for (_i = 50; _i <= 250; _i++){ _results.push(_i); }
+        return _results;
+      }).apply(this), _ref) >= 0) && scope.sidebarstatus === "open") {
+        return this.gesture = new GESTURES.SWYPERIGHT(pos);
+      } else if (pos.x >= window.innerWidth - 50) {
+        return this.gesture = new GESTURES.SWYPERIGHT(pos);
+      }
+    };
+
+    Swype.prototype.getParams = function(e) {
+      if (e.touches) {
+        return {
+          x: e.touches[0].pageX,
+          y: e.touches[0].pageY
+        };
+      } else {
+        return {
+          x: e.pageX,
+          y: e.pageY
+        };
+      }
+    };
+
+    return Swype;
+
+  })(BaseObject);
+
+  _gestures = ["SWYPELEFT", "SWYPERIGHT"];
+
+  GESTURES = {};
+
+  for (_i = 0, _len = _gestures.length; _i < _len; _i++) {
+    gest = _gestures[_i];
+    GESTURES[gest] = DepMan.gesture(gest.toLowerCase());
+  }
+
+  module.exports = Swype;
+
+}).call(this);
+}, "gestures/swypeleft": function(exports, require, module) {(function() {
+  var SwypeleftGesture, _tolerance,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  SwypeleftGesture = (function(_super) {
+    __extends(SwypeleftGesture, _super);
+
+    function SwypeleftGesture(init) {
+      this.init = init;
+      this.end = __bind(this.end, this);
+      this.move = __bind(this.move, this);
+      window.addEventListener("touchmove", this.move);
+      window.addEventListener("touchend", this.end);
+    }
+
+    SwypeleftGesture.prototype.move = function(e) {
+      var pos, scope;
+
+      if (this.breakup != null) {
+        return;
+      }
+      scope = angular.element("[ng-controller='NGAsideController']").scope();
+      pos = Swype.getParams(e);
+      if (pos.x - this.init.x > _tolerance) {
+        if (scope.sidebarstatus === "open") {
+          scope.asidetab(null, -1);
+        } else {
+          scope.togglesidebar();
+        }
+        scope.$apply();
+        return this.end();
+      }
+    };
+
+    SwypeleftGesture.prototype.end = function(e) {
+      this.breakup = true;
+      window.removeEventListener("touchmove", this.move);
+      return window.removeEventListener("touchend", this.end);
+    };
+
+    return SwypeleftGesture;
+
+  })(BaseObject);
+
+  _tolerance = 100;
+
+  module.exports = SwypeleftGesture;
+
+}).call(this);
+}, "gestures/swyperight": function(exports, require, module) {(function() {
+  var SwyperightGesture, _tolerance,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  SwyperightGesture = (function(_super) {
+    __extends(SwyperightGesture, _super);
+
+    function SwyperightGesture(init) {
+      this.init = init;
+      this.end = __bind(this.end, this);
+      this.move = __bind(this.move, this);
+      window.addEventListener("touchmove", this.move);
+      window.addEventListener("touchend", this.end);
+    }
+
+    SwyperightGesture.prototype.move = function(e) {
+      var pos, scope;
+
+      if (this.breakup != null) {
+        return;
+      }
+      scope = angular.element("[ng-controller='NGAsideController']").scope();
+      pos = Swype.getParams(e);
+      if (this.init.x - pos.x > _tolerance) {
+        if (scope.sidebarstatus === "closed") {
+          angular.element("[ng-controller='OPMLController']").scope().changeView();
+        } else {
+          if (this.init.x <= 300) {
+            scope.asidetab(null, 1);
+          } else {
+            scope.togglesidebar();
+          }
+        }
+        scope.$apply();
+        return this.end();
+      }
+    };
+
+    SwyperightGesture.prototype.end = function(e) {
+      this.breakup = true;
+      window.removeEventListener("touchmove", this.move);
+      return window.removeEventListener("touchend", this.end);
+    };
+
+    return SwyperightGesture;
+
+  })(BaseObject);
+
+  _tolerance = 100;
+
+  module.exports = SwyperightGesture;
+
+}).call(this);
 }, "helpers/DataTransfer": function(exports, require, module) {(function() {
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
     __hasProp = {}.hasOwnProperty,
@@ -1668,6 +2077,7 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
       this.basePrefix = basePrefix != null ? basePrefix : "";
       this.deps = deps != null ? deps : [];
       this.googleFont = __bind(this.googleFont, this);
+      this.gesture = __bind(this.gesture, this);
       this.classes = __bind(this.classes, this);
       this.angular = __bind(this.angular, this);
       this.lib = __bind(this.lib, this);
@@ -1726,6 +2136,10 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
 
     DepMan.prototype.classes = function(module) {
       return this._require(module, "classes/");
+    };
+
+    DepMan.prototype.gesture = function(module) {
+      return this._require(module, "gestures/");
     };
 
     DepMan.prototype.googleFont = function(font, sizes, subsets) {
@@ -2081,13 +2495,14 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
 
     function LocationsService(model) {
       this.model = model;
+      this.getNextChild = __bind(this.getNextChild, this);
       this.generate = __bind(this.generate, this);
-      this._firstTimeSetup = __bind(this._firstTimeSetup, this);
-      this.levels = [];
-      this._firstTimeSetup();
+      this.generateLocations = __bind(this.generateLocations, this);
+      this.generateLocations();
     }
 
-    LocationsService.prototype._firstTimeSetup = function() {
+    LocationsService.prototype.generateLocations = function() {
+      this.levels = [];
       return this.generate(this.model.structure, 0);
     };
 
@@ -2114,6 +2529,19 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
         }
       }
       return _results;
+    };
+
+    LocationsService.prototype.getNextChild = function(level) {
+      var _base, _ref;
+
+      if ((_ref = (_base = this.levels)[level]) == null) {
+        _base[level] = 0;
+      }
+      this.levels[level] += 75;
+      return {
+        x: level * 350 + 50,
+        y: this.levels[level] - 75
+      };
     };
 
     return LocationsService;
@@ -12295,10 +12723,12 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
       this.text = text != null ? text : null;
       this.manager = manager;
       this["delete"] = __bind(this["delete"], this);
+      this._move = __bind(this._move, this);
       this._removeChild = __bind(this._removeChild, this);
       this._rename = __bind(this._rename, this);
       this._addChild = __bind(this._addChild, this);
       this._modify = __bind(this._modify, this);
+      this.move = __bind(this.move, this);
       this.removeChild = __bind(this.removeChild, this);
       this.rename = __bind(this.rename, this);
       this.addChild = __bind(this.addChild, this);
@@ -12318,6 +12748,7 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
       this.events["outline." + this.title + ".addChild"] = this._addChild;
       this.events["outline." + this.title + ".edit"] = this._modify;
       this.events["outline." + this.title + ".removeChild"] = this._removeChild;
+      this.events["outline." + this.title + ".move"] = this._move;
       if (typeof Client !== "undefined" && Client !== null) {
         Client.events = this.events;
       }
@@ -12418,6 +12849,7 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
         if (kid.note != null) {
           string += "_note='" + (kid.note.replace("\"", "&#34;").replace("'", "&#39;").replace("\n", " ")) + "' ";
         }
+        string += "_x='" + kid.x + "' _y='" + kid.y + "' ";
         if (kid.status != null) {
           string += "_status='" + kid.status + "'";
         } else if (kid.children != null) {
@@ -12512,6 +12944,11 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
       return Client.publish("outline." + this.title + ".removeChild", path);
     };
 
+    OPML.prototype.move = function(path, to) {
+      this.log(path);
+      return Client.publish("outline." + this.title + ".move", JSON.stringify(path), JSON.stringify(to));
+    };
+
     OPML.prototype._modify = function(path, data) {
       var item, _ref;
 
@@ -12538,7 +12975,7 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
       var item;
 
       item = this.findNode(JSON.parse(path));
-      item.addChild();
+      item.addChild(this.locationService.getNextChild(path.length));
       return this.refreshView();
     };
 
@@ -12546,10 +12983,12 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
       Client.queue["outline." + this.title + ".addChild"] = null;
       Client.queue["outline." + this.title + ".edit"] = null;
       Client.queue["outline." + this.title + ".removeChild"] = null;
+      Client.queue["outline." + this.title + ".move"] = null;
       this.events = {};
       this.events["outline." + title + ".addChild"] = this.events["outline." + this.title + ".addChild"];
       this.events["outline." + title + ".edit"] = this.events["outline." + this.title + ".edit"];
       this.events["outline." + title + ".removeChlid"] = this.events["outline." + this.title + ".removeChlid"];
+      this.events["outline." + title + ".move"] = this.events["outline." + this.title + ".move"];
       if (typeof Client !== "undefined" && Client !== null) {
         Client.events = this.events;
       }
@@ -12570,6 +13009,15 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
         parent.parent.children = null;
       }
       return this.refreshView();
+    };
+
+    OPML.prototype._move = function(path, to) {
+      var item;
+
+      item = this.findNode(JSON.parse(path));
+      to = JSON.parse(to);
+      item.x = to.x;
+      return item.y = to.y;
     };
 
     OPML.prototype["delete"] = function() {
@@ -12659,10 +13107,12 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
   })(BaseObject);
 
   FakeOutline = (function() {
-    function FakeOutline(text, _status, childNodes) {
-      this.text = text != null ? text : "New Node";
-      this._status = _status != null ? _status : "unchecked";
-      this.childNodes = childNodes != null ? childNodes : [];
+    function FakeOutline(length) {
+      this.text = "New Node";
+      this._status = "unchecked";
+      this.childNodes = [];
+      this.x = length.x;
+      this.y = length.y;
     }
 
     FakeOutline.prototype.getAttribute = function(attr) {
@@ -12674,7 +13124,7 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
   })();
 
   Outline = (function() {
-    function Outline(xmlDoc, parent) {
+    function Outline(xmlDoc, parent, length) {
       if (xmlDoc == null) {
         xmlDoc = null;
       }
@@ -12684,10 +13134,11 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
       this.getData = __bind(this.getData, this);
       this.getPath = __bind(this.getPath, this);
       if (xmlDoc == null) {
-        xmlDoc = new FakeOutline();
+        xmlDoc = new FakeOutline(length);
       }
       this.getData(xmlDoc);
       this._map = _map;
+      console.log(this);
     }
 
     Outline.prototype.getPath = function() {
@@ -12712,6 +13163,8 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
       _checkParam(this, "note", "_note", xmlDoc);
       _checkParam(this, "x", "_x", xmlDoc);
       _checkParam(this, "y", "_y", xmlDoc);
+      this.x = parseInt(this.x);
+      this.y = parseInt(this.y);
       _children = new OutlineCollection(xmlDoc.childNodes, this, this.parent.depth + 1);
       this.children = (_children.topics.length ? _children : null);
       if (this.status === "") {
@@ -12744,11 +13197,11 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
       return _map[this.status];
     };
 
-    Outline.prototype.addChild = function() {
+    Outline.prototype.addChild = function(length) {
       if (this.children == null) {
         this.children = new OutlineCollection(false, this, this.parent.depth + 1);
       }
-      return this.children.topics.push(new Outline(null, this.children));
+      return this.children.topics.push(new Outline(null, this.children, length));
     };
 
     return Outline;
@@ -14794,22 +15247,20 @@ QRBitBuffer.prototype = {
   Client = (function(_super) {
     __extends(Client, _super);
 
-    function Client(server) {
-      var script,
-        _this = this;
-
-      this.server = server != null ? server : window.location.origin;
+    function Client() {
       this.connect = __bind(this.connect, this);
       this.dataReceived = __bind(this.dataReceived, this);
       this.loadEvents = __bind(this.loadEvents, this);
       this.log = __bind(this.log, this);
+      var script,
+        _this = this;
+
       this.online = false;
       script = document.createElement("script");
-      script.src = "socket.io/socket.io.js";
+      script.src = "/socket.io/socket.io.js";
       window.Client = this;
       script.onload = function() {
-        console.log("loaded socket.io");
-        _this.socket = io.connect(_this.server);
+        _this.socket = io.connect();
         return _this.socket.on("auth", function(id) {
           var ev, handler, me, _ref;
 

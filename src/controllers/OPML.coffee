@@ -36,6 +36,7 @@ class OPMLController extends BaseObject
 			@e.parentNode.removeChild @e
 		, 1000
 
+
 class OPMLControllerErrorReporter extends BaseObject
 
 	@extend IS.ErrorReporter

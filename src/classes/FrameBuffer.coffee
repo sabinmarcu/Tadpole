@@ -53,7 +53,9 @@ class FrameBuffer extends BaseObject
 		if @running then requestAnimFrame(@tick) 
 		else 
 			@_end?()
-			@context.clearRect 0, 0, @buffer.width, @buffer.height
 	sequence: => console.log "Tick width: #{@buffer.width}, height: #{@buffer.height}"
+
+	getX: (from) => ( from.x or 0 ) + ( @parent.offsets.x or 0 )
+	getY: (from) => ( from.y or 0 ) + ( @parent.offsets.y or 0 )
 
 module.exports = FrameBuffer

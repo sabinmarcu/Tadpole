@@ -21,16 +21,17 @@ class Application extends BaseObject
 		do ->
 			meta = document.createElement "meta"
 			meta.setAttribute "name", "viewport"
-			meta.setAttribute "content", "width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1"
+			meta.setAttribute "content", "width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1"
 			document.head.appendChild meta
 			meta = document.createElement "link"
-			meta.setAttribute "rel", "applie-touch-icon"
+			meta.setAttribute "rel", "apple-touch-icon"
 			meta.setAttribute "href", "arrow_up_1.png"
 			document.head.appendChild meta
 			meta = document.createElement "meta"
 			meta.setAttribute "name", "apple-mobile-web-app-capable"
 			meta.setAttribute "content", "yes"
 			document.head.appendChild meta
+			#document.addEventListener "touchmove", ((e) -> e.preventDefault()), false
 	firstTimeInclude: =>
 		window.DepMan = new ( require "helpers/DependenciesManager" )
 		window.Loading = new ( DepMan.helper "Loading" )()
@@ -127,6 +128,8 @@ class Application extends BaseObject
 		@progress 60
 		window.DnD = ( DepMan.controller "DragAndDrop" )
 		window.DnD.init()
+		@progress 62
+		window.Swype = new (DepMan.controller "Swype")()
 		@resolve true
 	mobileHooks: ->
 		window.isMobile = true
@@ -147,20 +150,22 @@ class Application extends BaseObject
 	opmlBootstrap: ->
 		( DepMan.helper "OPMLManager" )
 		@progress 85
-		@progress 100
 		@resolve true
 	dataTransferBootstrap: ->
 		( DepMan.helper "DataTransfer")
 		@resolve true
 	extras: ->
-		DepMan.angular "ChromeFrameController"
-		if chrome? and chrome.app.window?
+		if chrome? and chrome.app? and chrome.app.storage?
+			DepMan.angular "ChromeFrameController"
 			d = document.createElement "div"
 			d.innerHTML = DepMan.render "chromehandler"
 			document.body.appendChild d
+			@progress 90
 		@resolve true
 	finish: ->
+		@progress 95
 		angular.bootstrap document, ["Arrow"]
+		@progress 100
 		Loading.end()
 
 
