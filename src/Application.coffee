@@ -36,11 +36,19 @@ class Application extends BaseObject
 		window.DepMan = new ( require "helpers/DependenciesManager" )
 		window.Loading = new ( DepMan.helper "Loading" )()
 	loadApplication: =>
-		window.Toast = (title = "Message", body = "")->
-			jQuery("#tip-message-head").html title
-			jQuery("#tip-message-body").html body
-			jQuery("#tip-message").modal("show")
-			setTimeout((-> jQuery("#tip-message").modal("hide")), 1500)
+		window.Toast = (title = "Message", body...) ->
+			b = body.shift()
+			if webkitNotifications? and chrome.storage?
+				b += "\n#{item}" for item in body 
+				notif = webkitNotifications.createNotification '/arrow_up_1.png', title, b
+				notif.show()
+			else
+				b = "<p>#{b}</p>"
+				b += "<p>#{item}</p>" for item in body
+				jQuery("#tip-message-head").html title
+				jQuery("#tip-message-body").html b
+				jQuery("#tip-message").modal("show")
+				setTimeout((-> jQuery("#tip-message").modal("hide")), 1500)
 		@LoadProgress = LoadProgress = new IS.Promise()
 		@LoadProgress.then(( -> Loading.start(); LoadProgress.resolve true ), null, null).then(@loadLibs, null, Loading.progress).then(@bootStrapAngular, null, Loading.progress).then(@loadLanguage, null, Loading.progress).then(@resizeHook, null, Loading.progress).then(@decideView, null, Loading.progress)
 		@LoadProgress.resolve true
@@ -155,7 +163,8 @@ class Application extends BaseObject
 		( DepMan.helper "DataTransfer")
 		@resolve true
 	extras: ->
-		if chrome? and chrome.app? and chrome.app.storage?
+		if chrome? and chrome.app? and chrome.storage?
+			console.log "Should install chromeframecontroller"
 			DepMan.angular "ChromeFrameController"
 			d = document.createElement "div"
 			d.innerHTML = DepMan.render "chromehandler"

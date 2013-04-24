@@ -38,7 +38,7 @@ angular.module("Arrow").controller "OPMLController", ($scope, $rootScope, OPML) 
 
 		hooked = false
 		$scope.edit = (item) ->
-			modal = jQuery("#editnodemodal") if not modal?
+			modal = jQuery(".editnode##{$scope.getTitle()}") if not modal? or modal[0]?
 			modal.find("#text").val item.text
 			modal.find(".status").show()
 			sts = modal.find("#status")
@@ -46,8 +46,10 @@ angular.module("Arrow").controller "OPMLController", ($scope, $rootScope, OPML) 
 			else if item.status is "unchecked" then sts.prop "checked", false
 			else modal.find(".status").hide()
 			modal.find("#notes").val item.notes or ""
+			console.log modal
 			modal.modal("show")
 			$scope.path = do item.getPath
+			$(document.body).append modal
 			if not hooked
 				hooked = true
 				sts.on "change", -> $(@).prop "checked", @checked
@@ -60,7 +62,9 @@ angular.module("Arrow").controller "OPMLController", ($scope, $rootScope, OPML) 
 						"text"   : do modal.find("#text").val
 						"status" : status
 						"notes"  : do modal.find("#notes").val
+					jQuery(".modal-container##{$scope.getTitle()}").append modal
 					$scope.safeApply()
+		obj.editNodeModal = $scope.edit
 
 		views = ["mindmap", "outline"]
 		$scope.changeView = (to = null) ->
@@ -70,6 +74,8 @@ angular.module("Arrow").controller "OPMLController", ($scope, $rootScope, OPML) 
 			$scope.view = to
 			if to is "mindmap" then do $scope.object.controller.frameBuffer.sequence
 			$scope.safeApply()
+
+		$scope.getTitle = -> obj.title.replace(/\ /g, "_")
 
 		jQuery(window).keydown (e) ->
 			if e.ctrlKey or e.metaKey

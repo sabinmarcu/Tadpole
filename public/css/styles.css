@@ -1725,3 +1725,9 @@ body.landing .container.rest aside a {
     border-radius: 0;
   }
 }
+body .modal-backdrop {
+  z-index: 9999;
+}
+body .modal {
+  z-index: 99999;
+}

@@ -7,6 +7,8 @@ class OPML extends BaseObject
 		@events["outline.#{@title}.edit"] = @_modify
 		@events["outline.#{@title}.removeChild"] = @_removeChild
 		@events["outline.#{@title}.move"] = @_move
+		@events["outline.#{@title}.startMoving"] = @_startMoving
+		@events["outline.#{@title}.endMoving"] = @_endMoving
 		Client?.events = @events
 		Client?.loadEvents()
 
@@ -79,6 +81,7 @@ class OPML extends BaseObject
 	save: =>
 		window.storage?.setItem "opmls.#{@title}", do @Export
 		window.storage.getItem "opmls", (sets) =>
+			sets.opmls ?= "[]"
 			storageIndex = JSON.parse sets.opmls
 			if not storageIndex then window.storage.setItem "opmls", JSON.stringify [@title]
 			else if not ( @title in storageIndex )
@@ -88,7 +91,7 @@ class OPML extends BaseObject
 					delete @pastTitle
 				storageIndex.push @title
 				window.storage?.setItem "opmls", ( JSON.stringify storageIndex ).replace /<br\/?>/g, ""
-			Toast "Saved #{@title}", "<p>OPML Document saved. You can now return to ruining it, without the worry of loosing it</p>"
+			Toast "Saved #{@title}", "OPML Document saved. You can now return to ruining it, without the worry of loosing it."
 
 	findNode: (path, from = @structure) =>
 		#alert "Arrived with path #{path}"
@@ -104,7 +107,9 @@ class OPML extends BaseObject
 	addChild: (path) => Client.publish "outline.#{@title}.addChild", path
 	rename: (title) => Client.publish "outline.#{@title}.rename", title
 	removeChild: (path) => Client.publish "outline.#{@title}.removeChild", path
-	move: (path, to) => @log path; Client.publish "outline.#{@title}.move", ( JSON.stringify path ), ( JSON.stringify to )
+	startMoving: => Client.publish "outline.#{@title}.startMoving"
+	endMoving: => Client.publish "outline.#{@title}.endMoving"
+	move: (path, to) => Client.publish "outline.#{@title}.move", ( JSON.stringify path ), ( JSON.stringify to )
 
 	_modify: (path, data) =>
 		item = @findNode JSON.parse path
@@ -115,40 +120,49 @@ class OPML extends BaseObject
 			if item.status in ["checked", "unchecked"]
 				item.status = data.status
 		item.note = data.note if data.note?
-		do @refreshView
+		do @_refresh
+
+	_refresh: =>
+		do @refreshView if @refreshView?		
+		do @controller.frameBuffer.sequence if @controller.frameBuffer?
 
 	_addChild: (path) =>
 		item = @findNode JSON.parse path
 		item.addChild(@locationService.getNextChild path.length)
-		do @refreshView
+		do @_refresh
 
 	_rename: (title) =>
+		@events["outline.#{title}.addChild"] = @events["outline.#{@title}.addChild"]
+		@events["outline.#{title}.edit"] = @events["outline.#{@title}.edit"]
+		@events["outline.#{title}.removeChlid"] = @events["outline.#{@title}.removeChlid"]
+		@events["outline.#{title}.move"] = @events["outline.#{@title}.move"]
+		@events["outline.#{title}.startMoving"] = @events["outline.#{@title}.startMoving"] 
+		@events["outline.#{title}.endMoving"] = @events["outline.#{@title}.endMoving"]
 		Client.queue["outline.#{@title}.addChild"] = null
 		Client.queue["outline.#{@title}.edit"] = null
 		Client.queue["outline.#{@title}.removeChild"] = null
 		Client.queue["outline.#{@title}.move"] = null
 		@events = {}
-		@events["outline.#{title}.addChild"] = @events["outline.#{@title}.addChild"]
-		@events["outline.#{title}.edit"] = @events["outline.#{@title}.edit"]
-		@events["outline.#{title}.removeChlid"] = @events["outline.#{@title}.removeChlid"]
-		@events["outline.#{title}.move"] = @events["outline.#{@title}.move"]
 		Client?.events = @events
 		Client?.loadEvents()
 		@title = title
-		do @refreshView
+		do @_refresh
 
 	_removeChild: (path) =>
 		item = @findNode JSON.parse path
 		parent = item.parent
 		item.parent.remove item
 		if not parent.topics.length then parent.parent.children = null
-		do @refreshView
+		do @_refresh
 
 	_move: (path, to) =>
 		item = @findNode JSON.parse path
 		to = JSON.parse to
 		item.x = to.x
 		item.y = to.y
+
+	_startMoving: => @controller.frameBuffer.start()
+	_endMoving: => @controller.frameBuffer.end()
 
 
 	delete: =>

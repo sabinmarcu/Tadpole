@@ -2,5 +2,5 @@
     font-family: 'Electrolize';
     font-style: normal;
     font-weight: 400;
-    src: local('Electrolize'), local('Electrolize-Regular'), url(fonts/electrolize.woff) format('woff');
+    src: local('Electrolize'), local('Electrolize-Regular'), url(font/electrolize.woff) format('woff');
 }

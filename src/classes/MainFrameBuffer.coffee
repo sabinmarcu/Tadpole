@@ -1,9 +1,9 @@
 class MainFrameBuffer extends DepMan.classes("FrameBuffer")
 
 	constructor: (buffer, @model) ->
-		@Gugu = new (DepMan.classes "GuguFrameBuffer")(model, @)
-		@Aux = new (DepMan.classes "AuxFrameBuffer")(model, @)
-		@Line = new (DepMan.classes "LinesFrameBuffer")(model, @)
+		@Gugu = new (DepMan.classes "GuguFrameBuffer")(@model, @)
+		@Aux = new (DepMan.classes "AuxFrameBuffer")(@model, @)
+		@Line = new (DepMan.classes "LinesFrameBuffer")(@model, @)
 		@renderers = [@Gugu, @Line]
 		@offsets = x: 0, y: 0
 		super buffer
@@ -27,18 +27,29 @@ class MainFrameBuffer extends DepMan.classes("FrameBuffer")
 			node.push item for item in @node
 			node = @model.findNode node
 			@initOffset = x: node.x, y: node.y
+			@model.startMoving()
+			@isMovement = false
+			setTimeout =>
+				if not @isMovement then @model.editNodeModal node
+			, 200
+		do e.preventDefault
 		do @start
 	up: (e) =>
+		if @node then @model.endMoving()
 		@init = null
 		@node = null
+		@isMovement = false
 		do @end
+		do e.preventDefault
 	move: (e) =>
 		return null if not @init?
+		@isMovement = true
 		pos = @getPos e
 		if @node then @model.move @node,
 			x: @initOffset.x + pos.x - @init.x
 			y: @initOffset.y + pos.y - @init.y
 		else @offsets = x: pos.x - @init.x + @initOffset.x, y: pos.y - @init.y + @initOffset.y
+		do e.preventDefault
 
 	getPos: (e) =>
 		if e.touches then e = e.touches[0]

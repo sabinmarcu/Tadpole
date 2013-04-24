@@ -12,3 +12,6 @@
     <li ng-class="{'outline': 'selected'}[view]" ng-click="changeView('outline')"><i class="icon-list"></i></li>
     <li ng-class="{'mindmap': 'selected'}[view]" ng-click="changeView('mindmap')"><i class="icon-sitemap"></i></li>
 </nav>
+<span class="modal-container" id="{{getTitle()}}">
+	<%- DepMan.render "partials/editnode" %>
+</span>

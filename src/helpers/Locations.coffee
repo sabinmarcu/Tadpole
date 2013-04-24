@@ -7,13 +7,14 @@ class LocationsService extends BaseObject
 	generateLocations: =>
 		@levels = []
 		@generate @model.structure, 0
+		console.log @model.structure
 
 	generate: (list, depth) =>
 		@levels[depth] ?= 30
 		levelX = depth * 350 + 50
 		for item in list.topics
 			if item.children then @generate item.children, depth + 1
-			if item.x is "" or item.y is ""
+			if item.x is "" or item.y is "" or item.x is NaN or item.y is NaN
 				item.y = @levels[depth]
 				item.x = levelX
 				@levels[depth] += 75

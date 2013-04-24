@@ -47,7 +47,8 @@ class Outline
 		_checkParam @, "note", "_note", xmlDoc
 		_checkParam @, "x", "_x", xmlDoc
 		_checkParam @, "y", "_y", xmlDoc
-		@x = parseInt(@x); @y = parseInt(@y)
+		console.log @x, @y
+		@x = parseInt(@x) if @x isnt ""; @y = parseInt(@y) if @y isnt ""
 		_children = new OutlineCollection xmlDoc.childNodes, @, @parent.depth + 1
 		@children = (if _children.topics.length then _children else null)
 		if @status is ""

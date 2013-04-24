@@ -25,5 +25,8 @@
 		<li ng-click="delete()" class="btn">
 			<i class='icon-trash'><p>Delete</p></i>
 		</li>
+		<li ng-click="download()" class="btn">
+			<i class='icon-download'><p>Download</p></i>
+		</li>
 	</nav>
 </footer>    

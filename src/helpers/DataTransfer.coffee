@@ -3,12 +3,9 @@ do ->
 		
 		constructor: ->
 			@queue = {}
-			super "http://arrowpollingserver.herokuapp.com:80"
+			super "http://188.240.47.130:8080"
 		connected: (id) ->
-			jQuery("#tip-message-head").html "Connected to the new ID"
-			jQuery("#tip-message-body").html "<p>You are now connected to #{id}</p><p>Anything that you do will now be visible and mirrored in the other one's screen, and so will his every move in your screen.</p>"
-			jQuery("#settings").modal("hide")
-			jQuery("#tip-message").modal("show")
+			Toast "Connected to the new ID", "You are now connected to #{id}", "Anything that you do will now be visible and mirrored in the other one's screen, and so will his every move in your screen."
 
 		events:
 			"log": -> console.log arguments

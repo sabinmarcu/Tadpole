@@ -1,7 +1,7 @@
 {
     "name": "Arrow Brainstorming",
     "description": "Brainstorming on the fly",
-    "version": "0.3",
+    "version": "0.3.2",
     "offline_enabled": true,
     "manifest_version": 2,
     "app": {
@@ -13,6 +13,7 @@
         "128": "/arrow_up_1.png"
     },
     "permissions": [
-        "storage"
+        "storage",
+        "notifications"
     ]
 }
