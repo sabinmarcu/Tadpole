@@ -12,7 +12,7 @@ angular.module("Arrow").controller "OPMLController", ($scope, $rootScope, OPML) 
 		obj.refreshView = $scope.safeApply
 		$scope.object = obj
 		$scope.view = "outline"
-		#$scope.view = "mindmap"; do $scope.object.controller.frameBuffer.sequence
+		$scope.view = "mindmap"; do $scope.object.controller.frameBuffer.start
 
 		$scope.isMobile = window.isMobile
 
@@ -45,7 +45,7 @@ angular.module("Arrow").controller "OPMLController", ($scope, $rootScope, OPML) 
 			if item.status is "checked" then sts.prop "checked", true
 			else if item.status is "unchecked" then sts.prop "checked", false
 			else modal.find(".status").hide()
-			modal.find("#notes").val item.notes or ""
+			modal.find("#notes").val item.note or ""
 			console.log modal
 			modal.modal("show")
 			$scope.path = do item.getPath
@@ -61,7 +61,7 @@ angular.module("Arrow").controller "OPMLController", ($scope, $rootScope, OPML) 
 					obj.modify JSON.stringify($scope.path),
 						"text"   : do modal.find("#text").val
 						"status" : status
-						"notes"  : do modal.find("#notes").val
+						"note"  : do modal.find("#notes").val
 					jQuery(".modal-container##{$scope.getTitle()}").append modal
 					$scope.safeApply()
 		obj.editNodeModal = $scope.edit
@@ -72,7 +72,7 @@ angular.module("Arrow").controller "OPMLController", ($scope, $rootScope, OPML) 
 				if $scope.view is views[0] then to = views[1]
 				else to = views[0]
 			$scope.view = to
-			if to is "mindmap" then do $scope.object.controller.frameBuffer.sequence
+			if to is "mindmap" then do $scope.object.controller.frameBuffer.start
 			$scope.safeApply()
 
 		$scope.getTitle = -> obj.title.replace(/\ /g, "_")

@@ -1,9 +1,9 @@
 {
-  "name": "Arrow",
+  "name": "Arrow Brainstorming",
   "description": "Brainstorming app usable even in sleep",
   "launch_path": "/index.html",
   "icons": {
-    "128": "/arrow_up_1.png"
+    "128": "/arrow.png"
   },
   "developer": {
     "name": "Sabin Marcu",

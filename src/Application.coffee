@@ -89,6 +89,7 @@ class Application extends BaseObject
 		DepMan.lib "QRCodeDraw"
 		@progress 3
 		DepMan.stylesheet "bootstrap"
+		DepMan.stylesheet "bootstrap-responsive"
 		DepMan.stylesheet "font-awesome"
 		@progress 5
 		DepMan.stylesheet "ElectrolizeFont"

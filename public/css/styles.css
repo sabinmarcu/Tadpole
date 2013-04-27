@@ -1154,12 +1154,12 @@ body:not(.landing) > article {
   top: 0;
   bottom: 0;
   z-index: 2;
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #fff), color-stop(0.98, #fff), color-stop(1, #eee)) #eee;
-  background: -webkit-linear-gradient(top, #fff 0, #fff 98%, #eee 100%) #eee;
-  background: -moz-linear-gradient(top, #fff 0, #fff 98%, #eee 100%) #eee;
-  background: -o-linear-gradient(top, #fff 0, #fff 98%, #eee 100%) #eee;
-  background: -ms-linear-gradient(top, #fff 0, #fff 98%, #eee 100%) #eee;
-  background: linear-gradient(top, #fff 0, #fff 98%, #eee 100%) #eee;
+  background: url("/images/background.png") no-repeat center center, -webkit-gradient(linear, left top, left bottom, color-stop(0, #fff), color-stop(0.98, #fff), color-stop(1, #eee)) #eee;
+  background: url("/images/background.png") no-repeat center center, -webkit-linear-gradient(top, #fff 0, #fff 98%, #eee 100%) #eee;
+  background: url("/images/background.png") no-repeat center center, -moz-linear-gradient(top, #fff 0, #fff 98%, #eee 100%) #eee;
+  background: url("/images/background.png") no-repeat center center, -o-linear-gradient(top, #fff 0, #fff 98%, #eee 100%) #eee;
+  background: url("/images/background.png") no-repeat center center, -ms-linear-gradient(top, #fff 0, #fff 98%, #eee 100%) #eee;
+  background: url("/images/background.png") no-repeat center center, linear-gradient(top, #fff 0, #fff 98%, #eee 100%) #eee;
   -webkit-transition: all 0.5s ease-in-out;
   -moz-transition: all 0.5s ease-in-out;
   -o-transition: all 0.5s ease-in-out;
@@ -1223,7 +1223,6 @@ body:not(.landing) > article section article {
   right: 0;
   top: 0;
   bottom: 0;
-  background: #fff;
   -webkit-transform-style: preserve-3d;
   -moz-transform-style: preserve-3d;
   -o-transform-style: preserve-3d;
@@ -1351,7 +1350,6 @@ body:not(.landing) > article section article > div {
   z-index: -1;
   -webkit-box-shadow: none;
   box-shadow: none;
-  background: #fff;
   overflow-y: auto;
 }
 body:not(.landing) > article section article > div:first-child {

@@ -43,16 +43,17 @@ class OPML extends BaseObject
 		if aux? then into[prop.substr 1].set aux
 
 	download: =>
-		form = document.createElement "form"
-		form.setAttribute "action", "/echo/#{encodeURI(@title)}.opml"
-		form.setAttribute "method", "POST"
-		input = document.createElement "input"
-		input.setAttribute "name", "content"
-		input.value = ( do @Export ).replace /["']/g, "\""
-		form.appendChild input
-		document.body.appendChild form
-		form.submit()
-		document.body.removeChild form
+		window.open "data:application/xml,#{( do @Export ).replace /["']/g, "\""}"
+		# form = document.createElement "form"
+		# form.setAttribute "action", "/echo/#{encodeURI(@title)}.opml"
+		# form.setAttribute "method", "POST"
+		# input = document.createElement "input"
+		# input.setAttribute "name", "content"
+		# input.value = ( do @Export ).replace /["']/g, "\""
+		# form.appendChild input
+		# document.body.appendChild form
+		# form.submit()
+		# document.body.removeChild form
 
 
 	Export: => "<opml version='1.0'><head><title>#{@title}</title></head><body>#{do @exportBody}</body></opml>"

@@ -34,6 +34,7 @@ class FrameBuffer extends BaseObject
 	constructor: (@buffer) ->
 		@buffer ?= document.createElement("canvas")
 		@context = @buffer.getContext("2d")
+		@context.translate(0.5, 0.5)
 		do @_hookSizeModif
 		@echo "FrameBuffer Ready"
 
@@ -58,5 +59,12 @@ class FrameBuffer extends BaseObject
 
 	getX: (from) => ( from.x or 0 ) + ( @parent.offsets?.x or 0 )
 	getY: (from) => ( from.y or 0 ) + ( @parent.offsets?.y or 0 )
+
+	makeValue: (value, delta) => value + delta * value / 4 
+	getWidth: (delta) => @makeValue (@parent.sizes?.x or 300), delta
+	getHeight: (delta) => @makeValue (@parent.sizes?.y or 300), delta
+	getTextDelta: (delta) => @makeValue 30, delta
+	alphaDelta: (delta) => (1 + delta / 4) or 0.2
+
 
 module.exports = FrameBuffer

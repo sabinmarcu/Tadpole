@@ -1,31 +1,67 @@
 class GuguFrameBuffer extends DepMan.classes("FrameBuffer")
+
 	constructor: (@model, @parent) -> 
+		@currentItem = []
 		super()
 		@context.textBaseline = "middle" 
-		@context.font = "normal 12pt Verdana"
-	sequence: ->
+		# @context.font = "normal 12pt Verdana" 
+
+	sequence: =>
 		@buffer.width = @buffer.width
 		@drawGugus @model.structure
-	drawGugus: (set) ->
+
+	drawGugus: (set) =>
 		for item in set.topics
-			@drawGugu item
+			@currentItem.push item.text
 			if item.children then @drawGugus item.children
-	drawGugu: (item) ->
-		gradient = @context.createLinearGradient (@getX item), (@getY item), (@getX item), (@getY item) + 50
+			@drawGugu item
+			@currentItem.pop()
+	drawGugu: (item) =>
+		delta = 0
+		delta = @parent.level - @currentItem.length + 1 if @parent.triggers?.level
+		absDelta = -(Math.sqrt delta * delta)
+
 		switch item.status
-			when "checked" then @context.fillStyle = "rgb(0, 135, 255)"; texcolor = "black"; texStrokeColor = "rgba(0, 0, 0, 0)"
-			when "unchecked" then @context.fillStyle = "rgb(255, 67, 16)"; texcolor = "black"; texStrokeColor = "rgba(0, 0 ,0 ,0)"
-			when "determinate" then @context.fillStyle = "white"; texcolor = "black"; texStrokeColor = "white"
-			else @context.fillStyle = "black"; texcolor = "white"; texStrokeColor = "black"
-		@context.fillRectR (@getX item), (@getY item), 300, 50
+			when "checked" then @context.fillStyle = "rgba(0, 135, 255, #{@alphaDelta absDelta})"; texcolor = "rgba(256, 256, 256, #{@alphaDelta absDelta})"; texStrokeColor = "rgba(0, 0, 0, 0)"
+			when "unchecked" then @context.fillStyle = "rgba(255, 67, 16, #{@alphaDelta absDelta})"; texcolor = "rgba(0, 0, 0, #{@alphaDelta absDelta})"; texStrokeColor = "rgba(0, 0 , 0, 0)"
+			when "determinate" then @context.fillStyle = "rgba(256, 256, 256, #{@alphaDelta absDelta})"; texcolor = "rgba(0, 0, 0, #{@alphaDelta absDelta})"; texStrokeColor = "rgba(256, 256, 256, #{@alphaDelta absDelta})"
+			else @context.fillStyle = "rgba(0, 0, 0, #{@alphaDelta absDelta})"; texcolor = "rgba(256, 256, 256, #{@alphaDelta absDelta})"; texStrokeColor = "rgba(0, 0, 0, #{@alphaDelta absDelta})"
 		@context.lineWidth = 1
-		@context.strokeStyle = "white"
-		@context.strokeRectR (@getX item), (@getY item), 300, 50
+		@context.strokeStyle = "rgba(0, 0, 0, #{@alphaDelta absDelta})"
+		@context.fillRectR (@getX item), (@getY item), (@getWidth delta), (@getHeight delta)
+		@context.strokeRectR (@getX item), (@getY item), (@getWidth delta), (@getHeight delta)
 		text = item.text
 		if text.length > 40 then text = text.substr(0, 37) + "..."
 		@context.strokeStyle = texStrokeColor
-		@context.strokeText text, (@getX item) + 25, (@getY item) + 25
+		@context.font = "normal #{12 + 12 * delta / 4}pt Verdana" 
 		@context.fillStyle = texcolor
-		@context.fillText text, (@getX item) + 25, (@getY item) + 25
+		@context.strokeText text, (@getX item) + 25, (@getY item) + @getTextDelta delta
+		@context.fillText text, (@getX item) + 25, (@getY item) + @getTextDelta delta
+
+		# if do @verify then @drawButtons item, delta
+
+	drawButtons: (item, delta) =>
+		@context.fillStyle = "white"
+		@context.strokeStyle = "#444"
+		@context.fillRectR (@getX item) + (@getWidth delta) - 30, (@getY item) + 3, 20, 20
+		@context.fillRectR (@getX item) + (@getWidth delta) - 30, (@getY item) + 28, 20, 20
+		@context.beginPath()
+		@context.strokeRectR (@getX item) + (@getWidth delta) - 30, (@getY item) + 3, 20, 20
+		@context.strokeRectR (@getX item) + (@getWidth delta) - 30, (@getY item) + 28, 20, 20
+		@context.moveTo (@getX item) + (@getWidth delta) - 25, (@getY item) + 13
+		@context.lineTo (@getX item) + (@getWidth delta) - 15, (@getY item) + 13
+		@context.moveTo (@getX item) + (@getWidth delta) - 20, (@getY item) + 8
+		@context.lineTo (@getX item) + (@getWidth delta) - 20, (@getY item) + 18
+		@context.moveTo (@getX item) + (@getWidth delta) - 25, (@getY item) + 38
+		@context.lineTo (@getX item) + (@getWidth delta) - 15, (@getY item) + 38
+		@context.stroke()
+
+
+	verify: =>
+		return false if not @parent? or not @parent.buttons?
+		return false if @parent.buttons.length isnt @currentItem.length
+		for item, key in @currentItem
+			if @parent.buttons[key] isnt item then return false
+		return true
 
 module.exports = GuguFrameBuffer

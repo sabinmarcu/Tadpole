@@ -1,23 +1,32 @@
 class LinesFrameBuffer extends DepMan.classes("FrameBuffer")
-	constructor: (@model, @parent) -> super(); @context.strokeStyle = "#444"
+	constructor: (@model, @parent) -> 
+		@currentItem = [];
+		super()
 
 	sequence: => 
 		@context.clearRect 0, 0, @buffer.width, @buffer.height
-		@context.beginPath()
-		@context.strokeStyle = "#444"
 		@drawLines @model.structure
-		@context.stroke()
 
 	drawLines: (set) =>
 		for item in set.topics
+			@currentItem.push item.text
+			delta = 0
+			delta = @parent.level - @currentItem.length + 1 if @parent.triggers?.level
+			absDelta = -(Math.sqrt delta * delta)
 			if item.children
-				for kid in item.children.topics
-					@drawLine item, kid
 				@drawLines item.children
+				for kid in item.children.topics
+					@drawLine item, kid, delta
+			@currentItem.pop()
 
-	drawLine: (from, to) =>
-		@context.moveTo (@getX from) + 150, (@getY from) + 25
-		@context.lineTo (@getX to) + 150, (@getY to) + 25
+	drawLine: (from, to, delta) =>
+		@context.beginPath()
+		@context.strokeStyle = "rgba(0, 0, 0, #{@lineAlphaDelta delta})"
+		@context.moveTo (@getX from) + (@makeValue 150, delta), (@getY from) + (@makeValue 25, delta)
+		@context.lineTo (@getX to) + (@makeValue 150, delta - 1), (@getY to) + (@makeValue 25, delta - 1)
+		@context.stroke()
+
+	lineAlphaDelta: (delta) => 0.2 + 0.2 * (-Math.sqrt(delta * delta)) / 4
 
 
 module.exports = LinesFrameBuffer
