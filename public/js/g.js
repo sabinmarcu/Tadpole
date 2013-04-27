@@ -1005,21 +1005,19 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
     };
 
     AuxFrameBuffer.prototype.drawGugu = function(item) {
-      var code, delta, path, _ref1;
+      var absDelta, code, delta, path, _ref1;
 
       delta = 0;
       if ((_ref1 = this.parent.triggers) != null ? _ref1.level : void 0) {
         delta = this.parent.level - this.currentItem.length + 1;
       }
+      absDelta = -(Math.sqrt(delta * delta));
       path = item.getPath();
       code = "" + this.lastColor[COLORS.R] + ", " + this.lastColor[COLORS.G] + ", " + this.lastColor[COLORS.B];
       this.linkBack[code] = path;
       this.context.fillStyle = "rgb(" + code + ")";
       this.upColor();
-      this.context.fillRectR(this.getX(item), this.getY(item), this.getWidth(delta), this.getHeight(delta));
-      if (this.verify()) {
-        return this.drawButtons(item);
-      }
+      return this.context.fillRectR(this.getX(item), this.getY(item), this.getWidth(absDelta), this.getHeight(absDelta));
     };
 
     AuxFrameBuffer.prototype.drawButtons = function(item) {
@@ -1299,17 +1297,17 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
       }
       this.context.lineWidth = 1;
       this.context.strokeStyle = "rgba(0, 0, 0, " + (this.alphaDelta(absDelta)) + ")";
-      this.context.fillRectR(this.getX(item), this.getY(item), this.getWidth(delta), this.getHeight(delta));
-      this.context.strokeRectR(this.getX(item), this.getY(item), this.getWidth(delta), this.getHeight(delta));
+      this.context.fillRectR(this.getX(item), this.getY(item), this.getWidth(absDelta), this.getHeight(absDelta));
+      this.context.strokeRectR(this.getX(item), this.getY(item), this.getWidth(absDelta), this.getHeight(absDelta));
       text = item.text;
-      if (text.length > 40) {
-        text = text.substr(0, 37) + "...";
+      if (text.length > 25) {
+        text = text.substr(0, 22) + "...";
       }
       this.context.strokeStyle = texStrokeColor;
-      this.context.font = "normal " + (12 + 12 * delta / 4) + "pt Verdana";
+      this.context.font = "normal " + (12 + 12 * absDelta / 4) + "pt Verdana";
       this.context.fillStyle = texcolor;
-      this.context.strokeText(text, (this.getX(item)) + 25, (this.getY(item)) + this.getTextDelta(delta));
-      return this.context.fillText(text, (this.getX(item)) + 25, (this.getY(item)) + this.getTextDelta(delta));
+      this.context.strokeText(text, (this.getX(item)) + 20, (this.getY(item)) + this.getTextDelta(absDelta));
+      return this.context.fillText(text, (this.getX(item)) + 20, (this.getY(item)) + this.getTextDelta(absDelta));
     };
 
     GuguFrameBuffer.prototype.drawButtons = function(item, delta) {
@@ -1381,24 +1379,19 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
     };
 
     LinesFrameBuffer.prototype.drawLines = function(set) {
-      var absDelta, delta, item, kid, _i, _j, _len, _len1, _ref, _ref1, _ref2, _results;
+      var item, kid, _i, _j, _len, _len1, _ref, _ref1, _results;
 
       _ref = set.topics;
       _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         item = _ref[_i];
         this.currentItem.push(item.text);
-        delta = 0;
-        if ((_ref1 = this.parent.triggers) != null ? _ref1.level : void 0) {
-          delta = this.parent.level - this.currentItem.length + 1;
-        }
-        absDelta = -(Math.sqrt(delta * delta));
         if (item.children) {
           this.drawLines(item.children);
-          _ref2 = item.children.topics;
-          for (_j = 0, _len1 = _ref2.length; _j < _len1; _j++) {
-            kid = _ref2[_j];
-            this.drawLine(item, kid, delta);
+          _ref1 = item.children.topics;
+          for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+            kid = _ref1[_j];
+            this.drawLine(item, kid);
           }
         }
         _results.push(this.currentItem.pop());
@@ -1406,11 +1399,21 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
       return _results;
     };
 
-    LinesFrameBuffer.prototype.drawLine = function(from, to, delta) {
+    LinesFrameBuffer.prototype.drawLine = function(from, to) {
+      var absDelta, delta, sdelta, _ref;
+
       this.context.beginPath();
+      delta = 0;
+      sdelta = 0;
+      absDelta = 0;
+      if ((_ref = this.parent.triggers) != null ? _ref.level : void 0) {
+        delta = this.parent.level - this.currentItem.length + 1;
+        absDelta = -(Math.sqrt(delta * delta));
+        sdelta = -(Math.sqrt((delta - 1) * (delta - 1)));
+      }
       this.context.strokeStyle = "rgba(0, 0, 0, " + (this.lineAlphaDelta(delta)) + ")";
-      this.context.moveTo((this.getX(from)) + (this.makeValue(150, delta)), (this.getY(from)) + (this.makeValue(25, delta)));
-      this.context.lineTo((this.getX(to)) + (this.makeValue(150, delta - 1)), (this.getY(to)) + (this.makeValue(25, delta - 1)));
+      this.context.moveTo((this.getX(from)) + (this.makeValue(150, absDelta)), (this.getY(from)) + (this.makeValue(25, absDelta)));
+      this.context.lineTo((this.getX(to)) + (this.makeValue(150, sdelta)), (this.getY(to)) + (this.makeValue(25, sdelta)));
       return this.context.stroke();
     };
 
@@ -1868,7 +1871,6 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
     };
 
     DnD.prototype.dragExit = function(e) {
-      $(".dragdropplaceholder").remove();
       e.stopPropagation();
       return e.preventDefault();
     };

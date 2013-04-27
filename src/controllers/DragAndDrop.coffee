@@ -19,7 +19,7 @@ class DnD extends BaseObject
 		do e.preventDefault
 
 	dragExit: (e) =>
-		$(".dragdropplaceholder").remove()
+		# $(".dragdropplaceholder").remove()
 		do e.stopPropagation
 		do e.preventDefault
 

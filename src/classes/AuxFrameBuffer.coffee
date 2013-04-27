@@ -12,6 +12,7 @@ class AuxFrameBuffer extends DepMan.classes("GuguFrameBuffer")
 	drawGugu: (item) ->
 		delta = 0
 		delta = @parent.level - @currentItem.length + 1 if @parent.triggers?.level
+		absDelta = -(Math.sqrt delta * delta)
 		
 		path = item.getPath()
 		code = "#{@lastColor[COLORS.R]}, #{@lastColor[COLORS.G]}, #{@lastColor[COLORS.B]}"
@@ -19,8 +20,8 @@ class AuxFrameBuffer extends DepMan.classes("GuguFrameBuffer")
 		@context.fillStyle = "rgb(#{code})"
 		do @upColor
 
-		@context.fillRectR (@getX item), (@getY item), (@getWidth delta), (@getHeight delta)
-		if do @verify then @drawButtons item
+		@context.fillRectR (@getX item), (@getY item), (@getWidth absDelta), (@getHeight absDelta)
+		# if do @verify then @drawButtons item
 
 	drawButtons: (item) =>
 		@context.fillStyle = "white"

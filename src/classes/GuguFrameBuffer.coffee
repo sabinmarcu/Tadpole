@@ -28,15 +28,15 @@ class GuguFrameBuffer extends DepMan.classes("FrameBuffer")
 			else @context.fillStyle = "rgba(0, 0, 0, #{@alphaDelta absDelta})"; texcolor = "rgba(256, 256, 256, #{@alphaDelta absDelta})"; texStrokeColor = "rgba(0, 0, 0, #{@alphaDelta absDelta})"
 		@context.lineWidth = 1
 		@context.strokeStyle = "rgba(0, 0, 0, #{@alphaDelta absDelta})"
-		@context.fillRectR (@getX item), (@getY item), (@getWidth delta), (@getHeight delta)
-		@context.strokeRectR (@getX item), (@getY item), (@getWidth delta), (@getHeight delta)
+		@context.fillRectR (@getX item), (@getY item), (@getWidth absDelta), (@getHeight absDelta)
+		@context.strokeRectR (@getX item), (@getY item), (@getWidth absDelta), (@getHeight absDelta)
 		text = item.text
-		if text.length > 40 then text = text.substr(0, 37) + "..."
+		if text.length > 25 then text = text.substr(0, 22) + "..."
 		@context.strokeStyle = texStrokeColor
-		@context.font = "normal #{12 + 12 * delta / 4}pt Verdana" 
+		@context.font = "normal #{12 + 12 * absDelta / 4}pt Verdana" 
 		@context.fillStyle = texcolor
-		@context.strokeText text, (@getX item) + 25, (@getY item) + @getTextDelta delta
-		@context.fillText text, (@getX item) + 25, (@getY item) + @getTextDelta delta
+		@context.strokeText text, (@getX item) + 20, (@getY item) + @getTextDelta absDelta
+		@context.fillText text, (@getX item) + 20, (@getY item) + @getTextDelta absDelta
 
 		# if do @verify then @drawButtons item, delta
 
