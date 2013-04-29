@@ -4,12 +4,33 @@
     	<h3 id="tip-message-title" <%= _T "Edit Node" %> ></h3>
     </div>
     <div class="modal-body">
-    	<label for="text" <%= _T "Text of the node" %>></label>
-    	<input type="text" name="text" <%= _T "Application Error" %> id="text" />
-    	<label for="status" class="status" <%= _T "Status of the node (if leaf)" %> ></label>
-    	<input type="checkbox" name="status" class="status" checked="false" id="status" />
-    	<label for="notes" <%= _T "Notes attached to this node" %>></label>
-    	<textarea id="notes" <%= _T "Application Error" %> ></textarea>
+       <div class="controls row-fluid">
+            <div class="input-prepend span12 row">
+               <label class="add-on span6" <%= _T "Text of the node" %>></label>
+               <input type="text" class="span6 row" name="text" <%= _T "Application Error" %> id="text" />
+           </div>
+       </div>
+        <div class="controls row-fluid">
+            <div class="input-prepend span12 row">
+                <label class="status" for="status">
+                    <span class="add-on span6" <%= _T "Status of the node (if leaf)" %> ></span>
+                    <div class="span6 row" style="margin: 0; padding: 0 20px 0 0;">
+                        <input type="checkbox" name="status" class="status pull-right" checked="false" id="status" />
+                    </div>
+                </label>                    
+            </div>
+        </div>
+        <br><br>
+        <div class="controls row-fluid">
+            <div class="input-prepend span12 row">
+                <label class="add-on span6" for="notes" <%= _T "Notes attached to this node" %>></label>
+                <textarea class="span6" id="notes" <%= _T "Application Error" %> rows="5" ></textarea>
+            </div>
+        </div>
+        <div class="text-center">
+            <button class="btn btn-primary" id="new" <%= _T "Add a new node" %>></button>
+            <button class="btn btn-danger" id="delete" <%= _T "Remove this node" %>></button>
+        </div>
     </div>
     
 </div>

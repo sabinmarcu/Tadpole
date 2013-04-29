@@ -827,7 +827,8 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
       };
       hooked = false;
       $scope.edit = function(item) {
-        var modal, sts;
+        var modal, sts,
+          _this = this;
 
         if ((typeof modal === "undefined" || modal === null) || (modal[0] != null)) {
           modal = jQuery(".editnode#" + ($scope.getTitle()));
@@ -843,14 +844,26 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
           modal.find(".status").hide();
         }
         modal.find("#notes").val(item.note || "");
-        console.log(modal);
-        modal.modal("show");
         $scope.path = item.getPath();
+        modal.find("#new").click(function() {
+          obj.addChild(JSON.stringify($scope.path));
+          return modal.modal("hide");
+        });
+        modal.find("#delete").click(function() {
+          modal.modal("hide");
+          obj.removeChild(JSON.stringify($scope.path));
+          return modal.remove();
+        });
         $(document.body).append(modal);
+        modal.modal("show");
         if (!hooked) {
           hooked = true;
           sts.on("change", function() {
             return $(this).prop("checked", this.checked);
+          });
+          modal.find("form").submit(function(e) {
+            e.preventDefault();
+            return false;
           });
           return modal.on("hide", function() {
             var status;
@@ -15465,27 +15478,35 @@ QRBitBuffer.prototype = {
     
       __out.push(__sanitize(_T("Edit Node")));
     
-      __out.push(' ></h3>\n    </div>\n    <div class="modal-body">\n    \t<label for="text" ');
+      __out.push(' ></h3>\n    </div>\n    <div class="modal-body">\n       <div class="controls row-fluid">\n            <div class="input-prepend span12 row">\n               <label class="add-on span6" ');
     
       __out.push(__sanitize(_T("Text of the node")));
     
-      __out.push('></label>\n    \t<input type="text" name="text" ');
+      __out.push('></label>\n               <input type="text" class="span6 row" name="text" ');
     
       __out.push(__sanitize(_T("Application Error")));
     
-      __out.push(' id="text" />\n    \t<label for="status" class="status" ');
+      __out.push(' id="text" />\n           </div>\n       </div>\n        <div class="controls row-fluid">\n            <div class="input-prepend span12 row">\n                <label class="status" for="status">\n                    <span class="add-on span6" ');
     
       __out.push(__sanitize(_T("Status of the node (if leaf)")));
     
-      __out.push(' ></label>\n    \t<input type="checkbox" name="status" class="status" checked="false" id="status" />\n    \t<label for="notes" ');
+      __out.push(' ></span>\n                    <div class="span6 row" style="margin: 0; padding: 0 20px 0 0;">\n                        <input type="checkbox" name="status" class="status pull-right" checked="false" id="status" />\n                    </div>\n                </label>                    \n            </div>\n        </div>\n        <br><br>\n        <div class="controls row-fluid">\n            <div class="input-prepend span12 row">\n                <label class="add-on span6" for="notes" ');
     
       __out.push(__sanitize(_T("Notes attached to this node")));
     
-      __out.push('></label>\n    \t<textarea id="notes" ');
+      __out.push('></label>\n                <textarea class="span6" id="notes" ');
     
       __out.push(__sanitize(_T("Application Error")));
     
-      __out.push(' ></textarea>\n    </div>\n    \n</div>\n');
+      __out.push(' rows="5" ></textarea>\n            </div>\n        </div>\n        <div class="text-center">\n            <button class="btn btn-primary" id="new" ');
+    
+      __out.push(__sanitize(_T("Add a new node")));
+    
+      __out.push('></button>\n            <button class="btn btn-danger" id="delete" ');
+    
+      __out.push(__sanitize(_T("Remove this node")));
+    
+      __out.push('></button>\n        </div>\n    </div>\n    \n</div>\n');
     
     }).call(this);
     

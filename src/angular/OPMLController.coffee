@@ -46,13 +46,17 @@ angular.module("Arrow").controller "OPMLController", ($scope, $rootScope, OPML) 
 			else if item.status is "unchecked" then sts.prop "checked", false
 			else modal.find(".status").hide()
 			modal.find("#notes").val item.note or ""
-			console.log modal
-			modal.modal("show")
 			$scope.path = do item.getPath
+			modal.find("#new").click => obj.addChild JSON.stringify $scope.path; modal.modal("hide")
+			modal.find("#delete").click => modal.modal("hide"); obj.removeChild JSON.stringify $scope.path; modal.remove()
+
 			$(document.body).append modal
+			modal.modal("show")
+
 			if not hooked
 				hooked = true
 				sts.on "change", -> $(@).prop "checked", @checked
+				modal.find("form").submit (e) => do e.preventDefault; false
 				modal.on "hide", ->
 					status = modal.find("#status").prop "checked"
 					console.log status
@@ -64,6 +68,7 @@ angular.module("Arrow").controller "OPMLController", ($scope, $rootScope, OPML) 
 						"note"  : do modal.find("#notes").val
 					jQuery(".modal-container##{$scope.getTitle()}").append modal
 					$scope.safeApply()
+
 		obj.editNodeModal = $scope.edit
 
 		views = ["mindmap", "outline"]
