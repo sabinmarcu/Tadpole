@@ -1280,7 +1280,7 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
     };
 
     GuguFrameBuffer.prototype.drawGugu = function(item) {
-      var absDelta, delta, texStrokeColor, texcolor, text, _ref;
+      var absDelta, bgcolor1, bgcolor2, delta, grad, texStrokeColor, texcolor, text, _ref;
 
       delta = 0;
       if ((_ref = this.parent.triggers) != null ? _ref.level : void 0) {
@@ -1289,25 +1289,34 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
       absDelta = -(Math.sqrt(delta * delta));
       switch (item.status) {
         case "checked":
-          this.context.fillStyle = "rgba(0, 135, 255, " + (this.alphaDelta(absDelta)) + ")";
+          bgcolor1 = "rgba(0, 135, 255, " + (this.alphaDelta(absDelta)) + ")";
+          bgcolor2 = "rgba(0, 100, 220, " + (this.alphaDelta(absDelta)) + ")";
           texcolor = "rgba(256, 256, 256, " + (this.alphaDelta(absDelta)) + ")";
           texStrokeColor = "rgba(0, 0, 0, 0)";
           break;
         case "unchecked":
-          this.context.fillStyle = "rgba(255, 67, 16, " + (this.alphaDelta(absDelta)) + ")";
+          bgcolor1 = "rgba(255, 67, 16, " + (this.alphaDelta(absDelta)) + ")";
+          bgcolor2 = "rgba(220, 32, 0, " + (this.alphaDelta(absDelta)) + ")";
           texcolor = "rgba(0, 0, 0, " + (this.alphaDelta(absDelta)) + ")";
           texStrokeColor = "rgba(0, 0 , 0, 0)";
           break;
         case "determinate":
-          this.context.fillStyle = "rgba(256, 256, 256, " + (this.alphaDelta(absDelta)) + ")";
+          bgcolor1 = "rgba(256, 256, 256, " + (this.alphaDelta(absDelta)) + ")";
+          bgcolor2 = "rgba(210, 210, 210, " + (this.alphaDelta(absDelta)) + ")";
           texcolor = "rgba(0, 0, 0, " + (this.alphaDelta(absDelta)) + ")";
           texStrokeColor = "rgba(256, 256, 256, " + (this.alphaDelta(absDelta)) + ")";
           break;
         default:
-          this.context.fillStyle = "rgba(0, 0, 0, " + (this.alphaDelta(absDelta)) + ")";
+          bgcolor1 = "rgba(50, 50, 50, " + (this.alphaDelta(absDelta)) + ")";
+          bgcolor2 = "rgba(0, 0, 0, " + (this.alphaDelta(absDelta)) + ")";
           texcolor = "rgba(256, 256, 256, " + (this.alphaDelta(absDelta)) + ")";
           texStrokeColor = "rgba(0, 0, 0, " + (this.alphaDelta(absDelta)) + ")";
       }
+      grad = this.context.createLinearGradient(this.getX(item), this.getY(item), this.getX(item), (this.getY(item)) + (this.getHeight(absDelta)));
+      grad.addColorStop(0, bgcolor1);
+      grad.addColorStop(0.5, bgcolor1);
+      grad.addColorStop(1, bgcolor2);
+      this.context.fillStyle = grad;
       this.context.lineWidth = 1;
       this.context.strokeStyle = "rgba(0, 0, 0, " + (this.alphaDelta(absDelta)) + ")";
       this.context.fillRectR(this.getX(item), this.getY(item), this.getWidth(absDelta), this.getHeight(absDelta));
@@ -15506,7 +15515,7 @@ QRBitBuffer.prototype = {
     
       __out.push(__sanitize(_T("Remove this node")));
     
-      __out.push('></button>\n        </div>\n    </div>\n    \n</div>\n');
+      __out.push('></button>\n        </div>\n    </div>    \n</div>\n');
     
     }).call(this);
     

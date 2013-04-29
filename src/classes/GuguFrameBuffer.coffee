@@ -22,10 +22,15 @@ class GuguFrameBuffer extends DepMan.classes("FrameBuffer")
 		absDelta = -(Math.sqrt delta * delta)
 
 		switch item.status
-			when "checked" then @context.fillStyle = "rgba(0, 135, 255, #{@alphaDelta absDelta})"; texcolor = "rgba(256, 256, 256, #{@alphaDelta absDelta})"; texStrokeColor = "rgba(0, 0, 0, 0)"
-			when "unchecked" then @context.fillStyle = "rgba(255, 67, 16, #{@alphaDelta absDelta})"; texcolor = "rgba(0, 0, 0, #{@alphaDelta absDelta})"; texStrokeColor = "rgba(0, 0 , 0, 0)"
-			when "determinate" then @context.fillStyle = "rgba(256, 256, 256, #{@alphaDelta absDelta})"; texcolor = "rgba(0, 0, 0, #{@alphaDelta absDelta})"; texStrokeColor = "rgba(256, 256, 256, #{@alphaDelta absDelta})"
-			else @context.fillStyle = "rgba(0, 0, 0, #{@alphaDelta absDelta})"; texcolor = "rgba(256, 256, 256, #{@alphaDelta absDelta})"; texStrokeColor = "rgba(0, 0, 0, #{@alphaDelta absDelta})"
+			when "checked" then bgcolor1 = "rgba(0, 135, 255, #{@alphaDelta absDelta})"; bgcolor2 = "rgba(0, 100, 220, #{@alphaDelta absDelta})"; texcolor = "rgba(256, 256, 256, #{@alphaDelta absDelta})"; texStrokeColor = "rgba(0, 0, 0, 0)"
+			when "unchecked" then bgcolor1 = "rgba(255, 67, 16, #{@alphaDelta absDelta})"; bgcolor2 = "rgba(220, 32, 0, #{@alphaDelta absDelta})"; texcolor = "rgba(0, 0, 0, #{@alphaDelta absDelta})"; texStrokeColor = "rgba(0, 0 , 0, 0)"
+			when "determinate" then bgcolor1 = "rgba(256, 256, 256, #{@alphaDelta absDelta})"; bgcolor2 = "rgba(210, 210, 210, #{@alphaDelta absDelta})"; texcolor = "rgba(0, 0, 0, #{@alphaDelta absDelta})"; texStrokeColor = "rgba(256, 256, 256, #{@alphaDelta absDelta})"
+			else bgcolor1 = "rgba(50, 50, 50, #{@alphaDelta absDelta})"; bgcolor2 = "rgba(0, 0, 0, #{@alphaDelta absDelta})"; texcolor = "rgba(256, 256, 256, #{@alphaDelta absDelta})"; texStrokeColor = "rgba(0, 0, 0, #{@alphaDelta absDelta})"
+		grad = @context.createLinearGradient (@getX item), (@getY item), (@getX item), (@getY item) + (@getHeight absDelta)
+		grad.addColorStop 0, bgcolor1
+		grad.addColorStop 0.5, bgcolor1
+		grad.addColorStop 1, bgcolor2
+		@context.fillStyle = grad
 		@context.lineWidth = 1
 		@context.strokeStyle = "rgba(0, 0, 0, #{@alphaDelta absDelta})"
 		@context.fillRectR (@getX item), (@getY item), (@getWidth absDelta), (@getHeight absDelta)

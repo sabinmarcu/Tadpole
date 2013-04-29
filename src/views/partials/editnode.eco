@@ -31,6 +31,5 @@
             <button class="btn btn-primary" id="new" <%= _T "Add a new node" %>></button>
             <button class="btn btn-danger" id="delete" <%= _T "Remove this node" %>></button>
         </div>
-    </div>
-    
+    </div>    
 </div>
