@@ -1280,13 +1280,17 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
     };
 
     GuguFrameBuffer.prototype.drawGugu = function(item) {
-      var absDelta, bgcolor1, bgcolor2, delta, grad, texStrokeColor, texcolor, text, _ref;
+      var absDelta, bgcolor1, bgcolor2, delta, grad, height, texStrokeColor, texcolor, text, width, x, y, _ref;
 
       delta = 0;
       if ((_ref = this.parent.triggers) != null ? _ref.level : void 0) {
         delta = this.parent.level - this.currentItem.length + 1;
       }
       absDelta = -(Math.sqrt(delta * delta));
+      x = this.getX(item);
+      y = this.getY(item);
+      width = this.getWidth(absDelta);
+      height = this.getHeight(absDelta);
       switch (item.status) {
         case "checked":
           bgcolor1 = "rgba(0, 135, 255, " + (this.alphaDelta(absDelta)) + ")";
@@ -1312,15 +1316,15 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
           texcolor = "rgba(256, 256, 256, " + (this.alphaDelta(absDelta)) + ")";
           texStrokeColor = "rgba(0, 0, 0, " + (this.alphaDelta(absDelta)) + ")";
       }
-      grad = this.context.createLinearGradient(this.getX(item), this.getY(item), this.getX(item), (this.getY(item)) + (this.getHeight(absDelta)));
+      grad = this.context.createLinearGradient(x, y, x, y + height);
       grad.addColorStop(0, bgcolor1);
       grad.addColorStop(0.5, bgcolor1);
       grad.addColorStop(1, bgcolor2);
       this.context.fillStyle = grad;
       this.context.lineWidth = 1;
       this.context.strokeStyle = "rgba(0, 0, 0, " + (this.alphaDelta(absDelta)) + ")";
-      this.context.fillRectR(this.getX(item), this.getY(item), this.getWidth(absDelta), this.getHeight(absDelta));
-      this.context.strokeRectR(this.getX(item), this.getY(item), this.getWidth(absDelta), this.getHeight(absDelta));
+      this.context.fillRectR(x, y, width, height);
+      this.context.strokeRectR(x, y, width, height);
       text = item.text;
       if (text.length > 25) {
         text = text.substr(0, 22) + "...";
@@ -1328,24 +1332,29 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
       this.context.strokeStyle = texStrokeColor;
       this.context.font = "normal " + (12 + 12 * absDelta / 4) + "pt Verdana";
       this.context.fillStyle = texcolor;
-      this.context.strokeText(text, (this.getX(item)) + 20, (this.getY(item)) + this.getTextDelta(absDelta));
-      return this.context.fillText(text, (this.getX(item)) + 20, (this.getY(item)) + this.getTextDelta(absDelta));
+      this.context.strokeText(text, x + 20, y + this.getTextDelta(absDelta));
+      return this.context.fillText(text, x + 20, y + this.getTextDelta(absDelta));
     };
 
     GuguFrameBuffer.prototype.drawButtons = function(item, delta) {
+      var width, x, y;
+
+      x = this.getX(item);
+      y = this.getY(item);
+      width = this.getWidth(delta);
       this.context.fillStyle = "white";
       this.context.strokeStyle = "#444";
-      this.context.fillRectR((this.getX(item)) + (this.getWidth(delta)) - 30, (this.getY(item)) + 3, 20, 20);
-      this.context.fillRectR((this.getX(item)) + (this.getWidth(delta)) - 30, (this.getY(item)) + 28, 20, 20);
+      this.context.fillRectR(x + width - 30, y + 3, 20, 20);
+      this.context.fillRectR(x + width - 30, y + 28, 20, 20);
       this.context.beginPath();
-      this.context.strokeRectR((this.getX(item)) + (this.getWidth(delta)) - 30, (this.getY(item)) + 3, 20, 20);
-      this.context.strokeRectR((this.getX(item)) + (this.getWidth(delta)) - 30, (this.getY(item)) + 28, 20, 20);
-      this.context.moveTo((this.getX(item)) + (this.getWidth(delta)) - 25, (this.getY(item)) + 13);
-      this.context.lineTo((this.getX(item)) + (this.getWidth(delta)) - 15, (this.getY(item)) + 13);
-      this.context.moveTo((this.getX(item)) + (this.getWidth(delta)) - 20, (this.getY(item)) + 8);
-      this.context.lineTo((this.getX(item)) + (this.getWidth(delta)) - 20, (this.getY(item)) + 18);
-      this.context.moveTo((this.getX(item)) + (this.getWidth(delta)) - 25, (this.getY(item)) + 38);
-      this.context.lineTo((this.getX(item)) + (this.getWidth(delta)) - 15, (this.getY(item)) + 38);
+      this.context.strokeRectR(x + width - 30, y + 3, 20, 20);
+      this.context.strokeRectR(x + width - 30, y + 28, 20, 20);
+      this.context.moveTo(x + width - 25, y + 13);
+      this.context.lineTo(x + width - 15, y + 13);
+      this.context.moveTo(x + width - 20, y + 8);
+      this.context.lineTo(x + width - 20, y + 18);
+      this.context.moveTo(x + width - 25, y + 38);
+      this.context.lineTo(x + width - 15, y + 38);
       return this.context.stroke();
     };
 

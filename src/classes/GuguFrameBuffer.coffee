@@ -4,7 +4,6 @@ class GuguFrameBuffer extends DepMan.classes("FrameBuffer")
 		@currentItem = []
 		super()
 		@context.textBaseline = "middle" 
-		# @context.font = "normal 12pt Verdana" 
 
 	sequence: =>
 		@buffer.width = @buffer.width
@@ -20,45 +19,52 @@ class GuguFrameBuffer extends DepMan.classes("FrameBuffer")
 		delta = 0
 		delta = @parent.level - @currentItem.length + 1 if @parent.triggers?.level
 		absDelta = -(Math.sqrt delta * delta)
+		x = @getX item
+		y = @getY item
+		width = @getWidth absDelta
+		height = @getHeight absDelta
 
 		switch item.status
 			when "checked" then bgcolor1 = "rgba(0, 135, 255, #{@alphaDelta absDelta})"; bgcolor2 = "rgba(0, 100, 220, #{@alphaDelta absDelta})"; texcolor = "rgba(256, 256, 256, #{@alphaDelta absDelta})"; texStrokeColor = "rgba(0, 0, 0, 0)"
 			when "unchecked" then bgcolor1 = "rgba(255, 67, 16, #{@alphaDelta absDelta})"; bgcolor2 = "rgba(220, 32, 0, #{@alphaDelta absDelta})"; texcolor = "rgba(0, 0, 0, #{@alphaDelta absDelta})"; texStrokeColor = "rgba(0, 0 , 0, 0)"
 			when "determinate" then bgcolor1 = "rgba(256, 256, 256, #{@alphaDelta absDelta})"; bgcolor2 = "rgba(210, 210, 210, #{@alphaDelta absDelta})"; texcolor = "rgba(0, 0, 0, #{@alphaDelta absDelta})"; texStrokeColor = "rgba(256, 256, 256, #{@alphaDelta absDelta})"
 			else bgcolor1 = "rgba(50, 50, 50, #{@alphaDelta absDelta})"; bgcolor2 = "rgba(0, 0, 0, #{@alphaDelta absDelta})"; texcolor = "rgba(256, 256, 256, #{@alphaDelta absDelta})"; texStrokeColor = "rgba(0, 0, 0, #{@alphaDelta absDelta})"
-		grad = @context.createLinearGradient (@getX item), (@getY item), (@getX item), (@getY item) + (@getHeight absDelta)
+		grad = @context.createLinearGradient x, y, x, y + height
 		grad.addColorStop 0, bgcolor1
 		grad.addColorStop 0.5, bgcolor1
 		grad.addColorStop 1, bgcolor2
 		@context.fillStyle = grad
 		@context.lineWidth = 1
 		@context.strokeStyle = "rgba(0, 0, 0, #{@alphaDelta absDelta})"
-		@context.fillRectR (@getX item), (@getY item), (@getWidth absDelta), (@getHeight absDelta)
-		@context.strokeRectR (@getX item), (@getY item), (@getWidth absDelta), (@getHeight absDelta)
+		@context.fillRectR x, y, width, height
+		@context.strokeRectR x, y, width, height
 		text = item.text
 		if text.length > 25 then text = text.substr(0, 22) + "..."
 		@context.strokeStyle = texStrokeColor
 		@context.font = "normal #{12 + 12 * absDelta / 4}pt Verdana" 
 		@context.fillStyle = texcolor
-		@context.strokeText text, (@getX item) + 20, (@getY item) + @getTextDelta absDelta
-		@context.fillText text, (@getX item) + 20, (@getY item) + @getTextDelta absDelta
+		@context.strokeText text, x + 20, y + @getTextDelta absDelta
+		@context.fillText text, x + 20, y + @getTextDelta absDelta
 
 		# if do @verify then @drawButtons item, delta
 
 	drawButtons: (item, delta) =>
+		x = @getX item
+		y = @getY item
+		width = @getWidth delta
 		@context.fillStyle = "white"
 		@context.strokeStyle = "#444"
-		@context.fillRectR (@getX item) + (@getWidth delta) - 30, (@getY item) + 3, 20, 20
-		@context.fillRectR (@getX item) + (@getWidth delta) - 30, (@getY item) + 28, 20, 20
+		@context.fillRectR x + width - 30, y + 3, 20, 20
+		@context.fillRectR x + width - 30, y + 28, 20, 20
 		@context.beginPath()
-		@context.strokeRectR (@getX item) + (@getWidth delta) - 30, (@getY item) + 3, 20, 20
-		@context.strokeRectR (@getX item) + (@getWidth delta) - 30, (@getY item) + 28, 20, 20
-		@context.moveTo (@getX item) + (@getWidth delta) - 25, (@getY item) + 13
-		@context.lineTo (@getX item) + (@getWidth delta) - 15, (@getY item) + 13
-		@context.moveTo (@getX item) + (@getWidth delta) - 20, (@getY item) + 8
-		@context.lineTo (@getX item) + (@getWidth delta) - 20, (@getY item) + 18
-		@context.moveTo (@getX item) + (@getWidth delta) - 25, (@getY item) + 38
-		@context.lineTo (@getX item) + (@getWidth delta) - 15, (@getY item) + 38
+		@context.strokeRectR x + width - 30, y + 3, 20, 20
+		@context.strokeRectR x + width - 30, y + 28, 20, 20
+		@context.moveTo x + width - 25, y + 13
+		@context.lineTo x + width - 15, y + 13
+		@context.moveTo x + width - 20, y + 8
+		@context.lineTo x + width - 20, y + 18
+		@context.moveTo x + width - 25, y + 38
+		@context.lineTo x + width - 15, y + 38
 		@context.stroke()
 
 
