@@ -6,6 +6,22 @@ class OPMLController extends BaseObject
 		@e.innerHTML = DepMan.render "_outline", @model
 		@e.setAttribute("ng-csp", "")
 		@e.setAttribute "ng-controller", "OPMLController"
+		@e.addEventListener "contextmenu", (e) =>
+			console.log e.target.tagName
+			if not (e.target.tagName in ["I", "INPUT", "LI"])
+				do @model.scope.toggleSidebar
+				do e.preventDefault
+		down = (e) => 
+			return if @model.scope.view is "mindmap" or e.button is 1
+			if @model.scope.sidebarstatus then do @model.scope.cancelSidebar
+			@timer = setTimeout =>
+				do @model.scope.toggleSidebar
+			, 400
+		up = (e) =>  clearTimeout @timer
+		@e.addEventListener "mousedown", down
+		@e.addEventListener "touchstart", down
+		@e.addEventListener "mouseup", up
+		@e.addEventListener "touchend", up
 		section = $("body > article section")
 		e = document.createElement "script"
 		e.innerHTML = DepMan.render "_outline_render"

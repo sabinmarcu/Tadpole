@@ -10,10 +10,17 @@ class CanvasController extends BaseObject
 		@echo "Controller for #{@parent.model.title} enabled!"
 
 	down: (e) =>
+		do @parent.model.scope.cancelSidebar
 		@init = @getPos e
 		do @parent.Aux.sequence
 		@node = @parent.Aux.scan @init
-		if not @node then @initOffset = x: @parent.offsets.x, y: @parent.offsets.y
+		if not @node 
+			@initOffset = x: @parent.offsets.x, y: @parent.offsets.y
+			@isMovement = false
+			@timer = setTimeout =>
+				if not @isMovement then do @parent.model.scope.toggleSidebar
+				clearTimeout @timer
+			, 300		
 		else
 			node = []
 			node.push item for item in @node
@@ -21,13 +28,14 @@ class CanvasController extends BaseObject
 			@initOffset = x: node.x, y: node.y
 			@isMovement = false
 			@timer = setTimeout =>
-				if not @isMovement then @parent.model.editNodeModal node
+				if not @isMovement then @parent.model.scope.edit node
 				clearTimeout @timer
 			, 200
 		do e.preventDefault
 
 	move: (e) =>
 		pos = @getPos e
+		@isMovement = true
 		if not @init? 
 			node = @parent.Aux.scan pos
 			if node 
@@ -35,7 +43,6 @@ class CanvasController extends BaseObject
 				else @parent.buttons = node
 			else @parent.buttons = null
 		else 
-			@isMovement = true
 			if @node then @parent.model.move @node,
 				x: @initOffset.x + pos.x - @init.x
 				y: @initOffset.y + pos.y - @init.y
@@ -47,6 +54,7 @@ class CanvasController extends BaseObject
 		@init = null
 		@node = null
 		@isMovement = false
+		clearTimeout @timer
 		do e.preventDefault
 
 	getPos: (e) =>

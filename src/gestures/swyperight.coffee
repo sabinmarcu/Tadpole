@@ -6,15 +6,17 @@ class SwyperightGesture extends BaseObject
 
 	move: (e) =>
 		if @breakup? then return
-		scope = angular.element("[ng-controller='NGAsideController']").scope()
+		appscope = angular.element("[ng-controller='NGAsideController']").scope()
+		docscope = angular.element("[ng-controller='OPMLController']").scope()
 		pos = Swype.getParams e
 		if @init.x - pos.x > _tolerance
-			if scope.sidebarstatus is "closed"
-				angular.element("[ng-controller='OPMLController']").scope().changeView()
+			if appscope.sidebarstatus is "closed"
+				return if docscope.view is "mindmap"
+				do docscope.toggleSidebar
 			else
-				if @init.x <= 300 then scope.asidetab null, 1
-				else do scope.togglesidebar
-			do scope.$apply
+				if @init.x <= 300 then appscope.asidetab null, 1
+				else do appscope.togglesidebar
+			do appscope.safeApply
 			do @end
 	end: (e) =>
 		@breakup = true

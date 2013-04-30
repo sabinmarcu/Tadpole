@@ -6,14 +6,17 @@ class SwypeleftGesture extends BaseObject
 
 	move: (e) =>
 		if @breakup? then return
-		scope = angular.element("[ng-controller='NGAsideController']").scope()
+		appscope = angular.element("[ng-controller='NGAsideController']").scope()
+		docscope = angular.element("[ng-controller='OPMLController']").scope()
 		pos = Swype.getParams e
 		if pos.x - @init.x > _tolerance
-			if scope.sidebarstatus is "open"
-				scope.asidetab null, -1
+			if appscope.sidebarstatus is "open"
+				appscope.asidetab null, -1
 			else
-				do scope.togglesidebar
-			do scope.$apply
+				return if docscope.view is "mindmap"
+				if docscope.sidebarstatus then do docscope.toggleSidebar
+				else do appscope.togglesidebar
+			do appscope.$apply
 			do @end 
 
 	end: (e) =>

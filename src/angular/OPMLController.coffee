@@ -69,8 +69,6 @@ angular.module("Arrow").controller "OPMLController", ($scope, $rootScope, OPML) 
 					jQuery(".modal-container##{$scope.getTitle()}").append modal
 					$scope.safeApply()
 
-		obj.editNodeModal = $scope.edit
-
 		views = ["mindmap", "outline"]
 		$scope.changeView = (to = null) ->
 			if not to?
@@ -78,9 +76,23 @@ angular.module("Arrow").controller "OPMLController", ($scope, $rootScope, OPML) 
 				else to = views[0]
 			$scope.view = to
 			if to is "mindmap" then do $scope.object.controller.frameBuffer.start
+			else do $scope.object.controller.frameBuffer.end
+			$scope.sidebarstatus = false
 			$scope.safeApply()
 
+		obj.changeViewType = $scope.changeView
+
 		$scope.getTitle = -> obj.title.replace(/\ /g, "_")
+		$scope.sidebarstatus = false
+		$scope.toggleSidebar = -> $scope.sidebarstatus = not $scope.sidebarstatus; do $scope.safeApply
+		$scope.cancelSidebar = -> $scope.sidebarstatus = false; do $scope.safeApply
+		$scope.toggleLegend = -> $scope.object.controller.frameBuffer.triggers.legend = not $scope.object.controller.frameBuffer.triggers.legend if $scope.view is "mindmap"
+		$scope.toggleLevel = -> $scope.object.controller.frameBuffer.triggers.level = not $scope.object.controller.frameBuffer.triggers.level if $scope.view is "mindmap"
+		$scope.toggleLevelNo = -> $scope.object.controller.frameBuffer.triggers.levelno = not $scope.object.controller.frameBuffer.triggers.levelno if $scope.view is "mindmap"
+		$scope.toggleShortcuts = -> $scope.object.controller.frameBuffer.triggers.shortcuts = not $scope.object.controller.frameBuffer.triggers.shortcuts if $scope.view is "mindmap"
+		$scope.changeLevel = (amount) -> $scope.object.controller.frameBuffer.level += amount if $scope.view is "mindmap"
+
+		obj.scope = $scope
 
 		jQuery(window).keydown (e) ->
 			if e.ctrlKey or e.metaKey

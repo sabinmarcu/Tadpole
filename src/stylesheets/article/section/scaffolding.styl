@@ -5,7 +5,6 @@ article
 	right 0
 	top 0
 	bottom 0
-	// background white
 	transform-style preserve-3d
 	backface-visibility hidden
 	perspective 1600px
@@ -15,11 +14,6 @@ article
 	&.activated
 		z-index 2
 		transform translateX(0)
-		> div > nav
-			right -140px
-			&:hover
-				transform translateX(-140px)
-
 	&.deactivated
 		z-index -1
 		transform translateX(-100%)
@@ -31,7 +25,6 @@ article
 		right 0
 		top 0
 		bottom 0
-		overflow hidden
 		transform-style preserve-3d
 		backface-visibility hidden
 		perspective 1600px
@@ -53,7 +46,7 @@ article
 			bottom 0
 			z-index -1
 			box-shadow none
-			// background white
+			background white
 			overflow-y auto
 			&:first-child
 				transform rotateY(-180deg)
@@ -61,35 +54,3 @@ article
 				transform rotateY(0)
 				z-index 1
 				box-shadow 0 0 15px black
-
-		.approw
-			display block
-			position relative
-			&.bordertop 
-				border-top solid 1px #999
-			p
-				display block
-				margin 0 120px 0 35px
-				input
-					padding 10px 0
-					margin 10px 0
-					height 10px
-					line-height 10px
-					width 100%
-					text-indent 10px
-			> i
-				cursor pointer
-				float left
-				margin 20px 0
-				height 10px
-				&.icon-custom
-					margin-right 5px
-					&:before
-						content: "\f078"
-		
-			nav
-				position absolute
-				right 5px
-				top 10px
-				li
-					list-style none

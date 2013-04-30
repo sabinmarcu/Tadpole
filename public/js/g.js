@@ -885,7 +885,6 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
           });
         }
       };
-      obj.editNodeModal = $scope.edit;
       views = ["mindmap", "outline"];
       $scope.changeView = function(to) {
         if (to == null) {
@@ -901,12 +900,51 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
         $scope.view = to;
         if (to === "mindmap") {
           $scope.object.controller.frameBuffer.start();
+        } else {
+          $scope.object.controller.frameBuffer.end();
         }
+        $scope.sidebarstatus = false;
         return $scope.safeApply();
       };
+      obj.changeViewType = $scope.changeView;
       $scope.getTitle = function() {
         return obj.title.replace(/\ /g, "_");
       };
+      $scope.sidebarstatus = false;
+      $scope.toggleSidebar = function() {
+        $scope.sidebarstatus = !$scope.sidebarstatus;
+        return $scope.safeApply();
+      };
+      $scope.cancelSidebar = function() {
+        $scope.sidebarstatus = false;
+        return $scope.safeApply();
+      };
+      $scope.toggleLegend = function() {
+        if ($scope.view === "mindmap") {
+          return $scope.object.controller.frameBuffer.triggers.legend = !$scope.object.controller.frameBuffer.triggers.legend;
+        }
+      };
+      $scope.toggleLevel = function() {
+        if ($scope.view === "mindmap") {
+          return $scope.object.controller.frameBuffer.triggers.level = !$scope.object.controller.frameBuffer.triggers.level;
+        }
+      };
+      $scope.toggleLevelNo = function() {
+        if ($scope.view === "mindmap") {
+          return $scope.object.controller.frameBuffer.triggers.levelno = !$scope.object.controller.frameBuffer.triggers.levelno;
+        }
+      };
+      $scope.toggleShortcuts = function() {
+        if ($scope.view === "mindmap") {
+          return $scope.object.controller.frameBuffer.triggers.shortcuts = !$scope.object.controller.frameBuffer.triggers.shortcuts;
+        }
+      };
+      $scope.changeLevel = function(amount) {
+        if ($scope.view === "mindmap") {
+          return $scope.object.controller.frameBuffer.level += amount;
+        }
+      };
+      obj.scope = $scope;
       jQuery(window).keydown(function(e) {
         if (e.ctrlKey || e.metaKey) {
           switch (String.fromCharCode(e.which).toLowerCase()) {
@@ -1582,16 +1620,15 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
     };
 
     MainFrameBuffer.prototype._end = function() {
-      var renderer, _i, _len, _ref, _results;
+      var renderer, _i, _len, _ref;
 
       this.Controller.end();
       _ref = this.renderers;
-      _results = [];
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         renderer = _ref[_i];
-        _results.push(renderer.end());
+        renderer.end();
       }
-      return _results;
+      return this.buffer.width = this.buffer.width;
     };
 
     return MainFrameBuffer;
@@ -1635,6 +1672,7 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
       var item, node, _i, _len, _ref,
         _this = this;
 
+      this.parent.model.scope.cancelSidebar();
       this.init = this.getPos(e);
       this.parent.Aux.sequence();
       this.node = this.parent.Aux.scan(this.init);
@@ -1643,6 +1681,13 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
           x: this.parent.offsets.x,
           y: this.parent.offsets.y
         };
+        this.isMovement = false;
+        this.timer = setTimeout(function() {
+          if (!_this.isMovement) {
+            _this.parent.model.scope.toggleSidebar();
+          }
+          return clearTimeout(_this.timer);
+        }, 300);
       } else {
         node = [];
         _ref = this.node;
@@ -1658,7 +1703,7 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
         this.isMovement = false;
         this.timer = setTimeout(function() {
           if (!_this.isMovement) {
-            _this.parent.model.editNodeModal(node);
+            _this.parent.model.scope.edit(node);
           }
           return clearTimeout(_this.timer);
         }, 200);
@@ -1670,6 +1715,7 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
       var node, pos;
 
       pos = this.getPos(e);
+      this.isMovement = true;
       if (this.init == null) {
         node = this.parent.Aux.scan(pos);
         if (node) {
@@ -1682,7 +1728,6 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
           return this.parent.buttons = null;
         }
       } else {
-        this.isMovement = true;
         if (this.node) {
           this.parent.model.move(this.node, {
             x: this.initOffset.x + pos.x - this.init.x,
@@ -1702,6 +1747,7 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
       this.init = null;
       this.node = null;
       this.isMovement = false;
+      clearTimeout(this.timer);
       return e.preventDefault();
     };
 
@@ -1963,7 +2009,8 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
     __extends(OPMLController, _super);
 
     function OPMLController(model) {
-      var e, section;
+      var down, e, section, up,
+        _this = this;
 
       this.model = model;
       this.deactivate = __bind(this.deactivate, this);
@@ -1972,6 +2019,33 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
       this.e.innerHTML = DepMan.render("_outline", this.model);
       this.e.setAttribute("ng-csp", "");
       this.e.setAttribute("ng-controller", "OPMLController");
+      this.e.addEventListener("contextmenu", function(e) {
+        var _ref;
+
+        console.log(e.target.tagName);
+        if (!((_ref = e.target.tagName) === "I" || _ref === "INPUT" || _ref === "LI")) {
+          _this.model.scope.toggleSidebar();
+          return e.preventDefault();
+        }
+      });
+      down = function(e) {
+        if (_this.model.scope.view === "mindmap" || e.button === 1) {
+          return;
+        }
+        if (_this.model.scope.sidebarstatus) {
+          _this.model.scope.cancelSidebar();
+        }
+        return _this.timer = setTimeout(function() {
+          return _this.model.scope.toggleSidebar();
+        }, 400);
+      };
+      up = function(e) {
+        return clearTimeout(_this.timer);
+      };
+      this.e.addEventListener("mousedown", down);
+      this.e.addEventListener("touchstart", down);
+      this.e.addEventListener("mouseup", up);
+      this.e.addEventListener("touchend", up);
       section = $("body > article section");
       e = document.createElement("script");
       e.innerHTML = DepMan.render("_outline_render");
@@ -2313,20 +2387,28 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
     }
 
     SwypeleftGesture.prototype.move = function(e) {
-      var pos, scope;
+      var appscope, docscope, pos;
 
       if (this.breakup != null) {
         return;
       }
-      scope = angular.element("[ng-controller='NGAsideController']").scope();
+      appscope = angular.element("[ng-controller='NGAsideController']").scope();
+      docscope = angular.element("[ng-controller='OPMLController']").scope();
       pos = Swype.getParams(e);
       if (pos.x - this.init.x > _tolerance) {
-        if (scope.sidebarstatus === "open") {
-          scope.asidetab(null, -1);
+        if (appscope.sidebarstatus === "open") {
+          appscope.asidetab(null, -1);
         } else {
-          scope.togglesidebar();
+          if (docscope.view === "mindmap") {
+            return;
+          }
+          if (docscope.sidebarstatus) {
+            docscope.toggleSidebar();
+          } else {
+            appscope.togglesidebar();
+          }
         }
-        scope.$apply();
+        appscope.$apply();
         return this.end();
       }
     };
@@ -2364,24 +2446,28 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
     }
 
     SwyperightGesture.prototype.move = function(e) {
-      var pos, scope;
+      var appscope, docscope, pos;
 
       if (this.breakup != null) {
         return;
       }
-      scope = angular.element("[ng-controller='NGAsideController']").scope();
+      appscope = angular.element("[ng-controller='NGAsideController']").scope();
+      docscope = angular.element("[ng-controller='OPMLController']").scope();
       pos = Swype.getParams(e);
       if (this.init.x - pos.x > _tolerance) {
-        if (scope.sidebarstatus === "closed") {
-          angular.element("[ng-controller='OPMLController']").scope().changeView();
+        if (appscope.sidebarstatus === "closed") {
+          if (docscope.view === "mindmap") {
+            return;
+          }
+          docscope.toggleSidebar();
         } else {
           if (this.init.x <= 300) {
-            scope.asidetab(null, 1);
+            appscope.asidetab(null, 1);
           } else {
-            scope.togglesidebar();
+            appscope.togglesidebar();
           }
         }
-        scope.$apply();
+        appscope.safeApply();
         return this.end();
       }
     };
@@ -14964,11 +15050,11 @@ QRBitBuffer.prototype = {
   }
   (function() {
     (function() {
-      __out.push('<div id="outline" ng-class="{outline: \'active\'}[view]" ng-model="object.structure.topics">\n\t<div class="approw {{type(item)}}" style="\n\tpadding-left: 20px;\n\tmargin-left: 0px;\n" ng-repeat="item in object.structure.topics" ng-include="\'tree_row.html\'"/></div>\n</div>\n<div id="canvas" ng-class="{mindmap: \'active\'}[view]">\n    <canvas></canvas>\n</div>\n<nav>\n\t<li></li>\n    <li ng-class="{\'outline\': \'selected\'}[view]" ng-click="changeView(\'outline\')"><i class="icon-list"></i></li>\n    <li ng-class="{\'mindmap\': \'selected\'}[view]" ng-click="changeView(\'mindmap\')"><i class="icon-sitemap"></i></li>\n</nav>\n<span class="modal-container" id="{{getTitle()}}">\n\t');
+      __out.push('<div ng-class="{true: \'sidebaropen\'}[sidebarstatus]">\n\t<div id="outline" ng-class="{outline: \'active\'}[view]" ng-model="object.structure.topics">\n\t\t<div class="approw {{type(item)}}" style="\n\t\tpadding-left: 20px;\n\t\tmargin-left: 0px;\n\t" ng-repeat="item in object.structure.topics" ng-include="\'tree_row.html\'"/></div>\n\t</div>\n\t<div id="canvas" ng-class="{mindmap: \'active\'}[view]">\n\t    <canvas></canvas>\n\t</div>\n\t<span class="modal-container" id="{{getTitle()}}">\n\t\t');
     
       __out.push(DepMan.render("partials/editnode"));
     
-      __out.push('\n</span>');
+      __out.push('\n\t</span>\n\t<nav>\n\t\t<li></li>\n\t    <li ng-class="{\'outline\': \'selected\'}[view]" ng-click="changeView(\'outline\')"><i class="icon-list"></i></li>\n\t    <li ng-class="{\'mindmap\': \'selected\'}[view]" ng-click="changeView(\'mindmap\')"><i class="icon-sitemap"></i></li>\n\t    <li class="space"></li>\n\t    <span ng-show="view == \'mindmap\'">\n\t    \t<li ng-click="changeLevel(1)"><i class="icon-chevron-up"></i></li>\n\t    \t<li ng-click="toggleLegend()"><i class="icon-map-marker"></i></li>\n\t    \t<li ng-click="toggleShortcuts()"><i class="icon-info-sign"></i></li>\n\t    \t<li ng-click="toggleLevel()"><i class="icon-cog"></i></li>\n\t    \t<li ng-click="toggleLevelNo()"><i class="icon-time"></i></li>\n\t    \t<li ng-click="changeLevel(-1)"><i class="icon-chevron-down"></i></li>\n\t    </span>\n\t    <li class="space"></li>\n\t    <li class="space"></li>\n\t</nav>\n</div>');
     
     }).call(this);
     

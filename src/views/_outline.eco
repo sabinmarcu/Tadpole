@@ -1,17 +1,29 @@
-<div id="outline" ng-class="{outline: 'active'}[view]" ng-model="object.structure.topics">
-	<div class="approw {{type(item)}}" style="
-	padding-left: 20px;
-	margin-left: 0px;
-" ng-repeat="item in object.structure.topics" ng-include="'tree_row.html'"/></div>
+<div ng-class="{true: 'sidebaropen'}[sidebarstatus]">
+	<div id="outline" ng-class="{outline: 'active'}[view]" ng-model="object.structure.topics">
+		<div class="approw {{type(item)}}" style="
+		padding-left: 20px;
+		margin-left: 0px;
+	" ng-repeat="item in object.structure.topics" ng-include="'tree_row.html'"/></div>
+	</div>
+	<div id="canvas" ng-class="{mindmap: 'active'}[view]">
+	    <canvas></canvas>
+	</div>
+	<span class="modal-container" id="{{getTitle()}}">
+		<%- DepMan.render "partials/editnode" %>
+	</span>
+	<nav>
+		<li></li>
+	    <li ng-class="{'outline': 'selected'}[view]" ng-click="changeView('outline')"><i class="icon-list"></i></li>
+	    <li ng-class="{'mindmap': 'selected'}[view]" ng-click="changeView('mindmap')"><i class="icon-sitemap"></i></li>
+	    <li class="space"></li>
+	    <span ng-show="view == 'mindmap'">
+	    	<li ng-click="changeLevel(1)"><i class="icon-chevron-up"></i></li>
+	    	<li ng-click="toggleLegend()"><i class="icon-map-marker"></i></li>
+	    	<li ng-click="toggleShortcuts()"><i class="icon-info-sign"></i></li>
+	    	<li ng-click="toggleLevel()"><i class="icon-cog"></i></li>
+	    	<li ng-click="toggleLevelNo()"><i class="icon-time"></i></li>
+	    	<li ng-click="changeLevel(-1)"><i class="icon-chevron-down"></i></li>
+	    </span>
+	    <li class="space"></li>
+	</nav>
 </div>
-<div id="canvas" ng-class="{mindmap: 'active'}[view]">
-    <canvas></canvas>
-</div>
-<nav>
-	<li></li>
-    <li ng-class="{'outline': 'selected'}[view]" ng-click="changeView('outline')"><i class="icon-list"></i></li>
-    <li ng-class="{'mindmap': 'selected'}[view]" ng-click="changeView('mindmap')"><i class="icon-sitemap"></i></li>
-</nav>
-<span class="modal-container" id="{{getTitle()}}">
-	<%- DepMan.render "partials/editnode" %>
-</span>

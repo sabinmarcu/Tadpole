@@ -1237,61 +1237,6 @@ body:not(.landing) > article section article {
   -ms-perspective: 1600px;
   perspective: 1600px;
 }
-body:not(.landing) > article section article canvas {
-  display: block;
-  font-family: "Open Sans";
-  font-size: 24pt;
-}
-body:not(.landing) > article section article > nav {
-  display: block;
-  position: fixed;
-  width: 150px;
-  height: 50px;
-  right: -150px;
-  bottom: 50px;
-  z-index: 3;
-  -webkit-transition: all 1s ease-in-out;
-  -moz-transition: all 1s ease-in-out;
-  -o-transition: all 1s ease-in-out;
-  -ms-transition: all 1s ease-in-out;
-  transition: all 1s ease-in-out;
-}
-body:not(.landing) > article section article > nav li {
-  width: 50px;
-  height: 50px;
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0, rgba(0,0,0,0)), color-stop(1, rgba(0,0,0,0.4)));
-  background: -webkit-linear-gradient(top, rgba(0,0,0,0) 0%, rgba(0,0,0,0.4) 100%);
-  background: -moz-linear-gradient(top, rgba(0,0,0,0) 0%, rgba(0,0,0,0.4) 100%);
-  background: -o-linear-gradient(top, rgba(0,0,0,0) 0%, rgba(0,0,0,0.4) 100%);
-  background: -ms-linear-gradient(top, rgba(0,0,0,0) 0%, rgba(0,0,0,0.4) 100%);
-  background: linear-gradient(top, rgba(0,0,0,0) 0%, rgba(0,0,0,0.4) 100%);
-  display: inline-block;
-  list-style: none;
-  float: left;
-  line-height: 50px;
-  text-align: center;
-  background-color: #fff;
-  -webkit-box-shadow: 0 0 25px rgba(0,0,0,0.2) inset;
-  box-shadow: 0 0 25px rgba(0,0,0,0.2) inset;
-  color: #000;
-}
-body:not(.landing) > article section article > nav li.selected {
-  -webkit-box-shadow: 0 0 25px rgba(0,0,0,0.3) inset;
-  box-shadow: 0 0 25px rgba(0,0,0,0.3) inset;
-  background-color: #333;
-  color: #fff;
-}
-body:not(.landing) > article section article > nav li:first-child {
-  background: -webkit-gradient(linear, right top, left top, color-stop(0, rgba(0,0,0,0)), color-stop(1, rgba(0,0,0,0.4)));
-  background: -webkit-linear-gradient(right, rgba(0,0,0,0) 0%, rgba(0,0,0,0.4) 100%);
-  background: -moz-linear-gradient(right, rgba(0,0,0,0) 0%, rgba(0,0,0,0.4) 100%);
-  background: -o-linear-gradient(right, rgba(0,0,0,0) 0%, rgba(0,0,0,0.4) 100%);
-  background: -ms-linear-gradient(right, rgba(0,0,0,0) 0%, rgba(0,0,0,0.4) 100%);
-  background: linear-gradient(right, rgba(0,0,0,0) 0%, rgba(0,0,0,0.4) 100%);
-  background-color: #0084ff;
-  -webkit-box-shadow: 15px 0 25px rgba(0,0,0,0.2) inset;
-  box-shadow: 15px 0 25px rgba(0,0,0,0.2) inset;
-}
 body:not(.landing) > article section article.activating {
   z-index: 2;
   -webkit-transform: translateX(100%);
@@ -1308,12 +1253,6 @@ body:not(.landing) > article section article.activated {
   -ms-transform: translateX(0);
   transform: translateX(0);
 }
-body:not(.landing) > article section article.activated > nav {
-  right: -140px;
-}
-body:not(.landing) > article section article.activated > nav:hover {
-  right: 0;
-}
 body:not(.landing) > article section article.deactivated {
   z-index: -1;
   -webkit-transform: translateX(-100%);
@@ -1323,6 +1262,44 @@ body:not(.landing) > article section article.deactivated {
   transform: translateX(-100%);
 }
 body:not(.landing) > article section article > div {
+  -webkit-transform: translateX(0);
+  -moz-transform: translateX(0);
+  -o-transform: translateX(0);
+  -ms-transform: translateX(0);
+  transform: translateX(0);
+  -webkit-transition: all 0.5 ease-in-out;
+  -moz-transition: all 0.5 ease-in-out;
+  -o-transition: all 0.5 ease-in-out;
+  -ms-transition: all 0.5 ease-in-out;
+  transition: all 0.5 ease-in-out;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  -webkit-transform-style: preserve-3d;
+  -moz-transform-style: preserve-3d;
+  -o-transform-style: preserve-3d;
+  -ms-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+  -webkit-backface-visibility: hidden;
+  -moz-backface-visibility: hidden;
+  -ms-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-perspective: 1600px;
+  -moz-perspective: 1600px;
+  -ms-perspective: 1600px;
+  perspective: 1600px;
+}
+body:not(.landing) > article section article > div.sidebaropen {
+  trnasform: translateX(-15px);
+}
+body:not(.landing) > article section article > div canvas {
+  display: block;
+  font-family: "Open Sans";
+  font-size: 24pt;
+}
+body:not(.landing) > article section article > div > div {
   -webkit-transform: rotateY(180deg);
   -moz-transform: rotateY(180deg);
   -o-transform: rotateY(180deg);
@@ -1350,16 +1327,17 @@ body:not(.landing) > article section article > div {
   z-index: -1;
   -webkit-box-shadow: none;
   box-shadow: none;
+  background: #fff;
   overflow-y: auto;
 }
-body:not(.landing) > article section article > div:first-child {
+body:not(.landing) > article section article > div > div:first-child {
   -webkit-transform: rotateY(-180deg);
   -moz-transform: rotateY(-180deg);
   -o-transform: rotateY(-180deg);
   -ms-transform: rotateY(-180deg);
   transform: rotateY(-180deg);
 }
-body:not(.landing) > article section article > div.active {
+body:not(.landing) > article section article > div > div.active {
   -webkit-transform: rotateY(0);
   -moz-transform: rotateY(0);
   -o-transform: rotateY(0);
@@ -1369,18 +1347,18 @@ body:not(.landing) > article section article > div.active {
   -webkit-box-shadow: 0 0 15px #000;
   box-shadow: 0 0 15px #000;
 }
-body:not(.landing) > article section article .approw {
+body:not(.landing) > article section .approw {
   display: block;
   position: relative;
 }
-body:not(.landing) > article section article .approw.bordertop {
+body:not(.landing) > article section .approw.bordertop {
   border-top: solid 1px #999;
 }
-body:not(.landing) > article section article .approw p {
+body:not(.landing) > article section .approw p {
   display: block;
   margin: 0 120px 0 35px;
 }
-body:not(.landing) > article section article .approw p input {
+body:not(.landing) > article section .approw p input {
   padding: 10px 0;
   margin: 10px 0;
   height: 10px;
@@ -1388,25 +1366,86 @@ body:not(.landing) > article section article .approw p input {
   width: 100%;
   text-indent: 10px;
 }
-body:not(.landing) > article section article .approw > i {
+body:not(.landing) > article section .approw > i {
   cursor: pointer;
   float: left;
   margin: 20px 0;
   height: 10px;
 }
-body:not(.landing) > article section article .approw > i.icon-custom {
+body:not(.landing) > article section .approw > i.icon-custom {
   margin-right: 5px;
 }
-body:not(.landing) > article section article .approw > i.icon-custom:before {
+body:not(.landing) > article section .approw > i.icon-custom:before {
   content: "\f078";
 }
-body:not(.landing) > article section article .approw nav {
+body:not(.landing) > article section .approw nav {
   position: absolute;
   right: 5px;
   top: 10px;
 }
-body:not(.landing) > article section article .approw nav li {
+body:not(.landing) > article section .approw nav li {
   list-style: none;
+}
+body:not(.landing) > article section article > div {
+  -webkit-transition: -webkit-transform 0.5s ease-in-out;
+  -moz-transition: -moz-transform 0.5s ease-in-out;
+  -o-transition: -o-transform 0.5s ease-in-out;
+  -ms-transition: -ms-transform 0.5s ease-in-out;
+  transition: transform 0.5s ease-in-out;
+  -webkit-transform: translateX(0);
+  -moz-transform: translateX(0);
+  -o-transform: translateX(0);
+  -ms-transform: translateX(0);
+  transform: translateX(0);
+}
+body:not(.landing) > article section article > div.sidebaropen {
+  -webkit-transform: translateX(-50px);
+  -moz-transform: translateX(-50px);
+  -o-transform: translateX(-50px);
+  -ms-transform: translateX(-50px);
+  transform: translateX(-50px);
+}
+body:not(.landing) > article section article > div > nav {
+  position: fixed;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 50px;
+  -webkit-transform: translateX(50px);
+  -moz-transform: translateX(50px);
+  -o-transform: translateX(50px);
+  -ms-transform: translateX(50px);
+  transform: translateX(50px);
+  background: #222;
+  overflow-y: auto;
+}
+body:not(.landing) > article section article > div > nav li {
+  list-style: none;
+  width: 50px;
+  height: 50px;
+  -webkit-box-shadow: 0 0 50px #000 inset;
+  box-shadow: 0 0 50px #000 inset;
+  color: #ddd;
+  text-align: center;
+  line-height: 50px;
+}
+body:not(.landing) > article section article > div > nav li:hover {
+  color: #fff;
+}
+body:not(.landing) > article section article > div > nav li.space {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+body:not(.landing) > article section article > div > nav li.selected {
+  background: #ccc;
+  -webkit-box-shadow: 0 0 25px rgba(0,0,0,0.4) inset;
+  box-shadow: 0 0 25px rgba(0,0,0,0.4) inset;
+  color: #000;
+}
+body:not(.landing) > article section article > div > nav > li:first-child {
+  background: #0084ff;
+  -webkit-box-shadow: -25px 0 50px rgba(0,0,0,0.4) inset;
+  box-shadow: -25px 0 50px rgba(0,0,0,0.4) inset;
 }
 body:not(.landing) > article section .dragdropplaceholder {
   position: fixed;

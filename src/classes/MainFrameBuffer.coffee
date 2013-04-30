@@ -75,6 +75,6 @@ class MainFrameBuffer extends DepMan.classes("FrameBuffer")
 		do @Controller.start
 		do renderer.start for renderer in @renderers
 
-	_end: => do @Controller.end;  do renderer.end for renderer in @renderers
+	_end: => do @Controller.end;  do renderer.end for renderer in @renderers; @buffer.width = @buffer.width
 
 module.exports = MainFrameBuffer
