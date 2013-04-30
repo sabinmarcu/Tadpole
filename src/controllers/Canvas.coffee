@@ -18,9 +18,10 @@ class CanvasController extends BaseObject
 			@initOffset = x: @parent.offsets.x, y: @parent.offsets.y
 			@isMovement = false
 			@timer = setTimeout =>
-				if not @isMovement then do @parent.model.scope.toggleSidebar
-				clearTimeout @timer
-			, 300		
+				if not @isMovement 
+					do @parent.model.scope.toggleSidebar
+					do @up
+			, 200		
 		else
 			node = []
 			node.push item for item in @node
@@ -28,9 +29,10 @@ class CanvasController extends BaseObject
 			@initOffset = x: node.x, y: node.y
 			@isMovement = false
 			@timer = setTimeout =>
-				if not @isMovement then @parent.model.scope.edit node
-				clearTimeout @timer
-			, 200
+				if not @isMovement 
+					@parent.model.scope.edit node
+					do @up
+			, 100
 		do e.preventDefault
 
 	move: (e) =>
@@ -51,6 +53,7 @@ class CanvasController extends BaseObject
 			do e.preventDefault
 		
 	up: (e) =>
+		if not @isMovement and @node then @parent.model.scope.edit @parent.model.findNode @node
 		@init = null
 		@node = null
 		@isMovement = false

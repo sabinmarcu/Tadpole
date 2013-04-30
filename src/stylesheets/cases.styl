@@ -1,7 +1,28 @@
 &.redtheme
+	#loadingscreen
+		color redbasecolor
 	aside
 		background-color redbackgroundcolor
+		nav li
+			span
+				text-shadow 0 0 1px redbasecolor
+			&:hover i
+				text-shadow 0 0 1px redbasecolor
 		section article
 			background-color redbackgroundcolor
-	& > article section article > nav li:first-child
-		background-color redbasecolor
+	& > article section article > nav > li:first-child
+		background redbasecolor
+&.bluetheme
+	#loadingscreen
+		color bluebasecolor
+	aside
+		background-color bluebackgroundcolor
+		nav li
+			span
+				text-shadow 0 0 1px bluebasecolor
+			&:hover i
+				text-shadow 0 0 25px bluebasecolor
+		section article
+			background-color bluebackgroundcolor
+	& > article section article > div > nav > li:first-child
+		background bluebasecolor

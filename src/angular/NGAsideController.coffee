@@ -15,10 +15,11 @@ angular.module("Arrow").controller "NGAsideController", ($scope, $rootScope) ->
 		]
 		$scope.language = item for item in $scope.languages when $scope.language is item.mime
 	storage.getItem "theme", (sets) ->
-		$scope.theme = sets.theme or "bluetheme"
+		$scope.theme = sets.theme or "classictheme"
 		$scope.themes = [
 			{ name: "Blu Theme", mime: "bluetheme" }
 			{ name: "Red Theme", mime: "redtheme" }
+			{ name: "Classic Theme", mime: "classictheme" }
 		]
 		$scope.theme = item for item in $scope.themes when $scope.theme is item.mime
 	$scope.changedLanguage = ->

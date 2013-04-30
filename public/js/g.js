@@ -655,7 +655,7 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
     storage.getItem("theme", function(sets) {
       var item, _i, _len, _ref, _results;
 
-      $scope.theme = sets.theme || "bluetheme";
+      $scope.theme = sets.theme || "classictheme";
       $scope.themes = [
         {
           name: "Blu Theme",
@@ -663,6 +663,9 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
         }, {
           name: "Red Theme",
           mime: "redtheme"
+        }, {
+          name: "Classic Theme",
+          mime: "classictheme"
         }
       ];
       _ref = $scope.themes;
@@ -1685,9 +1688,9 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
         this.timer = setTimeout(function() {
           if (!_this.isMovement) {
             _this.parent.model.scope.toggleSidebar();
+            return _this.up();
           }
-          return clearTimeout(_this.timer);
-        }, 300);
+        }, 200);
       } else {
         node = [];
         _ref = this.node;
@@ -1704,9 +1707,9 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
         this.timer = setTimeout(function() {
           if (!_this.isMovement) {
             _this.parent.model.scope.edit(node);
+            return _this.up();
           }
-          return clearTimeout(_this.timer);
-        }, 200);
+        }, 100);
       }
       return e.preventDefault();
     };
@@ -1744,6 +1747,9 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
     };
 
     CanvasController.prototype.up = function(e) {
+      if (!this.isMovement && this.node) {
+        this.parent.model.scope.edit(this.parent.model.findNode(this.node));
+      }
       this.init = null;
       this.node = null;
       this.isMovement = false;
@@ -15054,7 +15060,7 @@ QRBitBuffer.prototype = {
     
       __out.push(DepMan.render("partials/editnode"));
     
-      __out.push('\n\t</span>\n\t<nav>\n\t\t<li></li>\n\t    <li ng-class="{\'outline\': \'selected\'}[view]" ng-click="changeView(\'outline\')"><i class="icon-list"></i></li>\n\t    <li ng-class="{\'mindmap\': \'selected\'}[view]" ng-click="changeView(\'mindmap\')"><i class="icon-sitemap"></i></li>\n\t    <li class="space"></li>\n\t    <span ng-show="view == \'mindmap\'">\n\t    \t<li ng-click="changeLevel(1)"><i class="icon-chevron-up"></i></li>\n\t    \t<li ng-click="toggleLegend()"><i class="icon-map-marker"></i></li>\n\t    \t<li ng-click="toggleShortcuts()"><i class="icon-info-sign"></i></li>\n\t    \t<li ng-click="toggleLevel()"><i class="icon-cog"></i></li>\n\t    \t<li ng-click="toggleLevelNo()"><i class="icon-time"></i></li>\n\t    \t<li ng-click="changeLevel(-1)"><i class="icon-chevron-down"></i></li>\n\t    </span>\n\t    <li class="space"></li>\n\t    <li class="space"></li>\n\t</nav>\n</div>');
+      __out.push('\n\t</span>\n\t<nav>\n\t\t<li></li>\n\t    <li ng-class="{\'outline\': \'selected\'}[view]" ng-click="changeView(\'outline\')"><i class="icon-list"></i></li>\n\t    <li ng-class="{\'mindmap\': \'selected\'}[view]" ng-click="changeView(\'mindmap\')"><i class="icon-sitemap"></i></li>\n\t    <li class="space"></li>\n\t    <span ng-show="view == \'mindmap\'">\n\t    \t<li ng-click="changeLevel(1)"><i class="icon-chevron-up"></i></li>\n\t    \t<li ng-click="toggleLegend()"><i class="icon-map-marker"></i></li>\n\t    \t<li ng-click="toggleShortcuts()"><i class="icon-info-sign"></i></li>\n\t    \t<li ng-click="toggleLevel()"><i class="icon-cog"></i></li>\n\t    \t<li ng-click="toggleLevelNo()"><i class="icon-time"></i></li>\n\t    \t<li ng-click="changeLevel(-1)"><i class="icon-chevron-down"></i></li>\n\t    </span>\n\t    <li class="space"></li>\n\t</nav>\n</div>');
     
     }).call(this);
     

@@ -25,7 +25,7 @@ class Application extends BaseObject
 			document.head.appendChild meta
 			meta = document.createElement "link"
 			meta.setAttribute "rel", "apple-touch-icon"
-			meta.setAttribute "href", "arrow_up_1.png"
+			meta.setAttribute "href", "arrow.png"
 			document.head.appendChild meta
 			meta = document.createElement "meta"
 			meta.setAttribute "name", "apple-mobile-web-app-capable"
