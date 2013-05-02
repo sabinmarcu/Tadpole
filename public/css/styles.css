@@ -434,6 +434,12 @@ body:not(.landing) > article section article > div > div.active {
 body:not(.landing) > article section .approw {
   display: block;
   position: relative;
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #fff), color-stop(1, #eee));
+  background: -webkit-linear-gradient(top, #fff 0%, #eee 100%);
+  background: -moz-linear-gradient(top, #fff 0%, #eee 100%);
+  background: -o-linear-gradient(top, #fff 0%, #eee 100%);
+  background: -ms-linear-gradient(top, #fff 0%, #eee 100%);
+  background: linear-gradient(top, #fff 0%, #eee 100%);
 }
 body:not(.landing) > article section .approw.bordertop {
   border-top: solid 1px #999;
@@ -458,9 +464,6 @@ body:not(.landing) > article section .approw > i {
 }
 body:not(.landing) > article section .approw > i.icon-custom {
   margin-right: 5px;
-}
-body:not(.landing) > article section .approw > i.icon-custom:before {
-  content: "\f078";
 }
 body:not(.landing) > article section .approw nav {
   position: absolute;

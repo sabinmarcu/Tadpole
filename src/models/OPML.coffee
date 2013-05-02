@@ -2,6 +2,7 @@ class OPML extends BaseObject
 
 	constructor: (@text = null, @manager) ->
 		@parse @text if @text?
+		@marked = []
 		@events = {}
 		@events["outline.#{@title}.addChild"] = @_addChild
 		@events["outline.#{@title}.edit"] = @_modify
@@ -9,6 +10,8 @@ class OPML extends BaseObject
 		@events["outline.#{@title}.move"] = @_move
 		@events["outline.#{@title}.startMoving"] = @_startMoving
 		@events["outline.#{@title}.endMoving"] = @_endMoving
+		@events["outline.#{@title}.markEdit"] = @_markEdit
+		@events["outline.#{@title}.unMarkEdit"] = @_unMarkEdit
 		Client?.events = @events
 		Client?.loadEvents()
 
@@ -19,10 +22,36 @@ class OPML extends BaseObject
 
 	JSONize: (xml) =>
 		@title = xml.getElementsByTagName("title")[0].childNodes[0].nodeValue
+		@expansionSet = ""
+		@expansionSet = xml.getElementsByTagName("expansionState")[0]?.childNodes[0].nodeValue or ""
+		@expansionSet = @expansionSet.replace(/\ /g, "").split ","
+		@expansionSet[index] = parseInt @expansionSet[index] for value, index in @expansionSet
 		@structure = (DepMan.model "Outline").generate xml
+		do @regenIndices
 		@locationService = new (DepMan.helper "Locations")(@)
 		console.log @structure
 		@controller = new (DepMan.controller "OPML")( @ )
+
+	regenIndices: =>
+		index = 0
+		regenIndices = (collection) =>
+			return if not collection?
+			for kid in collection.topics
+				kid.index = index++
+				if kid.children then regenIndices kid.children
+				console.log kid.index, @expansionSet
+				if not (kid.index in @expansionSet) then kid.fold = true
+		regenIndices @structure
+
+	getIndices: => 
+		indices = []
+		getIndices = (collection) =>
+			return if not collection?
+			for kid in collection.topics
+				if not kid.fold then indices.push kid.index
+				if kid.children then getIndices kid.children
+		getIndices @structure
+		indices
 
 	find: (search = [], start = null) =>
 
@@ -44,19 +73,9 @@ class OPML extends BaseObject
 
 	download: =>
 		window.open "data:application/xml,#{( do @Export ).replace /["']/g, "\""}"
-		# form = document.createElement "form"
-		# form.setAttribute "action", "/echo/#{encodeURI(@title)}.opml"
-		# form.setAttribute "method", "POST"
-		# input = document.createElement "input"
-		# input.setAttribute "name", "content"
-		# input.value = ( do @Export ).replace /["']/g, "\""
-		# form.appendChild input
-		# document.body.appendChild form
-		# form.submit()
-		# document.body.removeChild form
 
 
-	Export: => "<opml version='1.0'><head><title>#{@title}</title></head><body>#{do @exportBody}</body></opml>"
+	Export: => "<opml version='1.0'><head><title>#{@title}</title><expansionState>#{(do @getIndices).join ','}</expansionState></head><body>#{do @exportBody}</body></opml>"
 
 	exportBody: (tree = @structure) =>
 		string = ""
@@ -111,6 +130,12 @@ class OPML extends BaseObject
 	startMoving: => Client.publish "outline.#{@title}.startMoving"
 	endMoving: => Client.publish "outline.#{@title}.endMoving"
 	move: (path, to) => Client.publish "outline.#{@title}.move", ( JSON.stringify path ), ( JSON.stringify to )
+	markEdit: (path) => Client.publish "outline.#{@title}.markEdit", ( JSON.stringify path )
+	unMarkEdit: (path) => Client.publish "outline.#{@title}.unMarkEdit", ( JSON.stringify path )
+
+	_markEdit: (path) => @marked.push (JSON.parse path).join ", "
+
+	_unMarkEdit: (path) => @marked.splice (@marked.indexOf (JSON.parse path).join ", "), 1
 
 	_modify: (path, data) =>
 		item = @findNode JSON.parse path
@@ -121,6 +146,7 @@ class OPML extends BaseObject
 			if item.status in ["checked", "unchecked"]
 				item.status = data.status
 		item.note = data.note if data.note?
+		item.fold = data.fold if data.fold?
 		do @_refresh
 
 	_refresh: =>
@@ -139,10 +165,16 @@ class OPML extends BaseObject
 		@events["outline.#{title}.move"] = @events["outline.#{@title}.move"]
 		@events["outline.#{title}.startMoving"] = @events["outline.#{@title}.startMoving"] 
 		@events["outline.#{title}.endMoving"] = @events["outline.#{@title}.endMoving"]
+		@events["outline.#{title}.markEdit"] = @events["outline.#{@title}.markEdit"]
+		@events["outline.#{title}.unMarkEdit"] = @events["outline.#{@title}.unMarkEdit"]
 		Client.queue["outline.#{@title}.addChild"] = null
 		Client.queue["outline.#{@title}.edit"] = null
 		Client.queue["outline.#{@title}.removeChild"] = null
 		Client.queue["outline.#{@title}.move"] = null
+		Client.queue["outline.#{@title}.startMoving"] = null
+		Client.queue["outline.#{@title}.endMoving"] = null
+		Client.queue["outline.#{@title}.markEdit"] = null
+		Client.queue["outline.#{@title}.unMarkEdit"] = null
 		@events = {}
 		Client?.events = @events
 		Client?.loadEvents()

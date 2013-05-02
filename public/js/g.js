@@ -248,7 +248,7 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
         document.head.appendChild(meta);
         meta = document.createElement("link");
         meta.setAttribute("rel", "apple-touch-icon");
-        meta.setAttribute("href", "arrow_up_1.png");
+        meta.setAttribute("href", "arrow.png");
         document.head.appendChild(meta);
         meta = document.createElement("meta");
         meta.setAttribute("name", "apple-mobile-web-app-capable");
@@ -750,6 +750,8 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
 
 }).call(this);
 }, "angular/OPMLController": function(exports, require, module) {(function() {
+  var __indexOf = [].indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
+
   angular.module("Arrow").controller("OPMLController", function($scope, $rootScope, OPML) {
     $scope.safeApply = function(fn) {
       var phase;
@@ -789,9 +791,13 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
       };
       $scope.folded = function(item) {
         if (item.children == null) {
-          return "icon-hidden";
+          return "icon-custom icon-hidden";
         } else {
-          return "icon-custom";
+          if (item.fold) {
+            return "icon-custom icon-chevron-right";
+          } else {
+            return "icon-custom icon-chevron-down";
+          }
         }
       };
       $scope.hasKids = function(item) {
@@ -830,9 +836,17 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
       };
       hooked = false;
       $scope.edit = function(item) {
-        var modal, sts,
+        var fld, modal, sts, _ref, _ref1, _ref2,
           _this = this;
 
+        $scope.path = item.getPath();
+        console.log($scope.path.join(", "), $scope.object.marked, (_ref = $scope.path.join(", "), __indexOf.call($scope.object.marked, _ref) >= 0));
+        if (_ref1 = $scope.path.join(", "), __indexOf.call($scope.object.marked, _ref1) >= 0) {
+          Toast("Whoops", "Someone is already editing this node ... please try again later :)");
+          return;
+        }
+        $scope.object.markEdit($scope.path);
+        console.log($scope.path, $scope.object.marked);
         if ((typeof modal === "undefined" || modal === null) || (modal[0] != null)) {
           modal = jQuery(".editnode#" + ($scope.getTitle()));
         }
@@ -846,8 +860,17 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
         } else {
           modal.find(".status").hide();
         }
+        modal.find(".folding").show();
+        fld = modal.find("#folding");
+        if (item.fold) {
+          fld.prop("checked", true);
+        } else {
+          fld.prop("checked", false);
+        }
+        if ((_ref2 = item.status) === "checked" || _ref2 === "unchecked") {
+          modal.find(".folding").hide();
+        }
         modal.find("#notes").val(item.note || "");
-        $scope.path = item.getPath();
         modal.find("#new").click(function() {
           obj.addChild(JSON.stringify($scope.path));
           return modal.modal("hide");
@@ -869,19 +892,27 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
             return false;
           });
           return modal.on("hide", function() {
-            var status;
+            var fold, status;
 
+            $scope.object.unMarkEdit($scope.path);
             status = modal.find("#status").prop("checked");
-            console.log(status);
             if (status) {
               status = "checked";
             } else {
               status = "unchecked";
             }
+            fold = modal.find("#folding").prop("checked");
+            if (fold) {
+              fold = true;
+            } else {
+              fold = false;
+            }
+            console.log(modal.find("#folding").val());
             obj.modify(JSON.stringify($scope.path), {
               "text": modal.find("#text").val(),
               "status": status,
-              "note": modal.find("#notes").val()
+              "note": modal.find("#notes").val(),
+              "fold": fold
             });
             jQuery(".modal-container#" + ($scope.getTitle())).append(modal);
             return $scope.safeApply();
@@ -1311,7 +1342,7 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         item = _ref[_i];
         this.currentItem.push(item.text);
-        if (item.children) {
+        if (item.children && !item.fold) {
           this.drawGugus(item.children);
         }
         this.drawGugu(item);
@@ -1334,28 +1365,28 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
       height = this.getHeight(absDelta);
       switch (item.status) {
         case "checked":
-          bgcolor1 = "rgba(0, 135, 255, " + (this.alphaDelta(absDelta)) + ")";
-          bgcolor2 = "rgba(0, 100, 220, " + (this.alphaDelta(absDelta)) + ")";
-          texcolor = "rgba(256, 256, 256, " + (this.alphaDelta(absDelta)) + ")";
+          bgcolor1 = "rgba(0, 135, 255, 1)";
+          bgcolor2 = "rgba(0, 100, 220, 1)";
+          texcolor = "rgba(256, 256, 256, 1)";
           texStrokeColor = "rgba(0, 0, 0, 0)";
           break;
         case "unchecked":
-          bgcolor1 = "rgba(255, 67, 16, " + (this.alphaDelta(absDelta)) + ")";
-          bgcolor2 = "rgba(220, 32, 0, " + (this.alphaDelta(absDelta)) + ")";
-          texcolor = "rgba(0, 0, 0, " + (this.alphaDelta(absDelta)) + ")";
+          bgcolor1 = "rgba(255, 67, 16, 1)";
+          bgcolor2 = "rgba(220, 32, 0, 1)";
+          texcolor = "rgba(0, 0, 0, 1)";
           texStrokeColor = "rgba(0, 0 , 0, 0)";
           break;
         case "determinate":
-          bgcolor1 = "rgba(256, 256, 256, " + (this.alphaDelta(absDelta)) + ")";
-          bgcolor2 = "rgba(210, 210, 210, " + (this.alphaDelta(absDelta)) + ")";
-          texcolor = "rgba(0, 0, 0, " + (this.alphaDelta(absDelta)) + ")";
-          texStrokeColor = "rgba(256, 256, 256, " + (this.alphaDelta(absDelta)) + ")";
+          bgcolor1 = "rgba(256, 256, 256, 1)";
+          bgcolor2 = "rgba(210, 210, 210, 1)";
+          texcolor = "rgba(0, 0, 0, 1)";
+          texStrokeColor = "rgba(256, 256, 256, 1)";
           break;
         default:
-          bgcolor1 = "rgba(50, 50, 50, " + (this.alphaDelta(absDelta)) + ")";
-          bgcolor2 = "rgba(0, 0, 0, " + (this.alphaDelta(absDelta)) + ")";
-          texcolor = "rgba(256, 256, 256, " + (this.alphaDelta(absDelta)) + ")";
-          texStrokeColor = "rgba(0, 0, 0, " + (this.alphaDelta(absDelta)) + ")";
+          bgcolor1 = "rgba(50, 50, 50, 1)";
+          bgcolor2 = "rgba(0, 0, 0, 1)";
+          texcolor = "rgba(256, 256, 256, 1)";
+          texStrokeColor = "rgba(0, 0, 0, 1)";
       }
       grad = this.context.createLinearGradient(x, y, x, y + height);
       grad.addColorStop(0, bgcolor1);
@@ -1363,7 +1394,7 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
       grad.addColorStop(1, bgcolor2);
       this.context.fillStyle = grad;
       this.context.lineWidth = 1;
-      this.context.strokeStyle = "rgba(0, 0, 0, " + (this.alphaDelta(absDelta)) + ")";
+      this.context.strokeStyle = "rgba(0, 0, 0, 1)";
       this.context.fillRectR(x, y, width, height);
       this.context.strokeRectR(x, y, width, height);
       text = item.text;
@@ -1458,7 +1489,7 @@ for(var i=0;i<count;i++){counter.push(i)}return async.map(counter,iterator,callb
       for (_i = 0, _len = _ref.length; _i < _len; _i++) {
         item = _ref[_i];
         this.currentItem.push(item.text);
-        if (item.children) {
+        if (item.children && !item.fold) {
           this.drawLines(item.children);
           _ref1 = item.children.topics;
           for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
@@ -13218,6 +13249,10 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
       this._addChild = __bind(this._addChild, this);
       this._refresh = __bind(this._refresh, this);
       this._modify = __bind(this._modify, this);
+      this._unMarkEdit = __bind(this._unMarkEdit, this);
+      this._markEdit = __bind(this._markEdit, this);
+      this.unMarkEdit = __bind(this.unMarkEdit, this);
+      this.markEdit = __bind(this.markEdit, this);
       this.move = __bind(this.move, this);
       this.endMoving = __bind(this.endMoving, this);
       this.startMoving = __bind(this.startMoving, this);
@@ -13231,11 +13266,14 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
       this.Export = __bind(this.Export, this);
       this.download = __bind(this.download, this);
       this.find = __bind(this.find, this);
+      this.getIndices = __bind(this.getIndices, this);
+      this.regenIndices = __bind(this.regenIndices, this);
       this.JSONize = __bind(this.JSONize, this);
       this.parse = __bind(this.parse, this);
       if (this.text != null) {
         this.parse(this.text);
       }
+      this.marked = [];
       this.events = {};
       this.events["outline." + this.title + ".addChild"] = this._addChild;
       this.events["outline." + this.title + ".edit"] = this._modify;
@@ -13243,6 +13281,8 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
       this.events["outline." + this.title + ".move"] = this._move;
       this.events["outline." + this.title + ".startMoving"] = this._startMoving;
       this.events["outline." + this.title + ".endMoving"] = this._endMoving;
+      this.events["outline." + this.title + ".markEdit"] = this._markEdit;
+      this.events["outline." + this.title + ".unMarkEdit"] = this._unMarkEdit;
       if (typeof Client !== "undefined" && Client !== null) {
         Client.events = this.events;
       }
@@ -13260,11 +13300,83 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
     };
 
     OPML.prototype.JSONize = function(xml) {
+      var index, value, _i, _len, _ref, _ref1;
+
       this.title = xml.getElementsByTagName("title")[0].childNodes[0].nodeValue;
+      this.expansionSet = "";
+      this.expansionSet = ((_ref = xml.getElementsByTagName("expansionState")[0]) != null ? _ref.childNodes[0].nodeValue : void 0) || "";
+      this.expansionSet = this.expansionSet.replace(/\ /g, "").split(",");
+      _ref1 = this.expansionSet;
+      for (index = _i = 0, _len = _ref1.length; _i < _len; index = ++_i) {
+        value = _ref1[index];
+        this.expansionSet[index] = parseInt(this.expansionSet[index]);
+      }
       this.structure = (DepMan.model("Outline")).generate(xml);
+      this.regenIndices();
       this.locationService = new (DepMan.helper("Locations"))(this);
       console.log(this.structure);
       return this.controller = new (DepMan.controller("OPML"))(this);
+    };
+
+    OPML.prototype.regenIndices = function() {
+      var index, regenIndices,
+        _this = this;
+
+      index = 0;
+      regenIndices = function(collection) {
+        var kid, _i, _len, _ref, _ref1, _results;
+
+        if (collection == null) {
+          return;
+        }
+        _ref = collection.topics;
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          kid = _ref[_i];
+          kid.index = index++;
+          if (kid.children) {
+            regenIndices(kid.children);
+          }
+          console.log(kid.index, _this.expansionSet);
+          if (!(_ref1 = kid.index, __indexOf.call(_this.expansionSet, _ref1) >= 0)) {
+            _results.push(kid.fold = true);
+          } else {
+            _results.push(void 0);
+          }
+        }
+        return _results;
+      };
+      return regenIndices(this.structure);
+    };
+
+    OPML.prototype.getIndices = function() {
+      var getIndices, indices,
+        _this = this;
+
+      indices = [];
+      getIndices = function(collection) {
+        var kid, _i, _len, _ref, _results;
+
+        if (collection == null) {
+          return;
+        }
+        _ref = collection.topics;
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          kid = _ref[_i];
+          if (!kid.fold) {
+            indices.push(kid.index);
+          }
+          if (kid.children) {
+            _results.push(getIndices(kid.children));
+          } else {
+            _results.push(void 0);
+          }
+        }
+        return _results;
+      };
+      getIndices(this.structure);
+      return indices;
     };
 
     OPML.prototype.find = function(search, start) {
@@ -13315,7 +13427,7 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
     };
 
     OPML.prototype.Export = function() {
-      return "<opml version='1.0'><head><title>" + this.title + "</title></head><body>" + (this.exportBody()) + "</body></opml>";
+      return "<opml version='1.0'><head><title>" + this.title + "</title><expansionState>" + ((this.getIndices()).join(',')) + "</expansionState></head><body>" + (this.exportBody()) + "</body></opml>";
     };
 
     OPML.prototype.exportBody = function(tree) {
@@ -13442,6 +13554,22 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
       return Client.publish("outline." + this.title + ".move", JSON.stringify(path), JSON.stringify(to));
     };
 
+    OPML.prototype.markEdit = function(path) {
+      return Client.publish("outline." + this.title + ".markEdit", JSON.stringify(path));
+    };
+
+    OPML.prototype.unMarkEdit = function(path) {
+      return Client.publish("outline." + this.title + ".unMarkEdit", JSON.stringify(path));
+    };
+
+    OPML.prototype._markEdit = function(path) {
+      return this.marked.push((JSON.parse(path)).join(", "));
+    };
+
+    OPML.prototype._unMarkEdit = function(path) {
+      return this.marked.splice(this.marked.indexOf((JSON.parse(path)).join(", ")), 1);
+    };
+
     OPML.prototype._modify = function(path, data) {
       var item, _ref;
 
@@ -13460,6 +13588,9 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
       }
       if (data.note != null) {
         item.note = data.note;
+      }
+      if (data.fold != null) {
+        item.fold = data.fold;
       }
       return this._refresh();
     };
@@ -13488,10 +13619,16 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
       this.events["outline." + title + ".move"] = this.events["outline." + this.title + ".move"];
       this.events["outline." + title + ".startMoving"] = this.events["outline." + this.title + ".startMoving"];
       this.events["outline." + title + ".endMoving"] = this.events["outline." + this.title + ".endMoving"];
+      this.events["outline." + title + ".markEdit"] = this.events["outline." + this.title + ".markEdit"];
+      this.events["outline." + title + ".unMarkEdit"] = this.events["outline." + this.title + ".unMarkEdit"];
       Client.queue["outline." + this.title + ".addChild"] = null;
       Client.queue["outline." + this.title + ".edit"] = null;
       Client.queue["outline." + this.title + ".removeChild"] = null;
       Client.queue["outline." + this.title + ".move"] = null;
+      Client.queue["outline." + this.title + ".startMoving"] = null;
+      Client.queue["outline." + this.title + ".endMoving"] = null;
+      Client.queue["outline." + this.title + ".markEdit"] = null;
+      Client.queue["outline." + this.title + ".unMarkEdit"] = null;
       this.events = {};
       if (typeof Client !== "undefined" && Client !== null) {
         Client.events = this.events;
@@ -13650,7 +13787,6 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
       }
       this.getData(xmlDoc);
       this._map = _map;
-      console.log(this);
     }
 
     Outline.prototype.getPath = function() {
@@ -13675,7 +13811,6 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
       _checkParam(this, "note", "_note", xmlDoc);
       _checkParam(this, "x", "_x", xmlDoc);
       _checkParam(this, "y", "_y", xmlDoc);
-      console.log(this.x, this.y);
       if (this.x !== "") {
         this.x = parseInt(this.x);
       }
@@ -15600,7 +15735,11 @@ QRBitBuffer.prototype = {
     
       __out.push(__sanitize(_T("Status of the node (if leaf)")));
     
-      __out.push(' ></span>\n                    <div class="span6 row" style="margin: 0; padding: 0 20px 0 0;">\n                        <input type="checkbox" name="status" class="status pull-right" checked="false" id="status" />\n                    </div>\n                </label>                    \n            </div>\n        </div>\n        <br><br>\n        <div class="controls row-fluid">\n            <div class="input-prepend span12 row">\n                <label class="add-on span6" for="notes" ');
+      __out.push(' ></span>\n                    <div class="span6 row" style="margin: 0; padding: 0 20px 0 0;">\n                        <input type="checkbox" name="status" class="status pull-right" checked="false" id="status" />\n                    </div>\n                </label>\n            </div>\n            <div class="input-prepend span12 row">\n                <label class="folding" for="folding">\n                    <span class="add-on span6" ');
+    
+      __out.push(__sanitize(_T("Folding status (if not leaf)")));
+    
+      __out.push(' ></span>\n                    <div class="span6 row" style="margin: 0; padding: 0 20px 0 0;">\n                        <input type="checkbox" name="folding" class="folding pull-right" checked="false" id="folding" />\n                    </div>\n                </label>\n            </div>\n        </div>\n        <br><br>\n        <div class="controls row-fluid">\n            <div class="input-prepend span12 row">\n                <label class="add-on span6" for="notes" ');
     
       __out.push(__sanitize(_T("Notes attached to this node")));
     
@@ -15616,7 +15755,7 @@ QRBitBuffer.prototype = {
     
       __out.push(__sanitize(_T("Remove this node")));
     
-      __out.push('></button>\n        </div>\n    </div>    \n</div>\n');
+      __out.push('></button>\n        </div>\n    </div>\n</div>\n');
     
     }).call(this);
     

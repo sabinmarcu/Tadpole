@@ -12,7 +12,7 @@ class GuguFrameBuffer extends DepMan.classes("FrameBuffer")
 	drawGugus: (set) =>
 		for item in set.topics
 			@currentItem.push item.text
-			if item.children then @drawGugus item.children
+			if item.children and not item.fold then @drawGugus item.children
 			@drawGugu item
 			@currentItem.pop()
 	drawGugu: (item) =>
@@ -25,17 +25,17 @@ class GuguFrameBuffer extends DepMan.classes("FrameBuffer")
 		height = @getHeight absDelta
 
 		switch item.status
-			when "checked" then bgcolor1 = "rgba(0, 135, 255, #{@alphaDelta absDelta})"; bgcolor2 = "rgba(0, 100, 220, #{@alphaDelta absDelta})"; texcolor = "rgba(256, 256, 256, #{@alphaDelta absDelta})"; texStrokeColor = "rgba(0, 0, 0, 0)"
-			when "unchecked" then bgcolor1 = "rgba(255, 67, 16, #{@alphaDelta absDelta})"; bgcolor2 = "rgba(220, 32, 0, #{@alphaDelta absDelta})"; texcolor = "rgba(0, 0, 0, #{@alphaDelta absDelta})"; texStrokeColor = "rgba(0, 0 , 0, 0)"
-			when "determinate" then bgcolor1 = "rgba(256, 256, 256, #{@alphaDelta absDelta})"; bgcolor2 = "rgba(210, 210, 210, #{@alphaDelta absDelta})"; texcolor = "rgba(0, 0, 0, #{@alphaDelta absDelta})"; texStrokeColor = "rgba(256, 256, 256, #{@alphaDelta absDelta})"
-			else bgcolor1 = "rgba(50, 50, 50, #{@alphaDelta absDelta})"; bgcolor2 = "rgba(0, 0, 0, #{@alphaDelta absDelta})"; texcolor = "rgba(256, 256, 256, #{@alphaDelta absDelta})"; texStrokeColor = "rgba(0, 0, 0, #{@alphaDelta absDelta})"
+			when "checked" then bgcolor1 = "rgba(0, 135, 255, 1)"; bgcolor2 = "rgba(0, 100, 220, 1)"; texcolor = "rgba(256, 256, 256, 1)"; texStrokeColor = "rgba(0, 0, 0, 0)"
+			when "unchecked" then bgcolor1 = "rgba(255, 67, 16, 1)"; bgcolor2 = "rgba(220, 32, 0, 1)"; texcolor = "rgba(0, 0, 0, 1)"; texStrokeColor = "rgba(0, 0 , 0, 0)"
+			when "determinate" then bgcolor1 = "rgba(256, 256, 256, 1)"; bgcolor2 = "rgba(210, 210, 210, 1)"; texcolor = "rgba(0, 0, 0, 1)"; texStrokeColor = "rgba(256, 256, 256, 1)"
+			else bgcolor1 = "rgba(50, 50, 50, 1)"; bgcolor2 = "rgba(0, 0, 0, 1)"; texcolor = "rgba(256, 256, 256, 1)"; texStrokeColor = "rgba(0, 0, 0, 1)"
 		grad = @context.createLinearGradient x, y, x, y + height
 		grad.addColorStop 0, bgcolor1
 		grad.addColorStop 0.5, bgcolor1
 		grad.addColorStop 1, bgcolor2
 		@context.fillStyle = grad
 		@context.lineWidth = 1
-		@context.strokeStyle = "rgba(0, 0, 0, #{@alphaDelta absDelta})"
+		@context.strokeStyle = "rgba(0, 0, 0, 1)"
 		@context.fillRectR x, y, width, height
 		@context.strokeRectR x, y, width, height
 		text = item.text

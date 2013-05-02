@@ -10,7 +10,7 @@ class LinesFrameBuffer extends DepMan.classes("FrameBuffer")
 	drawLines: (set) =>
 		for item in set.topics
 			@currentItem.push item.text
-			if item.children
+			if item.children and not item.fold
 				@drawLines item.children
 				for kid in item.children.topics
 					@drawLine item, kid
