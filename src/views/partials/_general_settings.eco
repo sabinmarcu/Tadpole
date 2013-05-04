@@ -5,4 +5,5 @@
 	<select ng-model="theme" ng-options="t.name for t in themes" ng-change="changedTheme()"></select>
 	<p <%= _T "Change whether the next time you open the app, the landing page will be active" %>></p>
 	<label for="landingpageactive" class="checkbox"><input type="checkbox" ng-model="landingpageactive" ng-change="activateLanding()" /> Active Landing Page</label>
+	<label for="landingpageactive" class="checkbox"><input type="checkbox" ng-model="tutorialactive" ng-change="activateTutorial()" /> Active Tutorial</label>
 </form>

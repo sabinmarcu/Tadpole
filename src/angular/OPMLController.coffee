@@ -112,7 +112,7 @@ angular.module("Arrow").controller "OPMLController", ($scope, $rootScope, OPML) 
 		$scope.toggleLevel = -> $scope.object.controller.frameBuffer.triggers.level = not $scope.object.controller.frameBuffer.triggers.level if $scope.view is "mindmap"
 		$scope.toggleLevelNo = -> $scope.object.controller.frameBuffer.triggers.levelno = not $scope.object.controller.frameBuffer.triggers.levelno if $scope.view is "mindmap"
 		$scope.toggleShortcuts = -> $scope.object.controller.frameBuffer.triggers.shortcuts = not $scope.object.controller.frameBuffer.triggers.shortcuts if $scope.view is "mindmap"
-		$scope.changeLevel = (amount) -> $scope.object.controller.frameBuffer.level += amount if $scope.view is "mindmap"
+		$scope.changeLevel = (amount) -> return if amount is -1 and $scope.object.controller.frameBuffer.level is 0; $scope.object.controller.frameBuffer.level += amount if $scope.view is "mindmap"
 
 		obj.scope = $scope
 

@@ -1,7 +1,7 @@
-<nav data-role='tablist'>
-	<li data-tab='list' ng-click="asidetab('LIST')"><i class="icon-tasks"></i><span <%= _T "Documents" %>></span></li>
-	<li data-tab='server' ng-click="asidetab('SERVER')"><i class="icon-comments-alt"></i><span <%= _T "Server" %>></span></li>
-	<li data-tab='global' ng-click="asidetab('GENERAL')"><i class="icon-wrench"></i><span <%= _T "General" %>></span></li>
+<nav data-role='tablist' data-intro="These are the three global tabs for the app" data-step="3" data-position="top">
+	<li data-tab='list' ng-click="asidetab('LIST')" data-intro="Click here for a list of documents" data-step="4" data-position="top"><i class="icon-tasks"></i><span <%= _T "Documents" %>></span></li>
+	<li data-tab='server' ng-click="asidetab('SERVER')" data-intro="Click here for server settings - You need to get here when you want to connect to someone else" data-step="5" data-position="top"><i class="icon-comments-alt"></i><span <%= _T "Server" %>></span></li>
+	<li data-tab='global' ng-click="asidetab('GENERAL')" data-intro="Click here for general settings - Language, Themes, Start Page, Tutorial, etc" data-step="9" data-position="top"><i class="icon-wrench"></i><span <%= _T "General" %>></span></li>
 </nav>
 <section data-role="tabcontainer">
 	<article id='list' ng-class="{true: 'active ' + getAnim(), false: ''}[tabIsActive('LIST')]"></article>

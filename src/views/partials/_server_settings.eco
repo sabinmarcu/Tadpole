@@ -1,4 +1,4 @@
 <p <%= _T "To connect to another client, give him the code in the first input box or input his code in the second input box and press enter" %>></p>
-<div><canvas width="200" height="200" class="image image-circle" id="qrimage"></canvas></div>
-<input type="text" readonly id="connectionidself" value="Not Connected Yet ..." />
-<input type="text" value="" id="connectid" <%= _T "ID to connect to", "placeholder" %> />
+<div><canvas width="200" height="200" class="image image-circle" id="qrimage" data-intro="This QR code represents your unique ID" data-step="6" data-position="right"></canvas></div>
+<input type="text" readonly id="connectionidself" value="Not Connected Yet ..." data-intro="This code represents your unique ID (much like the QR, but in plain text)" data-step="7" data-position="right"/>
+<input type="text" value="" id="connectid" <%= _T "ID to connect to", "placeholder" %> data-intro="This is where you would insert the code someone else gives you in order to connect." data-step="8" data-position="right"/>

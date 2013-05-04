@@ -14,7 +14,7 @@
 	</div>
 </div>
 <nav class="btn-group" ng-show="isMobile">
-	<li class="btn" ng-click="addChild(item)"><i class="icon-plus"></i></li>
-	<li class="btn" ng-click="remove(item)"><i class="icon-remove"></i></li>	
-	<li class="btn" ng-click="edit(item)"><i class="icon-wrench"></i></li>
+	<li class="btn add" ng-click="addChild(item)"><i class="icon-plus"></i></li>
+	<li class="btn remove" ng-click="remove(item)"><i class="icon-remove"></i></li>	
+	<li class="btn edit" ng-click="edit(item)"><i class="icon-wrench"></i></li>
 </nav>

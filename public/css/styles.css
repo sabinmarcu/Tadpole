@@ -38,7 +38,6 @@ body:not(.landing) aside> nav li:first-child {
   border-left: none;
 }
 body:not(.landing) aside> nav li:last-child {
-  width: 82.33333333333333px;
   border-right: none;
 }
 body:not(.landing) aside> nav li i {

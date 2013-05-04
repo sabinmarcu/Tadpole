@@ -53,6 +53,7 @@ class OPMLManager extends IS.Object
 		<opml version='1.0'>
 			<head>
 				<title>New OPML</title>
+				<expansionState>0</expansionState>
 			</head>
 			<body>
 				<outline text=\"Parent Node\">

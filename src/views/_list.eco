@@ -15,7 +15,7 @@
 	</li>
 </section>
 <footer>
-	<nav class="btn-group">
+	<nav class="btn-group" data-intro="These are pretty self-explanitory. Let's create a document for shows :)" data-step="10" data-position="top">
 		<li ng-click="new()" class="btn">
 			<i class='icon-plus'><p>Add</p></i>
 		</li>

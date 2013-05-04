@@ -38,18 +38,23 @@ angular.module("Arrow").controller "NGAsideController", ($scope, $rootScope) ->
 	storage.getItem "lastpanel", (sets) ->
 		$scope.asidetab = (whom = null, step = 1) ->
 			if not whom?
-				whom = $scope.activeTab + step
+				whom = $scope.activeTab + step 
 				if whom > 2 then whom = 2
 				if whom < 0 then whom = 0
 			else whom = TABS[whom]
 			$scope.activeTab = whom; storage.setItem("lastpanel", whom)
+			$scope.safeApply()
 		animationVariants = ["topVariant", "bottomVariant"]
 		$scope.getAnim = -> animationVariants[Math.floor(Math.random() * animationVariants.length)]
 		$scope.tabIsActive = (whom) ->  TABS[whom].toString() is $scope.activeTab.toString()
 		$scope.activeTab = sets.lastpanel or TABS.LIST
-		console.log $scope.tabIsActive("LIST")
-		console.log $scope.tabIsActive("SERVER")
-		console.log $scope.tabIsActive("GENERAL")
 	storage.getItem "landing", (sets) ->
 		$scope.landingpageactive = sets.landing
-		$scope.activateLanding = -> !$scope.landingpageactive; storage.setItem("landing", $scope.landingpageactive)
+		$scope.activateLanding = -> 
+			storage.setItem("landing", $scope.landingpageactive)
+			window.location = window.location
+	Storage.get "tutorial", (tut) ->
+		$scope.tutorialactive = not tut
+		$scope.activateTutorial = -> 
+			Storage.set("tutorial", not $scope.tutorialactive)
+			window.location = window.location

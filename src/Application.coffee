@@ -9,15 +9,6 @@ class Application extends BaseObject
 	baseSetup: ->
 		window.echo = ( require "Object" ).echo
 		document.title = "Arrow Brainstorming"
-		window.storage =
-			"setItem": (key, value) ->
-				if chrome? and chrome.storage? then chrome.storage.sync.set key: value
-				else window.localStorage.setItem key, value
-			"getItem": (item, callback) ->
-				if chrome? and chrome.storage? then chrome.storage.sync.get item, callback
-				else
-					res = {}; res[item] = window.localStorage.getItem item
-					callback res
 		do ->
 			meta = document.createElement "meta"
 			meta.setAttribute "name", "viewport"
@@ -35,6 +26,7 @@ class Application extends BaseObject
 	firstTimeInclude: =>
 		window.DepMan = new ( require "helpers/DependenciesManager" )
 		window.Loading = new ( DepMan.helper "Loading" )()
+		window.Storage = new ( DepMan.helper "Storage")()
 	loadApplication: =>
 		window.Toast = (title = "Message", body...) ->
 			b = body.shift()
@@ -172,9 +164,11 @@ class Application extends BaseObject
 			document.body.appendChild d
 			@progress 90
 		@resolve true
-	finish: ->
+ 	finish: ->
 		@progress 95
 		angular.bootstrap document, ["Arrow"]
+		Storage.get "tutorial", (tut) =>
+			if not tut then (DepMan.helper "Tutorial")()
 		@progress 100
 		Loading.end()
 
