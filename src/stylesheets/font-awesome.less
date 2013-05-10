@@ -21,17 +21,16 @@
 
     */
 
-@FontAwesomePath:   "font";
 @borderColor:       #eee;
 @iconMuted:         #eee;
 .border-radius(@radius) { -webkit-border-radius: @radius; -moz-border-radius: @radius; border-radius: @radius; }
 
 @font-face {
   font-family: 'FontAwesome';
-  src: url('@{FontAwesomePath}/fontawesome-webfont.eot');
-  src: url('@{FontAwesomePath}/fontawesome-webfont.eot?#iefix') format('embedded-opentype'),
-    url('@{FontAwesomePath}/fontawesome-webfont.woff') format('woff'),
-    url('@{FontAwesomePath}/fontawesome-webfont.ttf') format('truetype');
+  src: url('<<INSERT FONTAWESOME EOT HERE>>');
+  src: url('<<INSERT FONTAWESOME EOT HERE>>?#iefix') format('embedded-opentype'),
+    url('<<INSERT FONTAWESOME WOFF HERE>>') format('woff'),
+    url('<<INSERT FONTAWESOME TTF HERE>>') format('truetype');
   font-weight: normal;
   font-style: normal;
 }

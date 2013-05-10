@@ -7,7 +7,9 @@ var parser = require("cliparser"),
 		"-p": "--port",
 		"-a": "--address",
 		"-s": "--static",
-		"-l": "--location"
+		"-l": "--location",
+		"-b": "--bundle",
+		"-v": "--verbose"
 	})["doubledash"];
 
 if (args.version) {
@@ -24,8 +26,9 @@ if (args.version) {
 		var jsLocation = location + "js/g.js",
 			cssLocation = location + "css/styles.css"
 		Compiler = require("./server/compiler");
+		Compiler.setAttribute("bundle", args.bundle);
+		Compiler.setAttribute("verbose", args.verbose);
 		Compiler.compile(jsLocation);
-		Compiler.compileStyles(cssLocation);
 		if (args.location) return;
 	}
 	if (args.static) {

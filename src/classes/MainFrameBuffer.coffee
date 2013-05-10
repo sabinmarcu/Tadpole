@@ -3,10 +3,10 @@ class MainFrameBuffer extends DepMan.classes("FrameBuffer")
 	constructor: (buffer, @model) ->
 		@offsets = x: 0, y: 0
 		@triggers = 
-			legend: true
+			legend: false
 			level: true
-			levelno: true
-			shortcuts: true
+			levelno: false
+			shortcuts: false
 		@sizes = 
 			x: 300
 			y: 50
@@ -19,9 +19,12 @@ class MainFrameBuffer extends DepMan.classes("FrameBuffer")
 		@context.font = "normal 12pt 'Open Sans'" 
 		@Controller = new (DepMan.controller "Canvas")(@)
 
+	getThemeFunction: (func, who = @, args = null) => ( DepMan.classes "themes/#{window.$rendertheme or "classic"}")[func]?.apply who, [args]
+
 	sequence: ->
 		@buffer.width = @buffer.width
-		if @triggers.legend then do @drawLegend
+		@getThemeFunction "background"
+		if @triggers.legend and (window.$rendertheme or "classic") is "classic" then do @drawLegend
 		if @triggers.shortcuts then do @drawShortcuts
 		if @triggers.level and @triggers.levelno then do @drawLevel
 		@context.drawImage @Line.context.canvas, 0, 0

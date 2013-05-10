@@ -40,7 +40,7 @@ class Application extends BaseObject
 				jQuery("#tip-message-head").html title
 				jQuery("#tip-message-body").html b
 				jQuery("#tip-message").modal("show")
-				setTimeout((-> jQuery("#tip-message").modal("hide")), 1500)
+				setTimeout((-> jQuery("#tip-message").modal("hide")), 1500)				
 		@LoadProgress = LoadProgress = new IS.Promise()
 		@LoadProgress.then(( -> Loading.start(); LoadProgress.resolve true ), null, null).then(@loadLibs, null, Loading.progress).then(@bootStrapAngular, null, Loading.progress).then(@loadLanguage, null, Loading.progress).then(@resizeHook, null, Loading.progress).then(@decideView, null, Loading.progress)
 		@LoadProgress.resolve true
@@ -84,8 +84,15 @@ class Application extends BaseObject
 		DepMan.stylesheet "bootstrap-responsive"
 		DepMan.stylesheet "font-awesome"
 		@progress 5
-		DepMan.stylesheet "ElectrolizeFont"
-		DepMan.stylesheet "OpenSansFont"
+		do ->
+			styles = $("#compiled_styles"); fwstyles = $("#css-font-awesome")
+			styles.html (styles.html().replace /\<\<INSERT\_BACKGROUND\_IMAGE\_HERE\>\>/g, require("images/background"))
+			fwstyles.html (fwstyles.html().replace /\<\<INSERT FONTAWESOME EOT HERE\>\>/g, require("fonts/eot/fontawesome-webfont"))
+			fwstyles.html (fwstyles.html().replace /\<\<INSERT FONTAWESOME TTF HERE\>\>/g, require("fonts/ttf/fontawesome-webfont"))
+			fwstyles.html (fwstyles.html().replace /\<\<INSERT FONTAWESOME WOFF HERE\>\>/g, require("fonts/woff/fontawesome-webfont"))
+			styles.html (styles.html().replace /\<\<INSERT OPEN SANS 300 WOFF HERE\>\>/g, require("fonts/woff/opensans1"))
+			styles.html (styles.html().replace /\<\<INSERT OPEN SANS 400 WOFF HERE\>\>/g, require("fonts/woff/opensans2"))
+			styles.html (styles.html().replace /\<\<INSERT ELECTROLIZE WOFF HERE\>\>/g, require("fonts/woff/opensans2"))
 		@progress 7
 		@resolve true
 	bootStrapAngular: ->

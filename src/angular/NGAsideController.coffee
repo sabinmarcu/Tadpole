@@ -7,34 +7,50 @@ angular.module("Arrow").controller "NGAsideController", ($scope, $rootScope) ->
 			if fn and (typeof(fn) is 'function')
 				do fn
 		else $scope.$apply(fn)
-	storage.getItem "lang", (sets) =>
-		$scope.language = sets.language or "en_US"
+	Storage.get "lang", (lang) =>
+		$scope.language = lang or "en_US"
 		$scope.languages = [
 			{ lang: "US English", mime: "en-US" }
 			{ lang: "Romanian", mime: "ro-RO" }
 		]
 		$scope.language = item for item in $scope.languages when $scope.language is item.mime
-	storage.getItem "theme", (sets) ->
-		$scope.theme = sets.theme or "classictheme"
+		$scope.changedLanguage = ->
+			Loading.start()
+			Loading.progress "Switching language"
+			setTimeout =>
+				LanguageHelper.switchLanguage $scope.language.mime
+				Loading.progress "Done"
+				Loading.end()
+			, 1000
+
+	Storage.get "theme", (theme) ->
+		$scope.theme = theme or "classictheme"
 		$scope.themes = [
 			{ name: "Blu Theme", mime: "bluetheme" }
 			{ name: "Red Theme", mime: "redtheme" }
 			{ name: "Classic Theme", mime: "classictheme" }
 		]
 		$scope.theme = item for item in $scope.themes when $scope.theme is item.mime
-	$scope.changedLanguage = ->
-		Loading.start()
-		Loading.progress "Switching language"
-		setTimeout =>
-			LanguageHelper.switchLanguage $scope.language.mime
-			Loading.progress "Done"
-			Loading.end()
-		, 1000
-	$scope.changedTheme = -> storage.setItem("theme", $scope.theme.mime)
+		$scope.changedTheme = -> Storage.set "theme", $scope.theme.mime
+	Storage.get "rendertheme", (rendertheme) ->
+		$scope.rendertheme = rendertheme or "classic"
+		$scope.renderthemes = [
+			{ name: "Blu Theme", mime: "blue" }
+			{ name: "Orange Theme", mime: "orange" }
+			{ name: "Classic Theme", mime: "classic" }
+		]
+		$scope.rendertheme = item for item in $scope.renderthemes when $scope.rendertheme is item.mime
+		window.$rendertheme = $scope.rendertheme.mime 
+		$scope.changedRenderTheme = -> 
+			window.$rendertheme = $scope.rendertheme.mime 
+			Storage.set "rendertheme", $scope.rendertheme.mime
+
 	storage.getItem "sidebarstatus", (sets) -> $scope.sidebarstatus = sets.sidebarstatus or "closed"
-	$scope.togglesidebar = ->
-		if $scope.sidebarstatus is "closed" then $scope.sidebarstatus = 'open' else $scope.sidebarstatus = 'closed'
+	$scope.togglesidebar = (to = null) ->
+		if to? then $scope.sidebarstatus = to
+		else if $scope.sidebarstatus is "closed" then $scope.sidebarstatus = 'open' else $scope.sidebarstatus = 'closed'
 		storage.setItem("sidebarstatus", $scope.sidebarstatus)
+		$scope.safeApply()
 	storage.getItem "lastpanel", (sets) ->
 		$scope.asidetab = (whom = null, step = 1) ->
 			if not whom?

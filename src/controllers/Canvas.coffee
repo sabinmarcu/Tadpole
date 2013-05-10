@@ -8,9 +8,15 @@ class CanvasController extends BaseObject
 			"touchend": @up
 			"touchmove": @move
 		@echo "Controller for #{@parent.model.title} enabled!"
+		@appScope = angular.element("[ng-controller='NGAsideController']").scope()
 
 	down: (e) =>
+		do e.preventDefault
 		do @parent.model.scope.cancelSidebar
+		@appScope ?= angular.element("[ng-controller='NGAsideController']").scope()
+		if @appScope.sidebarstatus is "open"
+			@appScope.togglesidebar "closed"
+			return false
 		@init = @getPos e
 		do @parent.Aux.sequence
 		@node = @parent.Aux.scan @init
@@ -33,7 +39,6 @@ class CanvasController extends BaseObject
 					@parent.model.scope.edit node
 					do @up
 			, 100
-		do e.preventDefault
 
 	move: (e) =>
 		pos = @getPos e

@@ -3,6 +3,8 @@
 	<select ng-model="language" ng-options="l.lang for l in languages" ng-change="changedLanguage()"></select>
 	<p <%= _T "Change the theme of the application" %>></p>
 	<select ng-model="theme" ng-options="t.name for t in themes" ng-change="changedTheme()"></select>
+	<p <%= _T "Change the renderer theme" %>></p>
+	<select ng-model="rendertheme" ng-options="t.name for t in renderthemes" ng-change="changedRenderTheme()"></select>
 	<p <%= _T "Change whether the next time you open the app, the landing page will be active" %>></p>
 	<label for="landingpageactive" class="checkbox"><input type="checkbox" ng-model="landingpageactive" ng-change="activateLanding()" /> Active Landing Page</label>
 	<label for="landingpageactive" class="checkbox"><input type="checkbox" ng-model="tutorialactive" ng-change="activateTutorial()" /> Active Tutorial</label>

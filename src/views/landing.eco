@@ -1,7 +1,7 @@
 <header>
 	<div class="container">
-		<article><img src="images/NoteTaking.jpg" alt="" /></article>
-		<article><img src="images/neuralNetwork.jpg" alt="" /></article>
+		<article><img src="<%- require 'images/NoteTaking' %>" alt="" /></article>
+		<article><img src="<%- require 'images/neuralNetwork' %>" alt="" /></article>
 	</div>
 	<a href="<%= window.location %>" id="startapp" class="btn">Start the App</a>
 </header>
