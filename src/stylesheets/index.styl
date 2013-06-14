@@ -1,8 +1,10 @@
-body, html
-	background white
-
 // Defining variables
 @import "variables"
+
+body, html
+	overflow hidden
+	* 
+		-webkit-overflow-scrolling touch
 
 body
 	width 100%
@@ -10,7 +12,10 @@ body
 	font-size 10pt
 	font-family "Open Sans", sans-serif
 	color #242424
-	background black
+	background-color black
+
+body.landing
+	background-color white
 
 body:not(.landing)
 	@import "fonts"

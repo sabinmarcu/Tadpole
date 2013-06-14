@@ -18,7 +18,6 @@ class StorageItem
 
 	get: (callback, parse = false) =>
 		window.storage.getItem @item, (sets) =>
-			console.log arguments, "STUFF"
 			@value = sets[@item] or null
 			@value = JSON.parse @value if parse
 			callback @value

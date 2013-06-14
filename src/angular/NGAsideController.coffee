@@ -54,7 +54,7 @@ angular.module("Arrow").controller "NGAsideController", ($scope, $rootScope) ->
 	storage.getItem "lastpanel", (sets) ->
 		$scope.asidetab = (whom = null, step = 1) ->
 			if not whom?
-				whom = $scope.activeTab + step 
+				whom = parseInt($scope.activeTab) + parseInt step 
 				if whom > 2 then whom = 2
 				if whom < 0 then whom = 0
 			else whom = TABS[whom]
@@ -64,13 +64,27 @@ angular.module("Arrow").controller "NGAsideController", ($scope, $rootScope) ->
 		$scope.getAnim = -> animationVariants[Math.floor(Math.random() * animationVariants.length)]
 		$scope.tabIsActive = (whom) ->  TABS[whom].toString() is $scope.activeTab.toString()
 		$scope.activeTab = sets.lastpanel or TABS.LIST
-	storage.getItem "landing", (sets) ->
-		$scope.landingpageactive = sets.landing
-		$scope.activateLanding = -> 
-			storage.setItem("landing", $scope.landingpageactive)
-			window.location = window.location
-	Storage.get "tutorial", (tut) ->
-		$scope.tutorialactive = not tut
-		$scope.activateTutorial = -> 
-			Storage.set("tutorial", not $scope.tutorialactive)
-			window.location = window.location
+	$scope.settings = {
+		"landing": 
+			"name": "Activate the Landing Page"
+			"action": ->
+		'tutorial': 
+			"name": "Activate the Tutorial"
+			"action": -> window.location = window.location
+		'outlinefirst': 
+			"name": "Have the outline view open first (instead of mindmap)"
+			"action": -> 
+		"exptilt": 
+			"name": "[Experimental] Canvas Tilt"
+			"action": -> 
+	}
+	$scope.settingValues ?= {}
+	for key, item of $scope.settings then do (key, item) -> 
+		$scope.settingValues[key] = Settings.reuse(key).value
+		(Settings.reuse key).refresh().then ->
+			$scope["activate#{key}"] = ->
+				(Settings.reuse key).toggle().then((promise)->
+					$scope.settingValues[key] = (Settings.reuse key).value
+					promise.resolve promise
+				).then item.action
+	do $scope.safeApply

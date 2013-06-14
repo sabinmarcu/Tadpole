@@ -6,7 +6,6 @@ aside
 	@import "list"
 
 aside
-
 	background linear-gradient(left, rgba(0, 0, 0, 0.2) 0, rgba(0, 0, 0, 0.2) 66%, rgba(0, 0, 0, 0.6) 100%) backgroundcolor
 	width asidewidth
 	position fixed
@@ -14,4 +13,10 @@ aside
 	left 0
 	top 0
 	bottom 0
+	transition all 0.5s ease-in-out
+	transform translateX(-50%)
+	opacity 0
+	&.sidebaropen
+		transform translateX(0)
+		opacity 1
 

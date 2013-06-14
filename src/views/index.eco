@@ -1,4 +1,4 @@
-<aside data-intro="This is the settings bar. Moving forward ..." data-step="2" data-position="right">
+<aside data-intro="This is the settings bar. Moving forward ..." data-step="2" data-position="right" ng-class="{open: 'sidebaropen', closed: ''}[sidebarstatus]">
 	<%- DepMan.render "layout/tabview" %>
 </aside>
 <article ng-class="{open: 'sidebaropen', closed: ''}[sidebarstatus]">

@@ -42,6 +42,6 @@ module.exports = =>
 			intro.goToStep(1).start()
 		, 500
 
-	Storage.set "tutorial", "true"
+	Storage.set "tutorial", "false"
 
 	intro.start "#showhideappmenu"

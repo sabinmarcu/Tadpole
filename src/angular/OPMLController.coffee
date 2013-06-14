@@ -2,7 +2,6 @@ angular.module("Arrow").controller "OPMLController", ($scope, $rootScope, OPML) 
 
 	$scope.safeApply = (fn) ->
 		phase = $scope.$parent.$$phase
-		console.log phase
 		if phase is '$apply' or phase is '$digest'
 			if fn and (typeof(fn) is 'function')
 				do fn
@@ -11,8 +10,10 @@ angular.module("Arrow").controller "OPMLController", ($scope, $rootScope, OPML) 
 	OPML.activateControllerFunctions.push (obj) ->
 		obj.refreshView = $scope.safeApply
 		$scope.object = obj
-		$scope.view = "outline"
-		$scope.view = "mindmap"; do $scope.object.controller.frameBuffer.start
+		Settings.reuse("outlinefirst").refresh().then ->
+			if Settings.reuse("outlinefirst").value then $scope.view = "outline"
+			else $scope.view = "mindmap"; do $scope.object.controller.frameBuffer.start
+		 do $scope.safeApply
 
 		$scope.isMobile = window.isMobile
 

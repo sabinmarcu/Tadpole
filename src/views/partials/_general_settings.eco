@@ -5,7 +5,12 @@
 	<select ng-model="theme" ng-options="t.name for t in themes" ng-change="changedTheme()"></select>
 	<p <%= _T "Change the renderer theme" %>></p>
 	<select ng-model="rendertheme" ng-options="t.name for t in renderthemes" ng-change="changedRenderTheme()"></select>
-	<p <%= _T "Change whether the next time you open the app, the landing page will be active" %>></p>
-	<label for="landingpageactive" class="checkbox"><input type="checkbox" ng-model="landingpageactive" ng-change="activateLanding()" /> Active Landing Page</label>
-	<label for="landingpageactive" class="checkbox"><input type="checkbox" ng-model="tutorialactive" ng-change="activateTutorial()" /> Active Tutorial</label>
+	<div>
+		<div ng-repeat="(key, value) in settings">
+			<label for="{{key}}active">
+				<input type="checkbox" ng-model="settingValues[key]" ng-checked="settingValues[key]" id="{{key}}active" ng-change="activate{{key}}()">
+				<div class="switch"><i ng-class="{true:'icon-ok', false:'icon-remove'}[settingValues[key]]"></i></div><span>{{value.name}}</span>
+			</label>
+		</div>
+	</div>
 </form>

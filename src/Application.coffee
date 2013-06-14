@@ -27,6 +27,8 @@ class Application extends BaseObject
 		window.DepMan = new ( require "helpers/DependenciesManager" )
 		window.Loading = new ( DepMan.helper "Loading" )()
 		window.Storage = new ( DepMan.helper "Storage")()
+		window.Settings = DepMan.helper "SettingsBook"
+		window.Settings.load ["loading", "tutorial", "exp-tilt"]
 	loadApplication: =>
 		window.Toast = (title = "Message", body...) ->
 			b = body.shift()
@@ -50,7 +52,7 @@ class Application extends BaseObject
 		storage.getItem "landing", (set) =>
 			landing = set.landing
 			if chrome? and chrome.storage? then landing = "false"
-			if not landing? then landing = true; storage.setItem("landing", false)
+			if not landing? then landing = true; storage.setItem("landing", "false")
 			landing = landing.toString()
 			@log landing, set
 			@LoadProgress.progress 31
@@ -174,8 +176,11 @@ class Application extends BaseObject
  	finish: ->
 		@progress 95
 		angular.bootstrap document, ["Arrow"]
-		Storage.get "tutorial", (tut) =>
-			if not tut then (DepMan.helper "Tutorial")()
+		Settings.reuse("tutorial").refresh().then => 
+			tut = Settings.reuse("tutorial").value
+			unless tut is false then (DepMan.helper "Tutorial")()
+		Settings.reuse("exptilt").refresh().then =>
+			if (Settings.reuse "exptilt").value is true then (DepMan.helper "TiltMechanics")() 
 		@progress 100
 		Loading.end()
 

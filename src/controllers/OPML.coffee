@@ -14,9 +14,6 @@ class OPMLController extends BaseObject
 		down = (e) => 
 			return if @model.scope.view is "mindmap" or e.button is 1
 			if @model.scope.sidebarstatus then do @model.scope.cancelSidebar
-			@timer = setTimeout =>
-				do @model.scope.toggleSidebar
-			, 400
 		up = (e) =>  clearTimeout @timer
 		@e.addEventListener "mousedown", down
 		@e.addEventListener "touchstart", down
