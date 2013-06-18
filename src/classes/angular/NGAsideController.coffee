@@ -77,6 +77,7 @@ angular.module("Arrow").controller "NGAsideController", ($scope, $rootScope) ->
 		"exptilt": 
 			"name": "[Experimental] Canvas Tilt"
 			"action": -> 
+				if not window.Tilt then (DepMan.helper "TiltMechanics")() 
 	}
 	$scope.settingValues ?= {}
 	for key, item of $scope.settings then do (key, item) -> 

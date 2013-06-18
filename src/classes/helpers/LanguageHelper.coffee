@@ -8,11 +8,12 @@ class LanguageHelper extends BaseObject
 		
 	switchLanguage: (@language) =>
 		try
-			require "languages/#{@language}"
+			DepMan.language @language
 			@_language = JSONImport["#{@language}"]
 			storage.setItem "lang", @language
 			do @_translateAll
 		catch e
+			@_language = []
 			@log "Error Encountered", e
 			
 	_translate: (text) => @_language[text] or text

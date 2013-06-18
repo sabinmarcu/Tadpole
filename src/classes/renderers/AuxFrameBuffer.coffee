@@ -1,6 +1,6 @@
 COLORS = new IS.Enum ["R", "G", "B"]
 
-class AuxFrameBuffer extends DepMan.classes("GuguFrameBuffer")
+class AuxFrameBuffer extends DepMan.renderer("GuguFrameBuffer")
 	sequence: =>
 		@linkBack = {}
 		@lastColor = [0, 0, 1]

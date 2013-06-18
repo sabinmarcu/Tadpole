@@ -48,9 +48,11 @@ article
 			box-shadow none
 			background white
 			overflow-y auto
+			opacity 0
 			&:first-child
 				transform rotateY(-180deg)
 			&.active
 				transform rotateY(0)
+				opacity 1
 				z-index 1
 				box-shadow 0 0 15px black

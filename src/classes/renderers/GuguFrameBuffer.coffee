@@ -1,4 +1,4 @@
-class GuguFrameBuffer extends DepMan.classes("FrameBuffer")
+class GuguFrameBuffer extends DepMan.renderer("FrameBuffer")
 
 	constructor: (@model, @parent) -> 
 		@currentItem = []

@@ -10,6 +10,11 @@
 				text-shadow 0 0 1px redbasecolor
 		section article
 			background-color redbackgroundcolor
+			form input[type="checkbox"]
+				& ~ *
+					background-color darken(redbasecolor, 20)
+				&:checked ~ *
+					background-color lighten(redbasecolor, 20)
 	& > article section article > nav > li:first-child
 		background redbasecolor
 &.bluetheme
@@ -24,5 +29,10 @@
 				text-shadow 0 0 25px bluebasecolor
 		section article
 			background-color bluebackgroundcolor
+			form input[type="checkbox"]
+				& ~ *
+					background-color darken(bluebasecolor, 20)
+				&:checked ~ *
+					background-color lighten(bluebasecolor, 20)
 	& > article section article > div > nav > li:first-child
 		background bluebasecolor

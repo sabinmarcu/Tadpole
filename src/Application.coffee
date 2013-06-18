@@ -1,4 +1,4 @@
-require "Object"
+require "classes/Object"
 class Application extends BaseObject
 
 	constructor: () ->
@@ -7,7 +7,7 @@ class Application extends BaseObject
 		do @loadApplication
 
 	baseSetup: ->
-		window.echo = ( require "Object" ).echo
+		window.echo = ( require "classes/Object" ).echo
 		document.title = "Arrow Brainstorming"
 		do ->
 			meta = document.createElement "meta"
@@ -24,7 +24,7 @@ class Application extends BaseObject
 			document.head.appendChild meta
 			#document.addEventListener "touchmove", ((e) -> e.preventDefault()), false
 	firstTimeInclude: =>
-		window.DepMan = new ( require "helpers/DependenciesManager" )
+		window.DepMan = new ( require "classes/helpers/DependenciesManager" )
 		window.Loading = new ( DepMan.helper "Loading" )()
 		window.Storage = new ( DepMan.helper "Storage")()
 		window.Settings = DepMan.helper "SettingsBook"
@@ -88,13 +88,13 @@ class Application extends BaseObject
 		@progress 5
 		do ->
 			styles = $("#compiled_styles"); fwstyles = $("#css-font-awesome")
-			styles.html (styles.html().replace /\<\<INSERT\_BACKGROUND\_IMAGE\_HERE\>\>/g, require("images/background"))
-			fwstyles.html (fwstyles.html().replace /\<\<INSERT FONTAWESOME EOT HERE\>\>/g, require("fonts/eot/fontawesome-webfont"))
-			fwstyles.html (fwstyles.html().replace /\<\<INSERT FONTAWESOME TTF HERE\>\>/g, require("fonts/ttf/fontawesome-webfont"))
-			fwstyles.html (fwstyles.html().replace /\<\<INSERT FONTAWESOME WOFF HERE\>\>/g, require("fonts/woff/fontawesome-webfont"))
-			styles.html (styles.html().replace /\<\<INSERT OPEN SANS 300 WOFF HERE\>\>/g, require("fonts/woff/opensans1"))
-			styles.html (styles.html().replace /\<\<INSERT OPEN SANS 400 WOFF HERE\>\>/g, require("fonts/woff/opensans2"))
-			styles.html (styles.html().replace /\<\<INSERT ELECTROLIZE WOFF HERE\>\>/g, require("fonts/woff/opensans2"))
+			styles.html (styles.html().replace /\<\<INSERT\_BACKGROUND\_IMAGE\_HERE\>\>/g, DepMan.image "background")
+			fwstyles.html (fwstyles.html().replace /\<\<INSERT FONTAWESOME EOT HERE\>\>/g, DepMan.font "eot/fontawesome-webfont")
+			fwstyles.html (fwstyles.html().replace /\<\<INSERT FONTAWESOME TTF HERE\>\>/g, DepMan.font "ttf/fontawesome-webfont")
+			fwstyles.html (fwstyles.html().replace /\<\<INSERT FONTAWESOME WOFF HERE\>\>/g, DepMan.font "woff/fontawesome-webfont")
+			styles.html (styles.html().replace /\<\<INSERT OPEN SANS 300 WOFF HERE\>\>/g, DepMan.font "woff/opensans1")
+			styles.html (styles.html().replace /\<\<INSERT OPEN SANS 400 WOFF HERE\>\>/g, DepMan.font "woff/opensans2")
+			styles.html (styles.html().replace /\<\<INSERT ELECTROLIZE WOFF HERE\>\>/g, DepMan.font "woff/electrolize")
 		@progress 7
 		@resolve true
 	bootStrapAngular: ->

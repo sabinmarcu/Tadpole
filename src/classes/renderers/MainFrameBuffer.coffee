@@ -1,4 +1,4 @@
-class MainFrameBuffer extends DepMan.classes("FrameBuffer")
+class MainFrameBuffer extends DepMan.renderer("FrameBuffer")
 
 	constructor: (buffer, @model) ->
 		@offsets = x: 0, y: 0
@@ -12,14 +12,14 @@ class MainFrameBuffer extends DepMan.classes("FrameBuffer")
 			y: 50
 		@level = 0
 		@buttons = null
-		@renderers = [new (DepMan.classes "GuguFrameBuffer")(@model, @), new (DepMan.classes "AuxFrameBuffer")(@model, @), new (DepMan.classes "LinesFrameBuffer")(@model, @)]
+		@renderers = [new (DepMan.renderer "GuguFrameBuffer")(@model, @), new (DepMan.renderer "AuxFrameBuffer")(@model, @), new (DepMan.renderer "LinesFrameBuffer")(@model, @)]
 		@Gugu = @renderers[0]; @Line = @renderers[2]; @Aux = @renderers[1]
 		super buffer
 		@context.textBaseline = "middle" 
 		@context.font = "normal 12pt 'Open Sans'" 
 		@Controller = new (DepMan.controller "Canvas")(@)
 
-	getThemeFunction: (func, who = @, args = null) => ( DepMan.classes "themes/#{window.$rendertheme or "classic"}")[func]?.apply who, [args]
+	getThemeFunction: (func, who = @, args = null) => ( DepMan.renderer "themes/#{window.$rendertheme or "classic"}")[func]?.apply who, [args]
 
 	sequence: ->
 		@buffer.width = @buffer.width

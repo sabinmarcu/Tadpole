@@ -1,4 +1,4 @@
-class LinesFrameBuffer extends DepMan.classes("FrameBuffer")
+class LinesFrameBuffer extends DepMan.renderer("FrameBuffer")
 	constructor: (@model, @parent) -> 
 		@currentItem = [];
 		super()

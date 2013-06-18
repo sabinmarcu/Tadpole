@@ -17,7 +17,8 @@
     "codo": "*",
     "stitchw": "*",
     "pc2cs": "*",
-    "eco": "~1.1.0-rc-3"
+    "eco": "~1.1.0-rc-3",
+    "mime": "~1.2.9"
   },
   "devDependencies": {
     "jasmine-node": "*"

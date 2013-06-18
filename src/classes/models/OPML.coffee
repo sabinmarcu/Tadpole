@@ -29,7 +29,6 @@ class OPML extends BaseObject
 		@structure = (DepMan.model "Outline").generate xml
 		do @regenIndices
 		@locationService = new (DepMan.helper "Locations")(@)
-		console.log @structure
 		@controller = new (DepMan.controller "OPML")( @ )
 
 	regenIndices: =>

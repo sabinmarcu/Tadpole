@@ -40,12 +40,12 @@ class FrameBuffer extends BaseObject
 
 	_hookSizeModif: =>
 		window.addEventListener "resize", @_sizeModif
-		do @_sizeModif
+		@_sizeModif true
 
-	_sizeModif: =>
+	_sizeModif: (bypass = false) =>
 		@buffer.width = window.innerWidth
 		@buffer.height = window.innerHeight
-		do @sequence
+		do @sequence if not bypass
 
 	start: => @_start?(); @running = true; do @tick 
 	end: => @running = false
@@ -55,7 +55,7 @@ class FrameBuffer extends BaseObject
 		if @running then requestAnimFrame(@tick) 
 		else 
 			@_end?()
-	sequence: => console.log "Tick width: #{@buffer.width}, height: #{@buffer.height}"
+	sequence: => console.log "Tick width: #{@buffer.width}, height: #{@buffer.height}"; debugger
 
 	getX: (from) => ( from.x or 0 ) + ( @parent.offsets?.x or 0 )
 	getY: (from) => ( from.y or 0 ) + ( @parent.offsets?.y or 0 )

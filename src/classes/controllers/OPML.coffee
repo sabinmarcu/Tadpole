@@ -28,7 +28,7 @@ class OPMLController extends BaseObject
 		angular.bootstrap @e, ["Arrow"]
 		@je = $(@e)
 		@canvas = @je.find("canvas")[0]
-		@frameBuffer = new (DepMan.classes "MainFrameBuffer")(@canvas, @model)
+		@frameBuffer = new (DepMan.renderer "MainFrameBuffer")(@canvas, @model)
 		@log @
 
 	activate: =>

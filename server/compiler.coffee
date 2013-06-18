@@ -3,7 +3,7 @@ require "isf"
 stitch = require "stitchw"
 stylus = require "stylus"
 nib    = require "nib"
-base   = (require "path").resolve "@{__dirname}/../src/stylesheets"
+base   = (require "path").resolve "@{__dirname}/../src/data/stylesheets"
 pack   = stitch.createPackage
 	"dependencies": ["./node_modules/isf/lib/isf.min.js", "./node_modules/pc2cs/src/ClientClient.coffee"]
 	"paths": ["./src"]
