@@ -38,6 +38,7 @@ angular.module("Arrow").controller "NGAsideController", ($scope, $rootScope) ->
 			{ name: "Blu Theme", mime: "blue" }
 			{ name: "Orange Theme", mime: "orange" }
 			{ name: "Classic Theme", mime: "classic" }
+			{ name: "[EXPERIMENTAL] Classic with rounded lines", mime: "classicround"}
 		]
 		$scope.rendertheme = item for item in $scope.renderthemes when $scope.rendertheme is item.mime
 		window.$rendertheme = $scope.rendertheme.mime 

@@ -1,6 +1,6 @@
 {
-  "name": "Arrow",
-  "version": "0.2.1",
+  "name": "Arrow Brainstorming",
+  "version": "0.3.0",
   "author": {
     "name": "Sabin Marcu",
     "email": "sabinmarcu@gmail.com"
@@ -10,7 +10,6 @@
     "cliparser": "*",
     "express": "*",
     "less": "*",
-    "jade": "*",
     "stylus": "*",
     "nib": "*",
     "isf": "*",
@@ -19,9 +18,6 @@
     "pc2cs": "*",
     "eco": "~1.1.0-rc-3",
     "mime": "~1.2.9"
-  },
-  "devDependencies": {
-    "jasmine-node": "*"
   },
   "scripts": {
     "create-dir-structure": "mkdir lib src spec bin",
