@@ -7,8 +7,9 @@ class Application extends BaseObject
 		do @loadApplication
 
 	baseSetup: ->
+		AppInfo.displayname ?= AppInfo.name
 		window.echo = ( require "classes/Object" ).echo
-		document.title = "Arrow Brainstorming"
+		document.title = AppInfo.displayname
 		do ->
 			meta = document.createElement "meta"
 			meta.setAttribute "name", "viewport"
@@ -66,7 +67,7 @@ class Application extends BaseObject
 		f.parentNode.removeChild f
 		@progress 50
 		jQuery("body").addClass("landing")
-		document.body.innerHTML = DepMan.render "landing", title: "Arrow", copyright: "&copy; Sabin Marcu 2013"
+		document.body.innerHTML = DepMan.render "landing", title: AppInfo.displayname, copyright: "&copy; Sabin Marcu 2013"
 		@progress 60
 		setTimeout =>
 			@progress 65

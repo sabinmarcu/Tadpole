@@ -24,11 +24,12 @@ angular.module("Arrow").controller "NGAsideController", ($scope, $rootScope) ->
 			, 1000
 
 	Storage.get "theme", (theme) ->
-		$scope.theme = theme or "classictheme"
+		$scope.theme = theme or "newtheme"
 		$scope.themes = [
 			{ name: "Blu Theme", mime: "bluetheme" }
 			{ name: "Red Theme", mime: "redtheme" }
 			{ name: "Classic Theme", mime: "classictheme" }
+			{ name: "New Theme", mime: "newtheme" }
 		]
 		$scope.theme = item for item in $scope.themes when $scope.theme is item.mime
 		$scope.changedTheme = -> Storage.set "theme", $scope.theme.mime
@@ -90,3 +91,8 @@ angular.module("Arrow").controller "NGAsideController", ($scope, $rootScope) ->
 					promise.resolve promise
 				).then item.action
 	do $scope.safeApply
+	$scope.startApp = ->
+		landing = Settings.reuse("landing")
+		landing.modify(false).then(landing.save).then(()->
+			window.location = window.location	
+		)

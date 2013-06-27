@@ -1,22 +1,3 @@
-&.redtheme
-	#loadingscreen
-		color redbasecolor
-	aside
-		background-color redbackgroundcolor
-		nav li
-			span
-				text-shadow 0 0 1px redbasecolor
-			&:hover i
-				text-shadow 0 0 1px redbasecolor
-		section article
-			background-color redbackgroundcolor
-			form input[type="checkbox"]
-				& ~ *
-					background-color darken(redbasecolor, 20)
-				&:checked ~ *
-					background-color lighten(redbasecolor, 20)
-	& > article section article > nav > li:first-child
-		background redbasecolor
 &.bluetheme
 	#loadingscreen
 		color bluebasecolor

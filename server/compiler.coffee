@@ -10,6 +10,10 @@ json     = require path.resolve "@{__dirname}/../package.json"
 pack     = stitch.createPackage
 	"dependencies": ["./node_modules/isf/lib/isf.min.js", "./node_modules/pc2cs/src/ClientClient.coffee"]
 	"paths": ["./src"]
+packjson = fs.readFileSync path.resolve "@{__dirname}/../package.json"
+packjson = """
+window.AppInfo = #{packjson};
+"""
 
 
 # The Compiler Bootstrap
@@ -29,7 +33,7 @@ class Compiler
 
 	@talk: (args...) -> if @options["verbose"] then @log.apply @, args
 
-	@sources: []
+	@sources: [packjson]
 	@options: {}
 
 	# Compile the application to its designated location.
