@@ -23,7 +23,6 @@ class Application extends BaseObject
 			meta.setAttribute "name", "apple-mobile-web-app-capable"
 			meta.setAttribute "content", "yes"
 			document.head.appendChild meta
-			#document.addEventListener "touchmove", ((e) -> e.preventDefault()), false
 	firstTimeInclude: =>
 		window.DepMan = new ( require "classes/helpers/DependenciesManager" )
 		window.Loading = new ( DepMan.helper "Loading" )()
@@ -57,8 +56,8 @@ class Application extends BaseObject
 			landing = landing.toString()
 			@log landing, set
 			@LoadProgress.progress 31
-			if landing isnt "false" then @LoadProgress.then(@renderLandingPage, null, Loading.progress).then(@hookLandingPageStuff, null, Loading.progress).then((-> Loading.end()), null, null)
-			else @LoadProgress.then(@dataTransferBootstrap, null, Loading.progress).then(@renderBaseline, null, Loading.progress).then(@dragAndDropHooks, null, Loading.progress).then(@mobileHooks, null, Loading.progress).then(@opmlBootstrap, null, Loading.progress).then(@extras, null, Loading.progress).then(@finish, null, null)
+			if landing isnt "false" then @LoadProgress.then(@renderLandingPage, null, Loading.progress).then(@hookLandingPageStuff, null, Loading.progress).then(@finish, null, Loading.progress).then((-> Loading.end()), null, null)
+			else @LoadProgress.then(@dataTransferBootstrap, null, Loading.progress).then(@renderBaseline, null, Loading.progress).then(@dragAndDropHooks, null, Loading.progress).then(@mobileHooks, null, Loading.progress).then(@opmlBootstrap, null, Loading.progress).then(@extras, null, Loading.progress).then(@finish, null, Loading.progress).then(@lastMinute, null, null)
 			@LoadProgress.resolve true
 
 	renderLandingPage: ->
@@ -66,15 +65,20 @@ class Application extends BaseObject
 		@progress 45
 		f.parentNode.removeChild f
 		@progress 50
+		DepMan.angular "Landing"
 		jQuery("body").addClass("landing")
-		document.body.innerHTML = DepMan.render "landing", title: AppInfo.displayname, copyright: "&copy; Sabin Marcu 2013"
+		jQuery("body").attr("ng-controller", "Landing")
+		window.StateNames = ["Closed", "Open", "Inactive", "Active"]
+		window.States = new IS.Enum(window.StateNames)
+		document.body.innerHTML = DepMan.render "landing", STATES: window.States, STATE_NAMES: window.StateNames
 		@progress 60
-		setTimeout =>
-			@progress 65
-			@resolve true
-		, 1000
+		@resolve true
+
 	hookLandingPageStuff: ->
-		jQuery("#startapp").click -> storage.setItem "landing", false
+		angular.bootstrap document, ["Arrow"]
+		setTimeout =>
+			@resolve true
+		, 50
 
 	# FULL APP
 	loadLibs: ->
@@ -96,6 +100,8 @@ class Application extends BaseObject
 			styles.html (styles.html().replace /\<\<INSERT OPEN SANS 300 WOFF HERE\>\>/g, DepMan.font "woff/opensans1")
 			styles.html (styles.html().replace /\<\<INSERT OPEN SANS 400 WOFF HERE\>\>/g, DepMan.font "woff/opensans2")
 			styles.html (styles.html().replace /\<\<INSERT ELECTROLIZE WOFF HERE\>\>/g, DepMan.font "woff/electrolize")
+			styles.html (styles.html().replace /\<\<INSERT ROBOTO 100 WOFF HERE\>\>/g, DepMan.font "woff/roboto100")
+			styles.html (styles.html().replace /\<\<INSERT ROBOTO 400 WOFF HERE\>\>/g, DepMan.font "woff/roboto400")
 		@progress 7
 		@resolve true
 	bootStrapAngular: ->
@@ -123,7 +129,6 @@ class Application extends BaseObject
 		@progress 30
 		@resolve true
 	renderBaseline: ->
-		DepMan.angular "NGAsideController"
 		f = jQuery("body > div")[0]
 		@progress 32
 		f.parentNode.removeChild f
@@ -176,7 +181,10 @@ class Application extends BaseObject
 		@resolve true
  	finish: ->
 		@progress 95
+		console.log "Finished"
 		angular.bootstrap document, ["Arrow"]
+		@resolve true
+	lastMinute: ->
 		Settings.reuse("tutorial").refresh().then => 
 			tut = Settings.reuse("tutorial").value
 			unless tut is false then (DepMan.helper "Tutorial")()

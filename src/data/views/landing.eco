@@ -1,46 +1,23 @@
-<section ng-class="sectionopen">
-	<article>
-		<a href="" onclick="var landing=Settings.reuse('landing'); landing.modify(false).then(landing.save); window.location = window.location">
-			<p>||</p>
-			<p><span>ONE<small>MIND</small></span></p>
-			<p>|</p>
-		</a>
+<section ng-class="{<% for state, index in @STATE_NAMES: %><%= @STATES[state] %>: '<%= state %>'<%= if index < @STATE_NAMES.length - 1 then ", " %><% end %>}[state]">
+	<section>
+		<h1 <%= _T "Main Content With Description And Stuff" %>></h1>
+	</section>
+	<nav>
+		<h1 <%= _T "To use this application, you have the following options: " %>></h1>
+		<ul>
+			<li <%= _T "Use the app in this browser "%>></li>
+			<li <%= _T "Install the app in Chrome " %>></li>
+			<li <%= _T "Install the app in Firefox" %>></li>
+			<li <%= _T "Install the Metro version" %>></li>
+			<li <%= _T "Install the app as a webapp in Safari Mobile" %>></li>
+			<li <%= _T "Install the app in Opera New (Beta)" %>></li>
+		</ul>
+	</nav>
+	<aside ng-style="getAsideStyle('top')"></aside>
+	<aside ng-style="getAsideStyle('bottom')"></aside>
+	<article ng-click="stateChange(<%= @STATES.Open %>)">
+		<p>||</p>
+		<p><span>ONE<small>MIND</small></span></p>
+		<p>|</p>
 	</article>
-	<header>
-		<article>
-			<h1 <%= _T "Install the application" %>></h1>
-			<p <%= _T "There are a number of environments that support the application to be installed. All of these environments are supplied by one browser or rendering agent (Chrome, iOS Safari, Firefox, Opera, Microsoft IE, etc)" %>></p>
-			<ul>
-				<li class="chrome">Install in ChromeOS / Chrome</li>
-				<li class="firefox">Install in FirefoxOS / Firefox Desktop / Firefox Android</li>
-				<li class="ie">Install in Microsoft Windows 8 / Internet Explorer 10+</li>
-				<li class="opera">Install in Opera Next</li>
-			</ul>
-		</article>
-	</header>
-	<footer>
-		<article>
-			<h1>The <strong>Open Mind</strong> Brainstorming Application</h1>
-			<h4 ng-hide="">Click this text to read more</h4>
-			<p>
-							Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus nisl arcu, rutrum ac diam a, vestibulum vehicula massa. Curabitur dignissim, arcu non porta blandit, mauris augue dapibus nisi, eget bibendum ipsum felis quis felis. Donec sit amet mauris vitae nisl ullamcorper facilisis. Nam quis aliquet diam, ut varius nunc. Sed porttitor suscipit lacus vel tincidunt. Sed non lorem a mauris facilisis malesuada. Phasellus metus metus, consectetur nec varius vel, varius vel orci. Mauris semper, dui nec placerat dignissim, neque elit pellentesque justo, vitae pharetra turpis tortor eu eros. Nam porttitor nunc nec metus dignissim, ut consequat nisi ornare. Integer sit amet est ultricies, pulvinar ligula eu, scelerisque nulla. Donec mollis sodales urna, sit amet fermentum turpis porta quis. Vivamus non elit vel nunc sodales pretium at at diam. Morbi dapibus viverra suscipit. Pellentesque porta arcu justo, non adipiscing tortor adipiscing nec.
-			</p>
-
-<p>
-	Cras adipiscing, magna non pulvinar imperdiet, arcu urna tempus neque, eget ultrices turpis libero ut odio. In pulvinar nunc arcu, sit amet vestibulum lacus dapibus sed. Nunc a lectus sapien. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec sed leo quam. Mauris in mauris viverra, luctus augue a, condimentum nisi. Morbi elementum luctus rhoncus. In hac habitasse platea dictumst. Etiam sit amet pretium dui, non convallis purus. Sed varius dui sed urna pretium sollicitudin. Vestibulum fringilla turpis non imperdiet porttitor. Donec scelerisque justo ut tellus laoreet, vitae posuere risus rhoncus. Fusce tempor fringilla hendrerit. Integer sapien enim, dignissim non lectus ac, vestibulum blandit nunc. Praesent accumsan ultrices nulla at ullamcorper.
-</p>
-
-<p>
-	Suspendisse sodales augue ut nisi dignissim, ut vehicula diam eleifend. Duis sit amet tellus pulvinar, auctor urna ut, posuere arcu. Vestibulum molestie, tortor vel mollis sodales, arcu erat tincidunt orci, sed sagittis magna libero tincidunt purus. Proin ut euismod turpis, eu adipiscing eros. Donec euismod dapibus viverra. Curabitur congue mollis suscipit. Proin suscipit magna dolor, id bibendum nibh accumsan eget. Donec mauris urna, faucibus vitae odio eget, convallis lacinia lorem. Cras sem nisl, mattis id sagittis et, suscipit ut velit. Suspendisse eget dui eget mi tempor tempus. Sed ac facilisis nisl. Morbi convallis turpis at lacus placerat placerat. Aliquam erat volutpat. Fusce elementum nibh eu dapibus gravida. Suspendisse pulvinar mi nulla, nec commodo diam aliquam eu.
-</p>
-
-<p>
-	Nullam ac risus augue. Pellentesque ut lacus eget dolor iaculis placerat sed non mauris. Proin volutpat, augue pretium suscipit fringilla, lorem justo bibendum enim, sed malesuada libero dolor eget est. Nulla facilisi. Integer quis ante quis sapien viverra mattis. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Etiam fermentum aliquet purus et rutrum. Aliquam nec enim in nunc pretium laoreet. Donec viverra orci et aliquet fringilla. Ut a quam nec risus interdum imperdiet.
-</p>
-
-<p>
-	Integer id risus in metus pharetra imperdiet. Suspendisse potenti. Fusce vitae convallis nisi. Nulla sed lacus placerat, molestie nisl at, auctor augue. Cras sit amet euismod ante. Nunc pharetra neque at turpis pharetra, vitae bibendum justo faucibus. Etiam sit amet felis tellus. Maecenas id mollis justo. Pellentesque euismod tellus nec bibendum luctus. Nullam tincidunt venenatis luctus. Proin eu felis in ipsum aliquet congue at vitae libero. Integer faucibus nisl diam, quis egestas purus faucibus a.
-</p>
-		</article>
-	</footer>
 </section>
