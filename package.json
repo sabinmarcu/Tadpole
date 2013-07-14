@@ -18,7 +18,9 @@
     "stitchw": "*",
     "pc2cs": "*",
     "eco": "~1.1.0-rc-3",
-    "mime": "~1.2.9"
+    "mime": "~1.2.9",
+    "LiveScript": "~1.1.1",
+    "js-yaml": "~2.1.0"
   },
   "scripts": {
     "create-dir-structure": "mkdir lib src spec bin",

@@ -3,8 +3,6 @@
 
 body, html
 	overflow hidden
-	* 
-		-webkit-overflow-scrolling touch
 
 body
 	width 100%
@@ -12,24 +10,18 @@ body
 	font-size 10pt
 	font-family "Open Sans", sans-serif
 	color #242424
-	background-color black
+	background-color red
 
 body.landing
 	background-color white
 
 body:not(.landing)
 	@import "fonts"
-	@import "aside"
-	@import "article"
-	@import "loadingscreen"
+	//@import "aside"
+	//@import "article"
+	@import "loading"
 	@import "themes"
     @import "chromeframe"
 
 body.landing
 	@import "landing"
-
-body
-	.modal-backdrop
-		z-index 9999
-	.modal
-		z-index 99999

@@ -7,7 +7,6 @@ angular.module("Arrow").controller "Landing", ($scope, $rootScope) ->
 	$scope.States = window.States
 	$scope.safeApply = (fn) ->
 		phase = $scope.$parent.$$phase
-		console.log phase
 		if phase is '$apply' or phase is '$digest'
 			if fn and (typeof(fn) is 'function')
 				do fn
@@ -59,3 +58,5 @@ angular.module("Arrow").controller "Landing", ($scope, $rootScope) ->
 	window.addEventListener "resize", ->
 		$scope.sizes = x: window.innerWidth, y: window.innerHeight
 		do $scope.safeApply
+
+	setTimeout ( -> $scope.stateChange() ), 3000

@@ -9,7 +9,7 @@ class SettingsBook extends BaseObject
 		if promise
 			Promise = new IS.Promise(if promise instanceof IS.Promise then promise else null)
 			Promise.object = @
-		Storage?.get @_id, (value) => console.log @value, value; @value = value is "true"; if promise then Promise.resolve Promise
+		Storage?.get @_id, (value) => @value = value is "true"; if promise then Promise.resolve Promise
 		if promise then Promise
 		else @
 	save: (promise = true) =>

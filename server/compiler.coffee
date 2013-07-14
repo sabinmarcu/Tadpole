@@ -46,10 +46,15 @@ class Compiler
 				"""
 				@sources.push """
 					// Writing Copyright Information to HTML
+					var done = false;
 					\nwindow.addEventListener('load', (function(){
-						x = document.createComment("#{critem.replace /\n/g, "\\n"}");
-						document.documentElement.insertBefore(x, document.head);
-						x = null;
+						if (!done) {
+							console.log("Written Copyright Information to HTML")
+							x = document.createComment("#{critem.replace /\n/g, "\\n"}");
+							document.documentElement.insertBefore(x, document.head);
+							x = null;
+							done = true;
+						}
 					}));
 				"""
 				@sources.push """
@@ -61,18 +66,21 @@ class Compiler
 
 					#{source}
 				"""
+				if @options["verbose"] then @sources.push "window.isDev = true;"
 				source += src for src in @sources when src.substr?
 				source += do src for src in @sources when src.apply?
-				@sources.length -= 2
+				@sources.length -= 2 + (@options.verbose)
 				added = false
 				@compileStyles(null, (styles) =>
 					source += """
 					\n\nwindow.addEventListener('load', (function(){
-						element = document.createElement('style');
-						element.innerHTML = \"#{styles.replace(/\"/g, "'").replace(/\n/g, "")}\";
-						element.id = \"compiled_styles\";
-						document.head.appendChild(element);
-						new (require(\"Application\"))();
+						window.getStylesheets = function() {
+							element = document.createElement('style');
+							element.innerHTML = \"#{styles.replace(/\"/g, "'").replace(/\n/g, "")}\";
+							element.id = \"compiled_styles\";
+							return element;
+						}
+						new (require(\"Application\"))(window.getStylesheets);
 					}))
 					"""
 					@talk "Compiled styles, now joining"

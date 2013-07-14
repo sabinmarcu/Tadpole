@@ -1,0 +1,13 @@
+<section id="loadingscreen">
+	<section></section>
+	<aside data-location='left'></aside>
+	<aside data-location='right'></aside>
+	<article>
+		<aside>
+			<p>||</p>
+			<p><span>ONE<small>MIND</small></span></p>
+			<p>|</p>
+		</aside>
+		<nav id="loadingmessage"></nav>
+	</article>
+</section>
