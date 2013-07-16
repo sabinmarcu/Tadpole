@@ -13,6 +13,7 @@ class LocalStorageDriver extends IS.Object
 	get: (item, callback) ~>
 		set <~ @get-string item
 		init = set[item]
+		return callback null unless init
 		if ( init.substr 0, 2 ) is \#> then @get-object init, callback
 		else callback init		
 	get-object: (item, callback) ->

@@ -1,8 +1,10 @@
-<aside data-intro="This is the settings bar. Moving forward ..." data-step="2" data-position="right" ng-class="{open: 'sidebaropen', closed: ''}[sidebarstatus]">
-	<%- DepMan.render "layout/tabview" %>
-</aside>
-<article ng-class="{open: 'sidebaropen', closed: ''}[sidebarstatus]">
-	<%- DepMan.render "layout/asidebutton" %>
-	<section></section>
-</article>
-<%- DepMan.render "partials/message" %>
+<section id="help">
+	<%- DepMan.render ["pages", "help"] %>
+</section>
+<section id="landing">
+	<%- DepMan.render [ "pages", "landing" ] %>
+</section>
+<section id="application">
+	<div class="dragger landing" ng-click="runtime.set('app-state', <%= @States['landing'] %>)" <%= _T "Landing" %>></div>
+	<div class="dragger help" ng-click="runtime.set('app-state', <%= @States['help'] %>)" <%= _T "Help" %>></div>
+</section>

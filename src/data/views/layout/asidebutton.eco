@@ -1,1 +1,0 @@
-<div id="showhideappmenu" ng-click="togglesidebar()" data-intro="Press this button to open the options menu" data-position="right" data-step="1"><i ng-class="{open: 'icon-chevron-left', closed: 'icon-chevron-right'}[sidebarstatus]"></i></div>

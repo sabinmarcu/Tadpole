@@ -3,11 +3,9 @@
 	<aside data-location='left'></aside>
 	<aside data-location='right'></aside>
 	<article>
-		<aside>
-			<p>||</p>
-			<p><span>ONE<small>MIND</small></span></p>
-			<p>|</p>
-		</aside>
-		<nav id="loadingmessage"></nav>
+		<div><p>Revelati</p></div>
+		<span></span>
+		<div><p>n</p></div>
+		<p><span id="loadingmessage"></span></p>
 	</article>
 </section>
