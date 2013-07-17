@@ -13,6 +13,9 @@ TESTS =
 		
 	"localstorage": -> chrome?.storage? or window.localStorage? # Only two things to check here : normal API and Chrome local Storage
 
+	"chrome.storage": -> chrome? and chrome.storage?
+	"webkitNotifications": -> webkitNotifications
+
 # A list of functions that normalize some stuff relating to databases and stuff
 NORMIALIZES =
 	"indexeddb": -> unless window.indexedDB

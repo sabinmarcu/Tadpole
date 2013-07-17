@@ -7,7 +7,7 @@ class Runtime extends IS.Object
 			@props[prop] = switch type
 			| \array => []
 			| \object => {}
-			| \number => 0
+			| \number, \boolean => 0
 			| otherwise => ""
 		@publish "prop-#{prop}-init"
 		@log "Prop #prop initialized! [prop-#{prop}-init emitted]"
@@ -15,5 +15,5 @@ class Runtime extends IS.Object
 	@include IS.Modules.Observer
 
 runtime = new Runtime()
-angular.module "Revelation" .value "Runtime", runtime
+angular.module AppInfo.displayname .value "Runtime", runtime
 module.exports = runtime

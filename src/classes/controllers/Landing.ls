@@ -26,5 +26,5 @@ class LandingController extends IS.Object
 		@scope <<< @
 
 Controller = new LandingController()
-angular.module "Revelation" .controller "Landing", ["$scope", "Runtime", Controller.init]
+angular.module AppInfo.displayname .controller "Landing", ["$scope", "Runtime", Controller.init]
 module.exports = Controller

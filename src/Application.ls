@@ -17,11 +17,15 @@ class Application extends IS.Object
 			document.head.appendChild meta
 			meta = document.createElement "link"
 			meta.setAttribute "rel", "apple-touch-icon"
-			meta.setAttribute "href", "arrow.png"
+			meta.setAttribute "href", "icon.ico"
 			document.head.appendChild meta
 			meta = document.createElement "meta"
 			meta.setAttribute "name", "apple-mobile-web-app-capable"
 			meta.setAttribute "content", "yes"
+			document.head.appendChild meta
+			meta = document.createElement \link
+			meta.set-attribute \rel, \icon
+			meta.set-attribute \href, \icon.ico
 			document.head.appendChild meta
 	loadLibs: ->
 		DepMan.lib "prelude"
@@ -35,19 +39,6 @@ class Application extends IS.Object
 		window.Tester = new ( DepMan.helper "Tester")()
 		window.Storage = new ( DepMan.helper "Storage")()
 		window.Settings = DepMan.helper "SettingsBook"
-		window.Toast = (title = "Message", ...body) ->
-			b = body.shift()
-			if webkitNotifications? and chrome.storage?
-				for item in body then b += "\n#{item}" 
-				notif = webkitNotifications.createNotification '/arrow_up_1.png', title, b
-				notif.show()
-			else
-				b = "<p>#{b}</p>"
-				for item in body then b += "<p>#{item}</p>"
-				jQuery("#tip-message-head").html title
-				jQuery("#tip-message-body").html b
-				jQuery("#tip-message").modal("show")
-				setTimeout((-> jQuery("#tip-message").modal("hide")), 1500)				
 	fixStylesheets: ~>
 		styles = window.getStylesheets!; fwstyles = $('#css-font-awesome')
 		styles.innerHTML = styles.innerHTML.replace /\<\<INSERT OPEN SANS 300 WOFF HERE\>\>/g, DepMan.font "woff/opensans1"
@@ -61,13 +52,15 @@ class Application extends IS.Object
 		fwstyles.html (fwstyles.html().replace /\<\<INSERT FONTAWESOME WOFF HERE\>\>/g, DepMan.font "woff/fontawesome-webfont")
 	loadApplication: ~>
 		window.Loading = new ( DepMan.helper "Loading" )()
-		angular.module "Revelation", []
+		angular.module AppInfo.displayname, []
 		DepMan.helper "Runtime"
 		DepMan.helper "Language"
+		[ window.Notification, window.Toast ] = DepMan.helper "Notification"
+		DepMan.controller "Modals"
 		DepMan.controller "Page"
 		DepMan.controller "Landing"
 		DepMan.controller "Help"
-		angular.bootstrap document.body, ["Revelation"]
+		angular.bootstrap document.body, [AppInfo.displayname]
 
 module.exports = Application
 

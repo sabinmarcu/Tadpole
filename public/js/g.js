@@ -186,7 +186,7 @@
 	}
 	return this.require.define;
 }).call(this)({"Application": function(exports, require, module) {(function(){
-  var Application, slice$ = [].slice;
+  var Application;
   Application = (function(superclass){
     var prototype = extend$((import$(Application, superclass).displayName = 'Application', Application), superclass).prototype, constructor = Application;
     function Application(){
@@ -213,11 +213,15 @@
         document.head.appendChild(meta);
         meta = document.createElement("link");
         meta.setAttribute("rel", "apple-touch-icon");
-        meta.setAttribute("href", "arrow.png");
+        meta.setAttribute("href", "icon.ico");
         document.head.appendChild(meta);
         meta = document.createElement("meta");
         meta.setAttribute("name", "apple-mobile-web-app-capable");
         meta.setAttribute("content", "yes");
+        document.head.appendChild(meta);
+        meta = document.createElement('link');
+        meta.setAttribute('rel', 'icon');
+        meta.setAttribute('href', 'icon.ico');
         return document.head.appendChild(meta);
       }();
     };
@@ -233,33 +237,7 @@
       window.DepMan = new (require("classes/helpers/DependenciesManager"));
       window.Tester = new (DepMan.helper("Tester"))();
       window.Storage = new (DepMan.helper("Storage"))();
-      window.Settings = DepMan.helper("SettingsBook");
-      return window.Toast = function(title){
-        var body, b, i$, len$, item, notif;
-        title == null && (title = "Message");
-        body = slice$.call(arguments, 1);
-        b = body.shift();
-        if ((typeof webkitNotifications != 'undefined' && webkitNotifications !== null) && chrome.storage != null) {
-          for (i$ = 0, len$ = body.length; i$ < len$; ++i$) {
-            item = body[i$];
-            b += "\n" + item;
-          }
-          notif = webkitNotifications.createNotification('/arrow_up_1.png', title, b);
-          return notif.show();
-        } else {
-          b = "<p>" + b + "</p>";
-          for (i$ = 0, len$ = body.length; i$ < len$; ++i$) {
-            item = body[i$];
-            b += "<p>" + item + "</p>";
-          }
-          jQuery(tipMessageHead + "").html(title);
-          jQuery(tipMessageBody + "").html(b);
-          jQuery(tipMessage + "").modal("show");
-          return setTimeout(function(){
-            return jQuery(tipMessage + "").modal("hide");
-          }, 1500);
-        }
-      };
+      return window.Settings = DepMan.helper("SettingsBook");
     };
     prototype.fixStylesheets = function(){
       var styles, fwstyles;
@@ -276,14 +254,17 @@
       return fwstyles.html(fwstyles.html().replace(/\<\<INSERT FONTAWESOME WOFF HERE\>\>/g, DepMan.font("woff/fontawesome-webfont")));
     };
     prototype.loadApplication = function(){
+      var ref$;
       window.Loading = new (DepMan.helper("Loading"))();
-      angular.module("Revelation", []);
+      angular.module(AppInfo.displayname, []);
       DepMan.helper("Runtime");
       DepMan.helper("Language");
+      ref$ = DepMan.helper("Notification"), window.Notification = ref$[0], window.Toast = ref$[1];
+      DepMan.controller("Modals");
       DepMan.controller("Page");
       DepMan.controller("Landing");
       DepMan.controller("Help");
-      return angular.bootstrap(document.body, ["Revelation"]);
+      return angular.bootstrap(document.body, [AppInfo.displayname]);
     };
     return Application;
   }(IS.Object));
@@ -428,7 +409,7 @@
     return HelpController;
   }(IS.Object));
   Controller = new HelpController();
-  angular.module("Revelation").controller("Help", ["$scope", "Runtime", Controller.init]);
+  angular.module(AppInfo.displayname).controller("Help", ["$scope", "Runtime", Controller.init]);
   module.exports = Controller;
   function bind$(obj, key, target){
     return function(){ return (target || obj)[key].apply(obj, arguments) };
@@ -496,7 +477,129 @@
     return LandingController;
   }(IS.Object));
   Controller = new LandingController();
-  angular.module("Revelation").controller("Landing", ["$scope", "Runtime", Controller.init]);
+  angular.module(AppInfo.displayname).controller("Landing", ["$scope", "Runtime", Controller.init]);
+  module.exports = Controller;
+  function bind$(obj, key, target){
+    return function(){ return (target || obj)[key].apply(obj, arguments) };
+  }
+  function extend$(sub, sup){
+    function fun(){} fun.prototype = (sub.superclass = sup).prototype;
+    (sub.prototype = new fun).constructor = sub;
+    if (typeof sup.extended == 'function') sup.extended(sub);
+    return sub;
+  }
+  function import$(obj, src){
+    var own = {}.hasOwnProperty;
+    for (var key in src) if (own.call(src, key)) obj[key] = src[key];
+    return obj;
+  }
+}).call(this);
+}, "classes/controllers/Modals": function(exports, require, module) {(function(){
+  var STATES, States, ModalController, Controller;
+  STATES = ['closed', 'normal', 'fullscreen'];
+  States = new IS.Enum(STATES);
+  ModalController = (function(superclass){
+    var prototype = extend$((import$(ModalController, superclass).displayName = 'ModalController', ModalController), superclass).prototype, constructor = ModalController;
+    function ModalController(){
+      var this$ = this instanceof ctor$ ? this : new ctor$;
+      this$.set = bind$(this$, 'set', prototype);
+      this$.hide = bind$(this$, 'hide', prototype);
+      this$.show = bind$(this$, 'show', prototype);
+      this$.toggle = bind$(this$, 'toggle', prototype);
+      this$.initRuntime = bind$(this$, 'initRuntime', prototype);
+      this$.configScope = bind$(this$, 'configScope', prototype);
+      this$.init = bind$(this$, 'init', prototype);
+      this$.setAttributes = bind$(this$, 'setAttributes', prototype);
+      this$.renderModal = bind$(this$, 'renderModal', prototype);
+      this$.setAttributes();
+      this$.renderModal();
+      return this$;
+    } function ctor$(){} ctor$.prototype = prototype;
+    prototype.renderModal = function(){
+      var div;
+      div = document.createElement('div');
+      div.innerHTML = DepMan.render("modal", {
+        States: States,
+        STATES: STATES
+      });
+      div.setAttribute('rel', "Modal Container");
+      div.setAttribute('id', 'modal-container');
+      return document.body.appendChild(div);
+    };
+    prototype.setAttributes = function(){
+      this.title = "Modal Window";
+      return this.content = "Test Content";
+    };
+    prototype.init = function(scope, runtime){
+      this.scope = scope;
+      this.runtime = runtime;
+      this.configScope();
+      return this.initRuntime();
+    };
+    prototype.configScope = function(){
+      var this$ = this;
+      this.safeApply = function(fn){
+        var phase;
+        phase = this$.scope.$parent.$$phase;
+        if (phase === "$apply" || phase === "$digest") {
+          if (fn && typeof fn === 'function') {
+            return fn();
+          }
+        } else {
+          return this$.scope.$apply(fn);
+        }
+      };
+      return import$(this.scope, this);
+    };
+    prototype.initRuntime = function(){
+      return this.runtime.init('modal-state', 'number');
+    };
+    prototype.toggle = function(){
+      if (this.runtime.get('modal-state') === States.normal) {
+        this.runtime.set('modal-state', States.fullscreen);
+      } else {
+        this.runtime.set('modal-state', States.normal);
+      }
+      return this.log(this.runtime.get('modal-state'));
+    };
+    prototype.show = function(data, timeout){
+      data == null && (data = {
+        title: "No Title",
+        content: "No Content"
+      });
+      this.scope.title = data.title || this.scope.title;
+      this.scope.content = data.content || this.scope.content;
+      this.runtime.set('modal-state', States.normal);
+      if (timeout) {
+        setTimeout(this.hide, timeout);
+      }
+      return this.safeApply();
+    };
+    prototype.hide = function(){
+      this.runtime.set('modal-state', States.closed);
+      return this.safeApply();
+    };
+    prototype.set = function(key, value){
+      if (key == 'title' || key == 'content') {
+        this[key] = value;
+        return this.safeApply();
+      }
+    };
+    return ModalController;
+  }(IS.Object));
+  Controller = new ModalController();
+  angular.module(AppInfo.displayname).controller("Modal", ["$scope", "Runtime", Controller.init]);
+  window.Modal = {
+    set: function(){
+      return Controller.edit.apply(Controller, arguments);
+    },
+    show: function(){
+      return Controller.show.apply(Controller, arguments);
+    },
+    hide: function(){
+      return Controller.hide.apply(Controller, arguments);
+    }
+  };
   module.exports = Controller;
   function bind$(obj, key, target){
     return function(){ return (target || obj)[key].apply(obj, arguments) };
@@ -514,13 +617,16 @@
   }
 }).call(this);
 }, "classes/controllers/Page": function(exports, require, module) {(function(){
-  var STATES, States, PageController, Controller;
+  var STATES, States, MODALS, Modals, PageController, Controller;
   STATES = ['landing', 'application', 'help'];
   States = new IS.Enum(STATES);
+  MODALS = ['modal-inactive', 'modal-active', 'modal-active'];
+  Modals = new IS.Enum(MODALS);
   PageController = (function(superclass){
     var prototype = extend$((import$(PageController, superclass).displayName = 'PageController', PageController), superclass).prototype, constructor = PageController;
     function PageController(){
       var this$ = this instanceof ctor$ ? this : new ctor$;
+      this$.computeClass = bind$(this$, 'computeClass', prototype);
       this$.getBodyState = bind$(this$, 'getBodyState', prototype);
       this$.getStored = bind$(this$, 'getStored', prototype);
       this$.initRuntime = bind$(this$, 'initRuntime', prototype);
@@ -548,21 +654,14 @@
       return this;
     };
     prototype.renderIndex = function(){
-      var d, objects, i$, ref$, len$, state, objectsString, classString;
+      var d;
       d = document.createElement("div");
       d.setAttribute("id", "appwrapper");
-      objects = [];
-      for (i$ = 0, len$ = (ref$ = STATES).length; i$ < len$; ++i$) {
-        state = ref$[i$];
-        objects.push(States[state] + ": '" + state + "'");
-      }
-      objectsString = objects.join(", ");
-      classString = "{" + objectsString + "}[runtime.props['app-state']]";
-      d.setAttribute("ng-class", classString);
+      d.setAttribute("class", "{{computeClass()}}");
       d.innerHTML = DepMan.render("index", {
         States: States
       });
-      return document.body.appendChild(d);
+      return document.body.insertBefore(d, document.body.children[0]);
     };
     prototype.configScope = function(){
       var this$ = this;
@@ -608,10 +707,13 @@
     prototype.getBodyState = function(){
       return STATES[this.runtime.get("app-state")];
     };
+    prototype.computeClass = function(){
+      return [STATES[this.runtime.get('app-state')], MODALS[this.runtime.get("modal-state")]].join(" ");
+    };
     return PageController;
   }(IS.Object));
   Controller = new PageController();
-  angular.module("Revelation").controller("Page", ["$scope", "Runtime", Controller.init]);
+  angular.module(AppInfo.displayname).controller("Page", ["$scope", "Runtime", Controller.init]);
   module.exports = Controller;
   function bind$(obj, key, target){
     return function(){ return (target || obj)[key].apply(obj, arguments) };
@@ -1616,6 +1718,106 @@
   module.exports = MacroReccorder;
 
 }).call(this);
+}, "classes/helpers/Notification": function(exports, require, module) {(function(){
+  var DRIVERS, Drivers, NotificationHelper, Helper, Toast, slice$ = [].slice, join$ = [].join;
+  DRIVERS = ['webkit', 'normal'];
+  Drivers = new IS.Enum(DRIVERS);
+  NotificationHelper = (function(superclass){
+    var prototype = extend$((import$(NotificationHelper, superclass).displayName = 'NotificationHelper', NotificationHelper), superclass).prototype, constructor = NotificationHelper;
+    function NotificationHelper(){
+      var this$ = this instanceof ctor$ ? this : new ctor$;
+      this$.toastNormal = bind$(this$, 'toastNormal', prototype);
+      this$.toastWebkit = bind$(this$, 'toastWebkit', prototype);
+      this$.toast = bind$(this$, 'toast', prototype);
+      Runtime.init('toast-driver', 'number');
+      Runtime.init('toast-timeout', 'numeber');
+      Storage.get("toast-timeout", function(timeout){
+        var handler;
+        timeout == null && (timeout = 5000);
+        Runtime.set('toast-timeout', timeout);
+        Runtime.set('toast-driver', Drivers['normal']);
+        if (Tester['webkitNotifications']) {
+          if (!Tester['chrome.storage']) {
+            handler = function(){
+              webkitNotifications.requestPermission();
+              return window.removeEventListener("click");
+            };
+            window.addEventListener("click", handler);
+          }
+          Runtime.set('toast-driver', Drivers['webkit']);
+        }
+        return this$.echo("Notification Helper Online, with driver : ", this$.drive, " and timeout : ", Runtime.get('toast-timeout'));
+      });
+      return this$;
+    } function ctor$(){} ctor$.prototype = prototype;
+    prototype.toast = function(title){
+      var body;
+      title == null && (title = "Notification");
+      body = slice$.call(arguments, 1);
+      switch (Runtime.get('toast-driver')) {
+      case Drivers.webkit:
+        if (webkitNotifications.checkPermission() === 0) {
+          return this.toastWebkit(title, body);
+        } else {
+          return this.toastNormal(title, body);
+        }
+        break;
+      default:
+        return this.toastNormal(title, body);
+      }
+    };
+    prototype.toastWebkit = function(title, body){
+      var b, i$, len$, item, notif;
+      b = body.shift();
+      for (i$ = 0, len$ = body.length; i$ < len$; ++i$) {
+        item = body[i$];
+        b += "\n" + item;
+      }
+      notif = webkitNotifications.createNotification('icon.ico', title, b);
+      notif.ondisplay = function(ev){
+        return setTimeout(function(){
+          return ev.currentTarget.cancel();
+        }, Runtime.get('toast-timeout'));
+      };
+      return notif.show();
+    };
+    prototype.toastNormal = function(title, body){
+      var b, i$, len$, item;
+      b = "";
+      if (typeof Modal != 'undefined' && Modal !== null) {
+        for (i$ = 0, len$ = body.length; i$ < len$; ++i$) {
+          item = body[i$];
+          b += "<p>" + item + "</p>";
+        }
+        return Modal.show({
+          title: title,
+          content: b
+        }, Runtime.get('toast-timeout'));
+      } else {
+        b = join$.call([title].concat(body), "\n");
+        return alert(b);
+      }
+    };
+    return NotificationHelper;
+  }(IS.Object));
+  Helper = new NotificationHelper();
+  Toast = Helper.toast;
+  module.exports = [Helper, Toast];
+  function bind$(obj, key, target){
+    return function(){ return (target || obj)[key].apply(obj, arguments) };
+  }
+  function extend$(sub, sup){
+    function fun(){} fun.prototype = (sub.superclass = sup).prototype;
+    (sub.prototype = new fun).constructor = sub;
+    if (typeof sup.extended == 'function') sup.extended(sub);
+    return sub;
+  }
+  function import$(obj, src){
+    var own = {}.hasOwnProperty;
+    for (var key in src) if (own.call(src, key)) obj[key] = src[key];
+    return obj;
+  }
+}).call(this);
 }, "classes/helpers/OPMLManager": function(exports, require, module) {(function() {
   var OPMLManager, _inst,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
@@ -1809,6 +2011,7 @@
           case 'object':
             return {};
           case 'number':
+          case 'boolean':
             return 0;
           default:
             return "";
@@ -1822,7 +2025,7 @@
     return Runtime;
   }(IS.Object));
   runtime = new Runtime();
-  angular.module("Revelation").value("Runtime", runtime);
+  angular.module(AppInfo.displayname).value("Runtime", runtime);
   module.exports = runtime;
   function bind$(obj, key, target){
     return function(){ return (target || obj)[key].apply(obj, arguments) };
@@ -2087,6 +2290,12 @@
     },
     "localstorage": function() {
       return ((typeof chrome !== "undefined" && chrome !== null ? chrome.storage : void 0) != null) || (window.localStorage != null);
+    },
+    "chrome.storage": function() {
+      return (typeof chrome !== "undefined" && chrome !== null) && (chrome.storage != null);
+    },
+    "webkitNotifications": function() {
+      return webkitNotifications;
     }
   };
 
@@ -14405,6 +14614,70 @@ return window.JSONImport['ro-RO'] = module.exports = item;}, "data/stylesheets/f
   (function() {
     (function() {
       __out.push('<section id="loadingscreen">\n\t<section></section>\n\t<aside data-location=\'left\'></aside>\n\t<aside data-location=\'right\'></aside>\n\t<article>\n\t\t<div><p>Revelati</p></div>\n\t\t<span></span>\n\t\t<div><p>n</p></div>\n\t\t<p><span id="loadingmessage"></span></p>\n\t</article>\n</section>\n');
+    
+    }).call(this);
+    
+  }).call(__obj);
+  __obj.safe = __objSafe, __obj.escape = __escape;
+  return __out.join('');
+}}, "data/views/modal": function(exports, require, module) {module.exports = function(__obj) {
+  if (!__obj) __obj = {};
+  var __out = [], __capture = function(callback) {
+    var out = __out, result;
+    __out = [];
+    callback.call(this);
+    result = __out.join('');
+    __out = out;
+    return __safe(result);
+  }, __sanitize = function(value) {
+    if (value && value.ecoSafe) {
+      return value;
+    } else if (typeof value !== 'undefined' && value != null) {
+      return __escape(value);
+    } else {
+      return '';
+    }
+  }, __safe, __objSafe = __obj.safe, __escape = __obj.escape;
+  __safe = __obj.safe = function(value) {
+    if (value && value.ecoSafe) {
+      return value;
+    } else {
+      if (!(typeof value !== 'undefined' && value != null)) value = '';
+      var result = new String(value);
+      result.ecoSafe = true;
+      return result;
+    }
+  };
+  if (!__escape) {
+    __escape = __obj.escape = function(value) {
+      return ('' + value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    };
+  }
+  (function() {
+    (function() {
+      __out.push(__sanitize(console.log(this)));
+    
+      __out.push('\n<section ng-controller=\'Modal\' id=\'modal-window\' ng-class="{');
+    
+      __out.push(__sanitize(this.States["closed"]));
+    
+      __out.push(': \'closed\', ');
+    
+      __out.push(__sanitize(this.States["normal"]));
+    
+      __out.push(': \'normal\', ');
+    
+      __out.push(__sanitize(this.States["fullscreen"]));
+    
+      __out.push(': \'fullscreen\'}[runtime.props[\'modal-state\']]">\n\t<section>\n\t<header ng-bind=\'title\'></header>\n\t  <nav>\n\t\t<li ng-click=\'runtime.set("modal-state", ');
+    
+      __out.push(__sanitize(this.States['closed']));
+    
+      __out.push(')\' ><i class="icon-remove"></i></li>\n\t\t<li ng-click=\'toggle()\'><i class="icon-fullscreen"></i></li>\n\t  </nav>\n\t  <article ng-bind-html-unsafe=\'content\'></article>\n\t</section>\n</section>\n');
     
     }).call(this);
     
@@ -15794,8 +16067,8 @@ QRBitBuffer.prototype = {
     }
 };}});
 window.AppInfo = {
-  "name": "revelation",
-  "displayname": "Revelation",
+  "name": "axon",
+  "displayname": "Axons",
   "version": "0.3.0",
   "author": {
     "name": "Sabin Marcu",
@@ -15946,59 +16219,15 @@ window.addEventListener('load', (function(){
 		x = null;
 		done = true;
 	}
-}));// Writing Copyright Information to HTML
-var done = false;
-
-window.addEventListener('load', (function(){
-	if (!done) {
-		console.log("Written Copyright Information to HTML")
-		x = document.createComment("Copyright (c) Sabin Marcu 2009-2013, Powered by the Arrowhead System (tm)\nYou may not redistribute this software under any circumstance other than sharing the link to any online service supplied by myself, Sabin Marcu, or any market or application store it might be registered in without consulting with the author, or using the software in any commercial way.\nOther than that, feel free to enjoy the application!");
-		document.documentElement.insertBefore(x, document.head);
-		x = null;
-		done = true;
-	}
-}));// Writing Copyright Information to HTML
-var done = false;
-
-window.addEventListener('load', (function(){
-	if (!done) {
-		console.log("Written Copyright Information to HTML")
-		x = document.createComment("Copyright (c) Sabin Marcu 2009-2013, Powered by the Arrowhead System (tm)\nYou may not redistribute this software under any circumstance other than sharing the link to any online service supplied by myself, Sabin Marcu, or any market or application store it might be registered in without consulting with the author, or using the software in any commercial way.\nOther than that, feel free to enjoy the application!");
-		document.documentElement.insertBefore(x, document.head);
-		x = null;
-		done = true;
-	}
-}));// Writing Copyright Information to HTML
-var done = false;
-
-window.addEventListener('load', (function(){
-	if (!done) {
-		console.log("Written Copyright Information to HTML")
-		x = document.createComment("Copyright (c) Sabin Marcu 2009-2013, Powered by the Arrowhead System (tm)\nYou may not redistribute this software under any circumstance other than sharing the link to any online service supplied by myself, Sabin Marcu, or any market or application store it might be registered in without consulting with the author, or using the software in any commercial way.\nOther than that, feel free to enjoy the application!");
-		document.documentElement.insertBefore(x, document.head);
-		x = null;
-		done = true;
-	}
-}));// Writing Copyright Information to HTML
-var done = false;
-
-window.addEventListener('load', (function(){
-	if (!done) {
-		console.log("Written Copyright Information to HTML")
-		x = document.createComment("Copyright (c) Sabin Marcu 2009-2013, Powered by the Arrowhead System (tm)\nYou may not redistribute this software under any circumstance other than sharing the link to any online service supplied by myself, Sabin Marcu, or any market or application store it might be registered in without consulting with the author, or using the software in any commercial way.\nOther than that, feel free to enjoy the application!");
-		document.documentElement.insertBefore(x, document.head);
-		x = null;
-		done = true;
-	}
 }));/** COPYRIGHT
 Copyright (c) Sabin Marcu 2009-2013, Powered by the Arrowhead System (tm)
 You may not redistribute this software under any circumstance other than sharing the link to any online service supplied by myself, Sabin Marcu, or any market or application store it might be registered in without consulting with the author, or using the software in any commercial way.
 Other than that, feel free to enjoy the application!
 
-@Application Name : Revelation
+@Application Name : Axons
 @Author           : Sabin Marcu <sabinmarcu@gmail.com>
 @Version          : 0.3.0
-@Date Compiled    : Tue Jul 16 2013 20:22:59 GMT+0300 (EEST)
+@Date Compiled    : Wed Jul 17 2013 20:41:03 GMT+0300 (EEST)
 **/
 
 !function(module){!function(){var CHARS="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".split("");Math.uuid=function(len,radix){var chars=CHARS,uuid=[],i;radix=radix||chars.length;if(len){for(i=0;i<len;i++)uuid[i]=chars[0|Math.random()*radix]}else{var r;uuid[8]=uuid[13]=uuid[18]=uuid[23]="-";uuid[14]="4";for(i=0;i<36;i++){if(!uuid[i]){r=0|Math.random()*16;uuid[i]=chars[i==19?r&3|8:r]}}}return uuid.join("")};Math.uuidFast=function(){var chars=CHARS,uuid=new Array(36),rnd=0,r;for(var i=0;i<36;i++){if(i==8||i==13||i==18||i==23){uuid[i]="-"}else if(i==14){uuid[i]="4"}else{if(rnd<=2)rnd=33554432+Math.random()*16777216|0;r=rnd&15;rnd=rnd>>4;uuid[i]=chars[i==19?r&3|8:r]}}return uuid.join("")};Math.uuidCompact=function(){return"xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g,function(c){var r=Math.random()*16|0,v=c=="x"?r:r&3|8;return v.toString(16)})}}();!function(){if(!this.require){var modules={},cache={},require=function(name,root){var path=expand(root,name),module=cache[path],fn;if(module){return module.exports}else if(fn=modules[path]||modules[path=expand(path,"./index")]){module={id:path,exports:{}};try{cache[path]=module;fn(module.exports,function(name){return require(name,dirname(path))},module);return module.exports}catch(err){delete cache[path];throw err}}else{throw"module '"+name+"' not found"}},expand=function(root,name){var results=[],parts,part;if(/^\.\.?(\/|$)/.test(name)){parts=[root,name].join("/").split("/")}else{parts=name.split("/")}for(var i=0,length=parts.length;i<length;i++){part=parts[i];if(part==".."){results.pop()}else if(part!="."&&part!=""){results.push(part)}}return results.join("/")},dirname=function(path){return path.split("/").slice(0,-1).join("/")};this.require=function(name){return require(name,"")};this.require.define=function(bundle){for(var key in bundle)modules[key]=bundle[key]}}return this.require.define}.call(this)({Enum:function(exports,require,module){!function(){var Enum;Enum=function(){function Enum(items,offset){var item,key,_i,_len;if(offset==null){offset=0}for(key=_i=0,_len=items.length;_i<_len;key=++_i){item=items[key];this[item]=key+offset}}return Enum}();module.exports=Enum}.call(this)},ErrorReporter:function(exports,require,module){!function(){var ErrorReporter,__bind=function(fn,me){return function(){return fn.apply(me,arguments)}},__indexOf=[].indexOf||function(item){for(var i=0,l=this.length;i<l;i++){if(i in this&&this[i]===item)return i}return-1};ErrorReporter=function(){function ErrorReporter(){this.toString=__bind(this.toString,this)}ErrorReporter._errors={"Unknown Error":["An unknown error has occurred"]};ErrorReporter._indices=[ErrorReporter._errors["Unknown Error"][0]];ErrorReporter._groups=["Unknown Error"];ErrorReporter.wrapCustomError=function(error){return"["+error.name+"] "+error.message};ErrorReporter.generate=function(errorCode,extra){if(extra==null){extra=null}return(new this).generate(errorCode,extra)};ErrorReporter.extended=function(){var error,errors,group,key,_i,_len,_ref;_ref=this.errors;for(group in _ref){errors=_ref[group];this._errors[group]=errors;this._groups.push(group);for(key=_i=0,_len=errors.length;_i<_len;key=++_i){error=errors[key];this._indices.push(this._errors[group][key])}}this.prototype._=this;delete this.errors;return this.include(ErrorReporter.prototype)};ErrorReporter.prototype.generate=function(errCode,extra){var errors,group,_ref,_ref1;this.errCode=errCode;if(extra==null){extra=null}if(!this._._indices[this.errCode]){this.name=this._._groups[0];this.message=this._._errors[this._._groups[0]][0]}else{this.message=this._._indices[this.errCode];if(extra){this.message+=" - Extra Data : "+extra}_ref=this._._errors;for(group in _ref){errors=_ref[group];if(!(_ref1=this.message,__indexOf.call(errors,_ref1)>=0)){continue}this.name=group;break}}return this};ErrorReporter.prototype.toString=function(){return"["+this.name+"] "+this.message+" |"+this.errCode+"|"};return ErrorReporter}();module.exports=ErrorReporter}.call(this)},"Modules/Mediator":function(exports,require,module){!function(){var Modules;Modules={Observer:require("Modules/Observer")};Modules.Mediator=function(){var extended,included,installTo,key,value,_ref;function Mediator(){}_ref=Modules.Observer;for(key in _ref){value=_ref[key];Mediator.prototype[key]=value}installTo=function(object){this.delegate("publish",object);return this.delegate("subscribe",object)};included=function(){this.prototype.queue={};return this.prototype._delegates={publish:true,subscribe:true}};extended=function(){this.queue={};return this._delegates={publish:true,subscribe:true}};return Mediator}();module.exports=Modules.Mediator.prototype}.call(this)},"Modules/ORM":function(exports,require,module){!function(){var Modules,V,__indexOf=[].indexOf||function(item){for(var i=0,l=this.length;i<l;i++){if(i in this&&this[i]===item)return i}return-1};Modules={};V=require("Variable");Modules.ORM=function(){function ORM(){}ORM.prototype._identifier="BasicORM";ORM.prototype._reccords={};ORM.prototype._symlinks={};ORM.prototype._head=0;ORM.prototype._props=[];ORM.prototype.get=function(which){if(typeof which==="object"){return this.getAdv(which)}return this._symlinks[which]||this._reccords[which]||null};ORM.prototype.getAdv=function(what){var check,key,rec,results,_ref,_ref1;results=[];check=function(rec){var final,k,mod,modfinal,recs,v,val,value,_i,_len;for(k in what){v=what[k];final=false;if(rec[k]==null){break}if(typeof v==="object"){for(mod in v){val=v[mod];modfinal=true;switch(mod){case"$gt":if(rec[k].get()<=val){modfinal=false;break}break;case"$gte":if(rec[k].get()<val){modfinal=false;break}break;case"$lt":if(rec[k].get()>=val){modfinal=false;break}break;case"$lte":if(rec[k].get()>val){modfinal=false;break}break;case"$contains":recs=rec[k].get();if(recs.constructor!==Array){modfinal=false;break}modfinal=false;for(_i=0,_len=recs.length;_i<_len;_i++){value=recs[_i];if(value===val){modfinal=true;break}}}if(modfinal===false){break}}if(modfinal===true){final=true}}else if(rec[k].get()===v){final=true}else{break}}if(final){return results.push(rec)}};_ref=this._reccords;for(key in _ref){rec=_ref[key];check(rec)}_ref1=this._symlinks;for(key in _ref1){rec=_ref1[key];check(rec)}if(results.length===0){return null}if(results.length===1){return results[0]}return results};ORM.prototype["delete"]=function(which){var _base,_base1;if((_base=this._reccords)[which]==null){_base[which]=null}return(_base1=this._symlinks)[which]!=null?(_base1=this._symlinks)[which]:_base1[which]=null};ORM.prototype.create=function(id,args){var prop,uuid,_i,_len,_ref;if(this._reccords==null){this._reccords={}}if(args==null){args={}}uuid=id||args._id||this._head;if(args._id==null){args._id=uuid}uuid=Math.uuidFast(uuid);args._uuid=uuid;args._fn=this;if(typeof this.preCreate==="function"){this.preCreate(args)}this._reccords[uuid]=new this(args);this._reccords[uuid]._constructor(args);if(typeof this.postCreate==="function"){this.postCreate(this._reccords[uuid],args)}if(id!=null&&id!==this._head){this._symlinks[id]=this._reccords[uuid]}if(uuid===this._head){this._head++}_ref=this._props;for(_i=0,_len=_ref.length;_i<_len;_i++){prop=_ref[_i];this._reccords[uuid][prop]=V.spawn()}return this._reccords[uuid]};ORM.prototype.reuse=function(which,args){var rez;if(args==null){args={}}rez=this.get(which);if(rez!=null){return rez}return this.create(which,args)};ORM.prototype.addProp=function(prop){var key,rec,_ref,_results;this._props.push(prop);_ref=this._reccords;_results=[];for(key in _ref){rec=_ref[key];_results.push(rec[prop]!=null?rec[prop]:rec[prop]=V.spawn())}return _results};ORM.prototype.removeProp=function(prop){var k,key,p,rec,_i,_len,_ref,_ref1;_ref=this._reccords;for(key in _ref){rec=_ref[key];if(rec[prop]==null){rec[prop]=null}}_ref1=this._props;for(k=_i=0,_len=_ref1.length;_i<_len;k=++_i){p=_ref1[k];if(p===prop){return this._props.splice(k,1)}}};ORM.prototype.extended=function(){this._excludes=["_fn","_uuid","_id"];return this.include({_constructor:function(args){var k,key,v,value,valueSet,_results;valueSet={};this._uuid=args._uuid||null;this._id=args._id||null;this.fn=args._fn;for(key in args){value=args[key];if(__indexOf.call(this.fn._excludes,key)<0&&this.constructFilter(key,value)!==false){valueSet[key]=value}}if(this.init!=null){return this.init.call(this,valueSet)}_results=[];for(k in valueSet){v=valueSet[k];_results.push(this[k]=v)}return _results},constructFilter:function(key,value){return true},remove:function(){return this.parent.remove(this.id)}})};return ORM}();module.exports=Modules.ORM.prototype}.call(this)},"Modules/Observer":function(exports,require,module){!function(){var Modules,__slice=[].slice;Modules={};Modules.Observer=function(){function Observer(){}Observer.prototype.delegateEvent=function(event,handler,object){var c,_base;if(object==null){object=window}if(event.substr(0,2)==="on"){event=event.substr(2)}if((_base=this.queue)[event]==null){_base[event]=[]}c=this.queue[event].length;this.queue[event].unshift(function(){return handler.apply(object,arguments)});return c};Observer.prototype.subscribe=function(event,handler){return this.delegateEvent(event,handler,this)};Observer.prototype.publish=function(){var args,event,handler,key,_ref;args=1<=arguments.length?__slice.call(arguments,0):[];event=args[0];args=args.splice(1);if(!event||this.queue[event]==null){return this}_ref=this.queue[event];for(key in _ref){handler=_ref[key];if(key!=="__head"){handler.apply(this,args)}}return this};Observer.prototype.unsubscribe=function(event,id){if(!this.queue[event]){return null}if(!this.queue[event][id]){return null}return this.queue[event].splice(id,1)};Observer.prototype.included=function(){return this.prototype.queue={}};Observer.prototype.extended=function(){return this.queue={}};return Observer}();module.exports=Modules.Observer.prototype}.call(this)},"Modules/Overload":function(exports,require,module){!function(){var CRITERIA,Include,Modules,_count,__slice=[].slice,__bind=function(fn,me){return function(){return fn.apply(me,arguments)}};Modules={};_count=function(object){var key,nr,value;nr=0;for(key in object){value=object[key];nr++}return nr};CRITERIA={args:function(crit,args){return args.length===crit}};Include=function(){function Include(){}Include.prototype.overload=function(sets){var helper;helper=new Modules.Overload(sets,this);return function(){var args;args=1<=arguments.length?__slice.call(arguments,0):[];helper.parent=this;return helper.verifyAll.apply(helper,args)}};return Include}();Modules.Overload=function(){function Overload(sets,parent){var aux,i,j,name,set,_i,_j,_ref,_ref1,_ref2;this.parent=parent;this.verify=__bind(this.verify,this);this.verifyAll=__bind(this.verifyAll,this);this.names=[];this.verifies=[];this.handles=[];for(name in sets){set=sets[name];this.names.push(name);this.verifies.push(set["if"]||null);this.handles.push(set.then||null)}for(i=_i=0,_ref=this.verifies.length-1;0<=_ref?_i<=_ref:_i>=_ref;i=0<=_ref?++_i:--_i){for(j=_j=_ref1=i+1,_ref2=this.verifies.length;_ref1<=_ref2?_j<=_ref2:_j>=_ref2;j=_ref1<=_ref2?++_j:--_j){if(_count(this.verifies[i])<_count(this.verifies[j])){aux=this.verifies[i];this.verifies[i]=this.verifies[j];this.verifies[j]=aux;aux=this.names[i];this.names[i]=this.names[j];this.names[j]=aux;aux=this.handles[i];this.handles[i]=this.handles[j];this.handles[j]=aux}}}}Overload.prototype.verifyAll=function(){var args,how,key,set,what,_i,_len,_ref;args=1<=arguments.length?__slice.call(arguments,0):[];this.args=args;_ref=this.verifies;for(key=_i=0,_len=_ref.length;_i<_len;key=++_i){set=_ref[key];if(set!=null){for(what in set){how=set[what];if(!this.verify(what,how)){break}return this.handles[key].apply(this.parent,this.args)}}}return(this.handles["default"]||this.handles[key-1]).apply(this.parent,this.args)};Overload.prototype.verify=function(what,how){if(CRITERIA[what]){return CRITERIA[what](how,this.args)}else{what=parseInt(what.replace("arg",""))-1;if(this.args[what]!=null){return how.apply(this.parent,this.args)}return false}};return Overload}();module.exports=Include.prototype}.call(this)},"Modules/Pythonize":function(exports,require,module){!function(){var CRITERIA,Include,Modules,_count,__slice=[].slice,__bind=function(fn,me){return function(){return fn.apply(me,arguments)}},__indexOf=[].indexOf||function(item){for(var i=0,l=this.length;i<l;i++){if(i in this&&this[i]===item)return i}return-1};Modules={};_count=function(object){var key,nr,value;nr=0;for(key in object){value=object[key];nr++}return nr};CRITERIA={args:function(crit,args){return args.length===crit}};Include=function(){function Include(){}Include.prototype.parameterize=function(sets,callback){var helper;helper=new Modules.Pythonize(sets,callback);return function(){var args;args=1<=arguments.length?__slice.call(arguments,0):[];helper.parent=this;return helper.verifyAll.apply(helper,args)}};return Include}();Modules.Pythonize=function(){function Pythonize(sets,callback){var item,newItem,_i,_len;this.callback=callback;this.verifyAll=__bind(this.verifyAll,this);this.parent=null;this._options=[];for(_i=0,_len=sets.length;_i<_len;_i++){item=sets[_i];newItem={name:item.name||item.toString(),"default":item["default"]||null};this._options.push(newItem)}}Pythonize.prototype.verifyAll=function(){var arg,args,curArg,i,items,lastarg,len,_i,_ref,_ref1,_ref2;args=1<=arguments.length?__slice.call(arguments,0):[];this.args=args;this.options={};len=this.args.length-1;i=0;while(this.args.length>1){curArg=this._options[i];arg=this.args.shift();this.options[curArg.name]=arg||curArg["default"];i++}lastarg=this.args.pop();items=this.verifyObject(lastarg,len);if(len<this._options.length-1){for(i=_i=_ref=len+(items.length===0),_ref1=this._options.length-1;_ref<=_ref1?_i<=_ref1:_i>=_ref1;i=_ref<=_ref1?++_i:--_i){if(!(_ref2=this._options[i].name,__indexOf.call(items,_ref2)>=0)){this.options[this._options[i].name]=this._options[i]["default"]}}}return this.callback.apply(this.parent,[this.options])};Pythonize.prototype.verifyObject=function(obj,id){var name,omits,option,valid,value,_i,_len,_ref;omits=[];if(typeof obj==="object"){for(name in obj){value=obj[name];valid=false;_ref=this._options;for(_i=0,_len=_ref.length;_i<_len;_i++){option=_ref[_i];if(option.name===name){valid=true;break}}if(!valid){this.options[this._options[id].name]=obj;return[]}else{omits.push(name);this.options[name]=value}}}else{this.options[this._options[id].name]=obj}return omits};return Pythonize}();module.exports=Include.prototype}.call(this)},"Modules/StateMachine":function(exports,require,module){!function(){var Modules,__bind=function(fn,me){return function(){return fn.apply(me,arguments)}};Modules={};Modules.StateMachine=function(){function StateMachine(){this.delegateContext=__bind(this.delegateContext,this)}StateMachine.prototype.extended=function(){this._contexts=[];return this._activeContext=null};StateMachine.prototype.included=function(){this.prototype._contexts=[];return this.prototype._activeContext=null};StateMachine.prototype.delegateContext=function(context){var l;if(this._find(context)){return null}l=this._contexts.length;this._contexts[l]=context;if(context.activate==null){context.activate=function(){}}if(context.deactivate==null){context.deactivate=function(){}}return this};StateMachine.prototype.getActiveContextID=function(){return this._activeContext};StateMachine.prototype.getActiveContext=function(){return this._activeContext};StateMachine.prototype.getContext=function(context){return this._contexts[context]||null};StateMachine.prototype._find=function(con){var key,value,_i,_len,_ref;_ref=this._contexts;for(value=_i=0,_len=_ref.length;_i<_len;value=++_i){key=_ref[value];if(con===key){return value}}return null};StateMachine.prototype.activateContext=function(context){var con;con=this._find(context);if(con==null){return null}if(this._activeContext===con){return true}this._activeContext=con;return context.activate()};StateMachine.prototype.deactivateContext=function(context){if(this._find(context)==null){return null}this._activeContext=null;return context.deactivate()};StateMachine.prototype.switchContext=function(context){var con;if(context==null){con=this._activeContext+1;if(con===this._contexts.length){con=0}}else{con=this._find(context);if(con==null){return null}}this.deactivateContext(this._contexts[this._activeContext]);this.activateContext(this._contexts[con]);return this._contexts[con]};return StateMachine}();module.exports=Modules.StateMachine.prototype}.call(this)},Object:function(exports,require,module){!function(){var $,Obiect,clone,_excludes,__indexOf=[].indexOf||function(item){for(var i=0,l=this.length;i<l;i++){if(i in this&&this[i]===item)return i}return-1},__slice=[].slice;_excludes=["included","extended"];clone=function(obj){var k,o,v;o=obj instanceof Array?[]:{};for(k in obj){v=obj[k];if(v!=null&&typeof v==="object"){o[k]=clone(v)}else{o[k]=v}}return o};$=function(what){return $[what]||null};Obiect=function(){var extended,included;function Obiect(){}Obiect.clone=function(obj){if(obj==null){obj=this}debugger;return Obiect.proxy(Obiect.include,Obiect.proxy(Obiect.extend,function(){})(obj))(obj.prototype)};Obiect.extend=function(obj,into){var k,value,_ref;if(into==null){into=this}obj=clone(obj);for(k in obj){value=obj[k];if(!(__indexOf.call(_excludes,k)>=0||obj._excludes!=null&&__indexOf.call(obj._excludes,k)>=0)){if(into[k]!=null){if(into["super"]==null){into["super"]={}}into["super"][k]=into[k]}into[k]=value}}if((_ref=obj.extended)!=null){_ref.call(into)}return this};Obiect.include=function(obj,into){var key,value,_ref;if(into==null){into=this}obj=clone(obj);for(key in obj){value=obj[key];into.prototype[key]=value}if((_ref=obj.included)!=null){_ref.call(into)}return this};Obiect.proxy=function(){var to,what,_this=this;what=arguments[0];to=arguments[1];if(typeof what==="function"){return function(){var args;args=1<=arguments.length?__slice.call(arguments,0):[];return what.apply(to,args)}}else{return this[what]}};Obiect.delegate=function(property,context){var _ref;if(((_ref=this._delegates)!=null?_ref[property]:void 0)!=null===false&&this._deleagates[property]!==false){trigger("Cannot delegate member "+property+" to "+context)}return context[property]=this.proxy(function(){return this[property](arguments)},this)};Obiect.echo=function(){var args,owner,prefix,_d;args=1<=arguments.length?__slice.call(arguments,0):[];_d=new Date;owner="<not supported>";if(this.__proto__!=null){owner=this.__proto__.constructor.name}prefix="["+_d.getHours()+":"+_d.getMinutes()+":"+_d.getSeconds()+"]["+(this.name||owner)+"]";if(args[0]===""){args[0]=prefix}else{args[0]=""+prefix+" "+args[0]}console.log(args);return this};Obiect.log=function(){var args;args=1<=arguments.length?__slice.call(arguments,0):[];if((typeof IS!=="undefined"&&IS!==null?IS.isDev:void 0)||window.isDev||(typeof root!=="undefined"&&root!==null?root.isDev:void 0)||isDev){args.unshift("");this.echo.apply(this,args)}return this};extended=function(){};included=function(){};Obiect.include({proxy:Obiect.proxy,log:Obiect.log,echo:Obiect.echo});return Obiect}();module.exports=Obiect}.call(this)},Promise:function(exports,require,module){!function(){var Promise,__slice=[].slice;Promise=function(){function Promise(promise){if(promise instanceof Promise){return promise}this.callbacks=[]}Promise.prototype.then=function(ok,err,progr){this.callbacks.push({ok:ok,error:err,progress:progr});return this};Promise.prototype.resolve=function(){var args,callback,time,_this=this;args=1<=arguments.length?__slice.call(arguments,0):[];callback=this.callbacks.shift();if(callback&&callback.ok){callback.ok.apply(this,args)}else{time=setTimeout(function(){clearTimeout(time);return _this.resolve.apply(_this,args)},50)}return this};Promise.prototype.reject=function(){var args,callback,time,_this=this;args=1<=arguments.length?__slice.call(arguments,0):[];callback=this.callbacks.shift();if(callback&&callback.error){callback.error.apply(this,args)}else{time=setTimeout(function(){clearTimeout(time);return _this.reject.apply(_this,args)},50)}return this};Promise.prototype.progress=function(){var args,callback;args=1<=arguments.length?__slice.call(arguments,0):[];callback=this.callbacks[0];if(callback&&callback.progress){callback.progress.apply(this,args)}return this};return Promise}();module.exports=Promise}.call(this)},Variable:function(exports,require,module){!function(){var Variable,_ref,__hasProp={}.hasOwnProperty,__extends=function(child,parent){for(var key in parent){if(__hasProp.call(parent,key))child[key]=parent[key]}function ctor(){this.constructor=child}ctor.prototype=parent.prototype;child.prototype=new ctor;child.__super__=parent.prototype;return child};Variable=function(_super){__extends(Variable,_super);function Variable(){_ref=Variable.__super__.constructor.apply(this,arguments);return _ref}Variable.spawn=function(){var x;x=new this;x._value=null;return x};Variable.prototype.get=function(){return this._value};Variable.prototype.set=function(value){return this._value=value};Variable.prototype.add=function(reccord){if(this._value==null||this._value.constructor!==Array){this._value=[]}return this._value.push(reccord)};return Variable}(require("Object"));if(typeof module!=="undefined"&&module!==null){module.exports=Variable}}.call(this)},async:function(exports,require,module){!function(){var async={};var root,previous_async;root=this;if(root!=null){previous_async=root.async}async.noConflict=function(){root.async=previous_async;return async};function only_once(fn){var called=false;return function(){if(called)throw new Error("Callback was already called.");called=true;fn.apply(root,arguments)}}var _each=function(arr,iterator){if(arr.forEach){return arr.forEach(iterator)}for(var i=0;i<arr.length;i+=1){iterator(arr[i],i,arr)}};var _map=function(arr,iterator){if(arr.map){return arr.map(iterator)}var results=[];_each(arr,function(x,i,a){results.push(iterator(x,i,a))});return results};var _reduce=function(arr,iterator,memo){if(arr.reduce){return arr.reduce(iterator,memo)}_each(arr,function(x,i,a){memo=iterator(memo,x,i,a)});return memo};var _keys=function(obj){if(Object.keys){return Object.keys(obj)}var keys=[];for(var k in obj){if(obj.hasOwnProperty(k)){keys.push(k)}}return keys};if(typeof process==="undefined"||!process.nextTick){if(typeof setImmediate==="function"){async.nextTick=function(fn){setImmediate(fn)};async.setImmediate=async.nextTick}else{async.nextTick=function(fn){setTimeout(fn,0)};async.setImmediate=async.nextTick}}else{async.nextTick=process.nextTick;if(typeof setImmediate!=="undefined"){async.setImmediate=setImmediate}else{async.setImmediate=async.nextTick}}async.each=function(arr,iterator,callback){callback=callback||function(){};if(!arr.length){return callback()}var completed=0;_each(arr,function(x){iterator(x,only_once(function(err){if(err){callback(err);callback=function(){}}else{completed+=1;if(completed>=arr.length){callback(null)}}}))})};async.forEach=async.each;async.eachSeries=function(arr,iterator,callback){callback=callback||function(){};if(!arr.length){return callback()}var completed=0;var iterate=function(){iterator(arr[completed],function(err){if(err){callback(err);callback=function(){}}else{completed+=1;if(completed>=arr.length){callback(null)}else{iterate()}}})};iterate()};async.forEachSeries=async.eachSeries;async.eachLimit=function(arr,limit,iterator,callback){var fn=_eachLimit(limit);fn.apply(null,[arr,iterator,callback])};async.forEachLimit=async.eachLimit;var _eachLimit=function(limit){return function(arr,iterator,callback){callback=callback||function(){};if(!arr.length||limit<=0){return callback()}var completed=0;var started=0;var running=0;!function replenish(){if(completed>=arr.length){return callback()}while(running<limit&&started<arr.length){started+=1;running+=1;iterator(arr[started-1],function(err){if(err){callback(err);callback=function(){}}else{completed+=1;running-=1;if(completed>=arr.length){callback()}else{replenish()}}})}}()}};var doParallel=function(fn){return function(){var args=Array.prototype.slice.call(arguments);return fn.apply(null,[async.each].concat(args))}};var doParallelLimit=function(limit,fn){return function(){var args=Array.prototype.slice.call(arguments);return fn.apply(null,[_eachLimit(limit)].concat(args))}};var doSeries=function(fn){return function(){var args=Array.prototype.slice.call(arguments);return fn.apply(null,[async.eachSeries].concat(args))}};var _asyncMap=function(eachfn,arr,iterator,callback){var results=[];arr=_map(arr,function(x,i){return{index:i,value:x}});eachfn(arr,function(x,callback){iterator(x.value,function(err,v){results[x.index]=v;callback(err)})},function(err){callback(err,results)})};async.map=doParallel(_asyncMap);async.mapSeries=doSeries(_asyncMap);async.mapLimit=function(arr,limit,iterator,callback){return _mapLimit(limit)(arr,iterator,callback)};var _mapLimit=function(limit){return doParallelLimit(limit,_asyncMap)};async.reduce=function(arr,memo,iterator,callback){async.eachSeries(arr,function(x,callback){iterator(memo,x,function(err,v){memo=v;callback(err)})},function(err){callback(err,memo)})};async.inject=async.reduce;async.foldl=async.reduce;async.reduceRight=function(arr,memo,iterator,callback){var reversed=_map(arr,function(x){return x}).reverse();async.reduce(reversed,memo,iterator,callback)};async.foldr=async.reduceRight;var _filter=function(eachfn,arr,iterator,callback){var results=[];arr=_map(arr,function(x,i){return{index:i,value:x}});eachfn(arr,function(x,callback){iterator(x.value,function(v){if(v){results.push(x)}callback()})},function(err){callback(_map(results.sort(function(a,b){return a.index-b.index}),function(x){return x.value}))})};async.filter=doParallel(_filter);async.filterSeries=doSeries(_filter);async.select=async.filter;async.selectSeries=async.filterSeries;var _reject=function(eachfn,arr,iterator,callback){var results=[];arr=_map(arr,function(x,i){return{index:i,value:x}});eachfn(arr,function(x,callback){iterator(x.value,function(v){if(!v){results.push(x)}callback()})},function(err){callback(_map(results.sort(function(a,b){return a.index-b.index}),function(x){return x.value}))})};async.reject=doParallel(_reject);async.rejectSeries=doSeries(_reject);var _detect=function(eachfn,arr,iterator,main_callback){eachfn(arr,function(x,callback){iterator(x,function(result){if(result){main_callback(x);main_callback=function(){}}else{callback()}})},function(err){main_callback()})};async.detect=doParallel(_detect);async.detectSeries=doSeries(_detect);async.some=function(arr,iterator,main_callback){async.each(arr,function(x,callback){iterator(x,function(v){if(v){main_callback(true);main_callback=function(){}}callback()})},function(err){main_callback(false)})};async.any=async.some;async.every=function(arr,iterator,main_callback){async.each(arr,function(x,callback){iterator(x,function(v){if(!v){main_callback(false);main_callback=function(){}}callback()})},function(err){main_callback(true)})};async.all=async.every;async.sortBy=function(arr,iterator,callback){async.map(arr,function(x,callback){iterator(x,function(err,criteria){if(err){callback(err)}else{callback(null,{value:x,criteria:criteria})}})},function(err,results){if(err){return callback(err)}else{var fn=function(left,right){var a=left.criteria,b=right.criteria;return a<b?-1:a>b?1:0};callback(null,_map(results.sort(fn),function(x){return x.value}))}})};async.auto=function(tasks,callback){callback=callback||function(){};var keys=_keys(tasks);if(!keys.length){return callback(null)}var results={};var listeners=[];var addListener=function(fn){listeners.unshift(fn)};var removeListener=function(fn){for(var i=0;i<listeners.length;i+=1){if(listeners[i]===fn){listeners.splice(i,1);return}}};var taskComplete=function(){_each(listeners.slice(0),function(fn){fn()})};addListener(function(){if(_keys(results).length===keys.length){callback(null,results);callback=function(){}}});_each(keys,function(k){var task=tasks[k]instanceof Function?[tasks[k]]:tasks[k];var taskCallback=function(err){var args=Array.prototype.slice.call(arguments,1);if(args.length<=1){args=args[0]}if(err){var safeResults={};_each(_keys(results),function(rkey){safeResults[rkey]=results[rkey]});safeResults[k]=args;callback(err,safeResults);callback=function(){}}else{results[k]=args;async.setImmediate(taskComplete)}};var requires=task.slice(0,Math.abs(task.length-1))||[];var ready=function(){return _reduce(requires,function(a,x){return a&&results.hasOwnProperty(x)},true)&&!results.hasOwnProperty(k)};if(ready()){task[task.length-1](taskCallback,results)}else{var listener=function(){if(ready()){removeListener(listener);task[task.length-1](taskCallback,results)}};addListener(listener)}})};async.waterfall=function(tasks,callback){callback=callback||function(){};if(tasks.constructor!==Array){var err=new Error("First argument to waterfall must be an array of functions");return callback(err)}if(!tasks.length){return callback()}var wrapIterator=function(iterator){return function(err){if(err){callback.apply(null,arguments);callback=function(){}}else{var args=Array.prototype.slice.call(arguments,1);var next=iterator.next();if(next){args.push(wrapIterator(next))}else{args.push(callback)}async.setImmediate(function(){iterator.apply(null,args)})}}};wrapIterator(async.iterator(tasks))()};var _parallel=function(eachfn,tasks,callback){callback=callback||function(){};if(tasks.constructor===Array){eachfn.map(tasks,function(fn,callback){if(fn){fn(function(err){var args=Array.prototype.slice.call(arguments,1);if(args.length<=1){args=args[0]}callback.call(null,err,args)})}},callback)}else{var results={};eachfn.each(_keys(tasks),function(k,callback){tasks[k](function(err){var args=Array.prototype.slice.call(arguments,1);if(args.length<=1){args=args[0]}results[k]=args;callback(err)})},function(err){callback(err,results)})}};async.parallel=function(tasks,callback){_parallel({map:async.map,each:async.each},tasks,callback)};async.parallelLimit=function(tasks,limit,callback){_parallel({map:_mapLimit(limit),each:_eachLimit(limit)},tasks,callback)};async.series=function(tasks,callback){callback=callback||function(){};if(tasks.constructor===Array){async.mapSeries(tasks,function(fn,callback){if(fn){fn(function(err){var args=Array.prototype.slice.call(arguments,1);if(args.length<=1){args=args[0]}callback.call(null,err,args)})}},callback)}else{var results={};async.eachSeries(_keys(tasks),function(k,callback){tasks[k](function(err){var args=Array.prototype.slice.call(arguments,1);if(args.length<=1){args=args[0]}results[k]=args;callback(err)})},function(err){callback(err,results)})}};async.iterator=function(tasks){var makeCallback=function(index){var fn=function(){if(tasks.length){tasks[index].apply(null,arguments)}return fn.next()};fn.next=function(){return index<tasks.length-1?makeCallback(index+1):null};return fn};return makeCallback(0)};async.apply=function(fn){var args=Array.prototype.slice.call(arguments,1);return function(){return fn.apply(null,args.concat(Array.prototype.slice.call(arguments)))}};var _concat=function(eachfn,arr,fn,callback){var r=[];eachfn(arr,function(x,cb){fn(x,function(err,y){r=r.concat(y||[]);cb(err)})},function(err){callback(err,r)})};async.concat=doParallel(_concat);async.concatSeries=doSeries(_concat);async.whilst=function(test,iterator,callback){if(test()){iterator(function(err){if(err){return callback(err)}async.whilst(test,iterator,callback)})}else{callback()}};async.doWhilst=function(iterator,test,callback){iterator(function(err){if(err){return callback(err)}if(test()){async.doWhilst(iterator,test,callback)}else{callback()}})};async.until=function(test,iterator,callback){if(!test()){iterator(function(err){if(err){return callback(err)}async.until(test,iterator,callback)})}else{callback()}};async.doUntil=function(iterator,test,callback){iterator(function(err){if(err){return callback(err)}if(!test()){async.doUntil(iterator,test,callback)}else{callback()}})};async.queue=function(worker,concurrency){if(concurrency===undefined){concurrency=1}function _insert(q,data,pos,callback){if(data.constructor!==Array){data=[data]
@@ -16189,7 +16418,7 @@ Other than that, feel free to enjoy the application!
 	}
 	return this.require.define;
 }).call(this)({"Application": function(exports, require, module) {(function(){
-  var Application, slice$ = [].slice;
+  var Application;
   Application = (function(superclass){
     var prototype = extend$((import$(Application, superclass).displayName = 'Application', Application), superclass).prototype, constructor = Application;
     function Application(){
@@ -16216,11 +16445,15 @@ Other than that, feel free to enjoy the application!
         document.head.appendChild(meta);
         meta = document.createElement("link");
         meta.setAttribute("rel", "apple-touch-icon");
-        meta.setAttribute("href", "arrow.png");
+        meta.setAttribute("href", "icon.ico");
         document.head.appendChild(meta);
         meta = document.createElement("meta");
         meta.setAttribute("name", "apple-mobile-web-app-capable");
         meta.setAttribute("content", "yes");
+        document.head.appendChild(meta);
+        meta = document.createElement('link');
+        meta.setAttribute('rel', 'icon');
+        meta.setAttribute('href', 'icon.ico');
         return document.head.appendChild(meta);
       }();
     };
@@ -16236,33 +16469,7 @@ Other than that, feel free to enjoy the application!
       window.DepMan = new (require("classes/helpers/DependenciesManager"));
       window.Tester = new (DepMan.helper("Tester"))();
       window.Storage = new (DepMan.helper("Storage"))();
-      window.Settings = DepMan.helper("SettingsBook");
-      return window.Toast = function(title){
-        var body, b, i$, len$, item, notif;
-        title == null && (title = "Message");
-        body = slice$.call(arguments, 1);
-        b = body.shift();
-        if ((typeof webkitNotifications != 'undefined' && webkitNotifications !== null) && chrome.storage != null) {
-          for (i$ = 0, len$ = body.length; i$ < len$; ++i$) {
-            item = body[i$];
-            b += "\n" + item;
-          }
-          notif = webkitNotifications.createNotification('/arrow_up_1.png', title, b);
-          return notif.show();
-        } else {
-          b = "<p>" + b + "</p>";
-          for (i$ = 0, len$ = body.length; i$ < len$; ++i$) {
-            item = body[i$];
-            b += "<p>" + item + "</p>";
-          }
-          jQuery(tipMessageHead + "").html(title);
-          jQuery(tipMessageBody + "").html(b);
-          jQuery(tipMessage + "").modal("show");
-          return setTimeout(function(){
-            return jQuery(tipMessage + "").modal("hide");
-          }, 1500);
-        }
-      };
+      return window.Settings = DepMan.helper("SettingsBook");
     };
     prototype.fixStylesheets = function(){
       var styles, fwstyles;
@@ -16279,14 +16486,17 @@ Other than that, feel free to enjoy the application!
       return fwstyles.html(fwstyles.html().replace(/\<\<INSERT FONTAWESOME WOFF HERE\>\>/g, DepMan.font("woff/fontawesome-webfont")));
     };
     prototype.loadApplication = function(){
+      var ref$;
       window.Loading = new (DepMan.helper("Loading"))();
-      angular.module("Revelation", []);
+      angular.module(AppInfo.displayname, []);
       DepMan.helper("Runtime");
       DepMan.helper("Language");
+      ref$ = DepMan.helper("Notification"), window.Notification = ref$[0], window.Toast = ref$[1];
+      DepMan.controller("Modals");
       DepMan.controller("Page");
       DepMan.controller("Landing");
       DepMan.controller("Help");
-      return angular.bootstrap(document.body, ["Revelation"]);
+      return angular.bootstrap(document.body, [AppInfo.displayname]);
     };
     return Application;
   }(IS.Object));
@@ -16431,7 +16641,7 @@ Other than that, feel free to enjoy the application!
     return HelpController;
   }(IS.Object));
   Controller = new HelpController();
-  angular.module("Revelation").controller("Help", ["$scope", "Runtime", Controller.init]);
+  angular.module(AppInfo.displayname).controller("Help", ["$scope", "Runtime", Controller.init]);
   module.exports = Controller;
   function bind$(obj, key, target){
     return function(){ return (target || obj)[key].apply(obj, arguments) };
@@ -16499,7 +16709,129 @@ Other than that, feel free to enjoy the application!
     return LandingController;
   }(IS.Object));
   Controller = new LandingController();
-  angular.module("Revelation").controller("Landing", ["$scope", "Runtime", Controller.init]);
+  angular.module(AppInfo.displayname).controller("Landing", ["$scope", "Runtime", Controller.init]);
+  module.exports = Controller;
+  function bind$(obj, key, target){
+    return function(){ return (target || obj)[key].apply(obj, arguments) };
+  }
+  function extend$(sub, sup){
+    function fun(){} fun.prototype = (sub.superclass = sup).prototype;
+    (sub.prototype = new fun).constructor = sub;
+    if (typeof sup.extended == 'function') sup.extended(sub);
+    return sub;
+  }
+  function import$(obj, src){
+    var own = {}.hasOwnProperty;
+    for (var key in src) if (own.call(src, key)) obj[key] = src[key];
+    return obj;
+  }
+}).call(this);
+}, "classes/controllers/Modals": function(exports, require, module) {(function(){
+  var STATES, States, ModalController, Controller;
+  STATES = ['closed', 'normal', 'fullscreen'];
+  States = new IS.Enum(STATES);
+  ModalController = (function(superclass){
+    var prototype = extend$((import$(ModalController, superclass).displayName = 'ModalController', ModalController), superclass).prototype, constructor = ModalController;
+    function ModalController(){
+      var this$ = this instanceof ctor$ ? this : new ctor$;
+      this$.set = bind$(this$, 'set', prototype);
+      this$.hide = bind$(this$, 'hide', prototype);
+      this$.show = bind$(this$, 'show', prototype);
+      this$.toggle = bind$(this$, 'toggle', prototype);
+      this$.initRuntime = bind$(this$, 'initRuntime', prototype);
+      this$.configScope = bind$(this$, 'configScope', prototype);
+      this$.init = bind$(this$, 'init', prototype);
+      this$.setAttributes = bind$(this$, 'setAttributes', prototype);
+      this$.renderModal = bind$(this$, 'renderModal', prototype);
+      this$.setAttributes();
+      this$.renderModal();
+      return this$;
+    } function ctor$(){} ctor$.prototype = prototype;
+    prototype.renderModal = function(){
+      var div;
+      div = document.createElement('div');
+      div.innerHTML = DepMan.render("modal", {
+        States: States,
+        STATES: STATES
+      });
+      div.setAttribute('rel', "Modal Container");
+      div.setAttribute('id', 'modal-container');
+      return document.body.appendChild(div);
+    };
+    prototype.setAttributes = function(){
+      this.title = "Modal Window";
+      return this.content = "Test Content";
+    };
+    prototype.init = function(scope, runtime){
+      this.scope = scope;
+      this.runtime = runtime;
+      this.configScope();
+      return this.initRuntime();
+    };
+    prototype.configScope = function(){
+      var this$ = this;
+      this.safeApply = function(fn){
+        var phase;
+        phase = this$.scope.$parent.$$phase;
+        if (phase === "$apply" || phase === "$digest") {
+          if (fn && typeof fn === 'function') {
+            return fn();
+          }
+        } else {
+          return this$.scope.$apply(fn);
+        }
+      };
+      return import$(this.scope, this);
+    };
+    prototype.initRuntime = function(){
+      return this.runtime.init('modal-state', 'number');
+    };
+    prototype.toggle = function(){
+      if (this.runtime.get('modal-state') === States.normal) {
+        this.runtime.set('modal-state', States.fullscreen);
+      } else {
+        this.runtime.set('modal-state', States.normal);
+      }
+      return this.log(this.runtime.get('modal-state'));
+    };
+    prototype.show = function(data, timeout){
+      data == null && (data = {
+        title: "No Title",
+        content: "No Content"
+      });
+      this.scope.title = data.title || this.scope.title;
+      this.scope.content = data.content || this.scope.content;
+      this.runtime.set('modal-state', States.normal);
+      if (timeout) {
+        setTimeout(this.hide, timeout);
+      }
+      return this.safeApply();
+    };
+    prototype.hide = function(){
+      this.runtime.set('modal-state', States.closed);
+      return this.safeApply();
+    };
+    prototype.set = function(key, value){
+      if (key == 'title' || key == 'content') {
+        this[key] = value;
+        return this.safeApply();
+      }
+    };
+    return ModalController;
+  }(IS.Object));
+  Controller = new ModalController();
+  angular.module(AppInfo.displayname).controller("Modal", ["$scope", "Runtime", Controller.init]);
+  window.Modal = {
+    set: function(){
+      return Controller.edit.apply(Controller, arguments);
+    },
+    show: function(){
+      return Controller.show.apply(Controller, arguments);
+    },
+    hide: function(){
+      return Controller.hide.apply(Controller, arguments);
+    }
+  };
   module.exports = Controller;
   function bind$(obj, key, target){
     return function(){ return (target || obj)[key].apply(obj, arguments) };
@@ -16517,13 +16849,16 @@ Other than that, feel free to enjoy the application!
   }
 }).call(this);
 }, "classes/controllers/Page": function(exports, require, module) {(function(){
-  var STATES, States, PageController, Controller;
+  var STATES, States, MODALS, Modals, PageController, Controller;
   STATES = ['landing', 'application', 'help'];
   States = new IS.Enum(STATES);
+  MODALS = ['modal-inactive', 'modal-active', 'modal-active'];
+  Modals = new IS.Enum(MODALS);
   PageController = (function(superclass){
     var prototype = extend$((import$(PageController, superclass).displayName = 'PageController', PageController), superclass).prototype, constructor = PageController;
     function PageController(){
       var this$ = this instanceof ctor$ ? this : new ctor$;
+      this$.computeClass = bind$(this$, 'computeClass', prototype);
       this$.getBodyState = bind$(this$, 'getBodyState', prototype);
       this$.getStored = bind$(this$, 'getStored', prototype);
       this$.initRuntime = bind$(this$, 'initRuntime', prototype);
@@ -16551,21 +16886,14 @@ Other than that, feel free to enjoy the application!
       return this;
     };
     prototype.renderIndex = function(){
-      var d, objects, i$, ref$, len$, state, objectsString, classString;
+      var d;
       d = document.createElement("div");
       d.setAttribute("id", "appwrapper");
-      objects = [];
-      for (i$ = 0, len$ = (ref$ = STATES).length; i$ < len$; ++i$) {
-        state = ref$[i$];
-        objects.push(States[state] + ": '" + state + "'");
-      }
-      objectsString = objects.join(", ");
-      classString = "{" + objectsString + "}[runtime.props['app-state']]";
-      d.setAttribute("ng-class", classString);
+      d.setAttribute("class", "{{computeClass()}}");
       d.innerHTML = DepMan.render("index", {
         States: States
       });
-      return document.body.appendChild(d);
+      return document.body.insertBefore(d, document.body.children[0]);
     };
     prototype.configScope = function(){
       var this$ = this;
@@ -16611,10 +16939,13 @@ Other than that, feel free to enjoy the application!
     prototype.getBodyState = function(){
       return STATES[this.runtime.get("app-state")];
     };
+    prototype.computeClass = function(){
+      return [STATES[this.runtime.get('app-state')], MODALS[this.runtime.get("modal-state")]].join(" ");
+    };
     return PageController;
   }(IS.Object));
   Controller = new PageController();
-  angular.module("Revelation").controller("Page", ["$scope", "Runtime", Controller.init]);
+  angular.module(AppInfo.displayname).controller("Page", ["$scope", "Runtime", Controller.init]);
   module.exports = Controller;
   function bind$(obj, key, target){
     return function(){ return (target || obj)[key].apply(obj, arguments) };
@@ -17619,6 +17950,106 @@ Other than that, feel free to enjoy the application!
   module.exports = MacroReccorder;
 
 }).call(this);
+}, "classes/helpers/Notification": function(exports, require, module) {(function(){
+  var DRIVERS, Drivers, NotificationHelper, Helper, Toast, slice$ = [].slice, join$ = [].join;
+  DRIVERS = ['webkit', 'normal'];
+  Drivers = new IS.Enum(DRIVERS);
+  NotificationHelper = (function(superclass){
+    var prototype = extend$((import$(NotificationHelper, superclass).displayName = 'NotificationHelper', NotificationHelper), superclass).prototype, constructor = NotificationHelper;
+    function NotificationHelper(){
+      var this$ = this instanceof ctor$ ? this : new ctor$;
+      this$.toastNormal = bind$(this$, 'toastNormal', prototype);
+      this$.toastWebkit = bind$(this$, 'toastWebkit', prototype);
+      this$.toast = bind$(this$, 'toast', prototype);
+      Runtime.init('toast-driver', 'number');
+      Runtime.init('toast-timeout', 'numeber');
+      Storage.get("toast-timeout", function(timeout){
+        var handler;
+        timeout == null && (timeout = 5000);
+        Runtime.set('toast-timeout', timeout);
+        Runtime.set('toast-driver', Drivers['normal']);
+        if (Tester['webkitNotifications']) {
+          if (!Tester['chrome.storage']) {
+            handler = function(){
+              webkitNotifications.requestPermission();
+              return window.removeEventListener("click");
+            };
+            window.addEventListener("click", handler);
+          }
+          Runtime.set('toast-driver', Drivers['webkit']);
+        }
+        return this$.echo("Notification Helper Online, with driver : ", this$.drive, " and timeout : ", Runtime.get('toast-timeout'));
+      });
+      return this$;
+    } function ctor$(){} ctor$.prototype = prototype;
+    prototype.toast = function(title){
+      var body;
+      title == null && (title = "Notification");
+      body = slice$.call(arguments, 1);
+      switch (Runtime.get('toast-driver')) {
+      case Drivers.webkit:
+        if (webkitNotifications.checkPermission() === 0) {
+          return this.toastWebkit(title, body);
+        } else {
+          return this.toastNormal(title, body);
+        }
+        break;
+      default:
+        return this.toastNormal(title, body);
+      }
+    };
+    prototype.toastWebkit = function(title, body){
+      var b, i$, len$, item, notif;
+      b = body.shift();
+      for (i$ = 0, len$ = body.length; i$ < len$; ++i$) {
+        item = body[i$];
+        b += "\n" + item;
+      }
+      notif = webkitNotifications.createNotification('icon.ico', title, b);
+      notif.ondisplay = function(ev){
+        return setTimeout(function(){
+          return ev.currentTarget.cancel();
+        }, Runtime.get('toast-timeout'));
+      };
+      return notif.show();
+    };
+    prototype.toastNormal = function(title, body){
+      var b, i$, len$, item;
+      b = "";
+      if (typeof Modal != 'undefined' && Modal !== null) {
+        for (i$ = 0, len$ = body.length; i$ < len$; ++i$) {
+          item = body[i$];
+          b += "<p>" + item + "</p>";
+        }
+        return Modal.show({
+          title: title,
+          content: b
+        }, Runtime.get('toast-timeout'));
+      } else {
+        b = join$.call([title].concat(body), "\n");
+        return alert(b);
+      }
+    };
+    return NotificationHelper;
+  }(IS.Object));
+  Helper = new NotificationHelper();
+  Toast = Helper.toast;
+  module.exports = [Helper, Toast];
+  function bind$(obj, key, target){
+    return function(){ return (target || obj)[key].apply(obj, arguments) };
+  }
+  function extend$(sub, sup){
+    function fun(){} fun.prototype = (sub.superclass = sup).prototype;
+    (sub.prototype = new fun).constructor = sub;
+    if (typeof sup.extended == 'function') sup.extended(sub);
+    return sub;
+  }
+  function import$(obj, src){
+    var own = {}.hasOwnProperty;
+    for (var key in src) if (own.call(src, key)) obj[key] = src[key];
+    return obj;
+  }
+}).call(this);
 }, "classes/helpers/OPMLManager": function(exports, require, module) {(function() {
   var OPMLManager, _inst,
     __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
@@ -17812,6 +18243,7 @@ Other than that, feel free to enjoy the application!
           case 'object':
             return {};
           case 'number':
+          case 'boolean':
             return 0;
           default:
             return "";
@@ -17825,7 +18257,7 @@ Other than that, feel free to enjoy the application!
     return Runtime;
   }(IS.Object));
   runtime = new Runtime();
-  angular.module("Revelation").value("Runtime", runtime);
+  angular.module(AppInfo.displayname).value("Runtime", runtime);
   module.exports = runtime;
   function bind$(obj, key, target){
     return function(){ return (target || obj)[key].apply(obj, arguments) };
@@ -18090,6 +18522,12 @@ Other than that, feel free to enjoy the application!
     },
     "localstorage": function() {
       return ((typeof chrome !== "undefined" && chrome !== null ? chrome.storage : void 0) != null) || (window.localStorage != null);
+    },
+    "chrome.storage": function() {
+      return (typeof chrome !== "undefined" && chrome !== null) && (chrome.storage != null);
+    },
+    "webkitNotifications": function() {
+      return webkitNotifications;
     }
   };
 
@@ -30408,6 +30846,70 @@ return window.JSONImport['ro-RO'] = module.exports = item;}, "data/stylesheets/f
   (function() {
     (function() {
       __out.push('<section id="loadingscreen">\n\t<section></section>\n\t<aside data-location=\'left\'></aside>\n\t<aside data-location=\'right\'></aside>\n\t<article>\n\t\t<div><p>Revelati</p></div>\n\t\t<span></span>\n\t\t<div><p>n</p></div>\n\t\t<p><span id="loadingmessage"></span></p>\n\t</article>\n</section>\n');
+    
+    }).call(this);
+    
+  }).call(__obj);
+  __obj.safe = __objSafe, __obj.escape = __escape;
+  return __out.join('');
+}}, "data/views/modal": function(exports, require, module) {module.exports = function(__obj) {
+  if (!__obj) __obj = {};
+  var __out = [], __capture = function(callback) {
+    var out = __out, result;
+    __out = [];
+    callback.call(this);
+    result = __out.join('');
+    __out = out;
+    return __safe(result);
+  }, __sanitize = function(value) {
+    if (value && value.ecoSafe) {
+      return value;
+    } else if (typeof value !== 'undefined' && value != null) {
+      return __escape(value);
+    } else {
+      return '';
+    }
+  }, __safe, __objSafe = __obj.safe, __escape = __obj.escape;
+  __safe = __obj.safe = function(value) {
+    if (value && value.ecoSafe) {
+      return value;
+    } else {
+      if (!(typeof value !== 'undefined' && value != null)) value = '';
+      var result = new String(value);
+      result.ecoSafe = true;
+      return result;
+    }
+  };
+  if (!__escape) {
+    __escape = __obj.escape = function(value) {
+      return ('' + value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    };
+  }
+  (function() {
+    (function() {
+      __out.push(__sanitize(console.log(this)));
+    
+      __out.push('\n<section ng-controller=\'Modal\' id=\'modal-window\' ng-class="{');
+    
+      __out.push(__sanitize(this.States["closed"]));
+    
+      __out.push(': \'closed\', ');
+    
+      __out.push(__sanitize(this.States["normal"]));
+    
+      __out.push(': \'normal\', ');
+    
+      __out.push(__sanitize(this.States["fullscreen"]));
+    
+      __out.push(': \'fullscreen\'}[runtime.props[\'modal-state\']]">\n\t<section>\n\t<header ng-bind=\'title\'></header>\n\t  <nav>\n\t\t<li ng-click=\'runtime.set("modal-state", ');
+    
+      __out.push(__sanitize(this.States['closed']));
+    
+      __out.push(')\' ><i class="icon-remove"></i></li>\n\t\t<li ng-click=\'toggle()\'><i class="icon-fullscreen"></i></li>\n\t  </nav>\n\t  <article ng-bind-html-unsafe=\'content\'></article>\n\t</section>\n</section>\n');
     
     }).call(this);
     
@@ -31936,7 +32438,7 @@ window.isDev = true;(function() {
 window.addEventListener('load', (function(){
 	window.getStylesheets = function() {
 		element = document.createElement('style');
-		element.innerHTML = "body,html {  overflow: hidden;  width: 100%;  height: 100%;  margin: 0;  padding: 0;}body {  width: 100%;  height: 100%;  font-size: 10pt;  font-family: Roboto, sans-serif;  color: #242424;  background: #000;}@font-face {  font-family: 'Open Sans';  font-style: normal;  font-weight: 300;  src: local('Open Sans Light'), local('OpenSans-Light'), url('<<INSERT OPEN SANS 300 WOFF HERE>>') format('woff');}@font-face {  font-family: 'Open Sans';  font-style: normal;  font-weight: 400;  src: local('Open Sans'), local('OpenSans'), url('<<INSERT OPEN SANS 400 WOFF HERE>>') format('woff');}@font-face {  font-family: 'Electrolize';  font-style: normal;  font-weight: 400;  src: local('Electrolize'), local('Electrolize-Regular'), url('<<INSERT ELECTROLIZE WOFF HERE>>') format('woff');}@font-face {  font-family: 'Roboto';  font-style: normal;  font-weight: 100;  src: local('Roboto Thin'), local('Roboto-Thin'), url('<<INSERT ROBOTO 100 WOFF HERE>>') format('woff');}@font-face {  font-family: 'Roboto';  font-style: normal;  font-weight: 400;  src: local('Roboto Regular'), local('Roboto-Regular'), url('<<INSERT ROBOTO 400 WOFF HERE>>') format('woff');}body #appwrapper > section {  position: absolute;  font-weight: 100;  z-index: 1;  left: 0;  top: 0;  bottom: 0;  right: 0;  -webkit-transition: all 1s ease-in-out;  -moz-transition: all 1s ease-in-out;  -o-transition: all 1s ease-in-out;  -ms-transition: all 1s ease-in-out;  transition: all 1s ease-in-out;  -webkit-perspective: 1600px;  -moz-perspective: 1600px;  -ms-perspective: 1600px;  perspective: 1600px;}body #appwrapper > section .dragger {  position: fixed;  width: auto;  z-index: 5;  opacity: 1;  -ms-filter: none;  filter: none;  font-size: 24;  background: rgba(255,255,255,0.2);  -webkit-border-radius: 4px;  border-radius: 4px;  border: solid 1px rgba(255,255,255,0.4);  padding: 15px;}body #appwrapper > section perspective-origin bottom center {  -webkit-transition: all 0.2s ease-in-out;  -moz-transition: all 0.2s ease-in-out;  -o-transition: all 0.2s ease-in-out;  -ms-transition: all 0.2s ease-in-out;  transition: all 0.2s ease-in-out;  font-family: Roboto;  font-weight: 100;  font-size: 24pt;}body #appwrapper > section#help {  background: rgba(0,0,0,0.8);  z-index: 3;  -webkit-transform: translateY(-100%);  -moz-transform: translateY(-100%);  -o-transform: translateY(-100%);  -ms-transform: translateY(-100%);  transform: translateY(-100%);}body #appwrapper > section#help .dragger {  background: rgba(0,0,0,0.8);  border-color: #000;  color: #fff;  bottom: 0;  left: 25px;  border-bottom-right-radius: 0;  border-bottom-left-radius: 0;  border-bottom: none;}body #appwrapper > section#help .wrapper {  display: table;  width: 100%;  height: 100%;  text-align: center;}body #appwrapper > section#help .wrapper aside {  position: absolute;  top: 0;  bottom: 0;  width: 15%;  -webkit-transition: all 0.5s ease-in-out;  -moz-transition: all 0.5s ease-in-out;  -o-transition: all 0.5s ease-in-out;  -ms-transition: all 0.5s ease-in-out;  transition: all 0.5s ease-in-out;  background: rgba(255,255,255,0.1);}body #appwrapper > section#help .wrapper aside.right {  right: 0;}body #appwrapper > section#help .wrapper aside.left {  left: 0;}body #appwrapper > section#help .wrapper aside:hover {  background: rgba(255,255,255,0.2);}body #appwrapper > section#help .wrapper nav {  position: absolute;  top: 70%;  width: 500px;  left: 50%;  margin-left: -250px;  text-align: center;}body #appwrapper > section#help .wrapper nav li {  display: inline-block;  width: 0;  height: 0;  border: solid 5px rgba(255,255,255,0.4);  -webkit-border-radius: 100%;  border-radius: 100%;  margin: 10px;  -webkit-transition: all 0.5s ease-in-out;  -moz-transition: all 0.5s ease-in-out;  -o-transition: all 0.5s ease-in-out;  -ms-transition: all 0.5s ease-in-out;  transition: all 0.5s ease-in-out;}body #appwrapper > section#help .wrapper nav li:hover {  border-color: rgba(255,255,255,0.6);}body #appwrapper > section#help .wrapper nav li.active {  border-color: #fff;}body #appwrapper > section#help .wrapper section {  position: absolute;  height: 40%;  top: 20%;  left: 50%;  margin-left: -250px;  width: 500px;  -webkit-box-shadow: 0 0 50px rgba(0,0,0,0.1);  box-shadow: 0 0 50px rgba(0,0,0,0.1);  overflow: hidden;  -webkit-border-radius: 4px;  border-radius: 4px;  -webkit-perspective: 200px;  -moz-perspective: 200px;  -ms-perspective: 200px;  perspective: 200px;}body #appwrapper > section#help .wrapper section article {  position: absolute;  left: 0;  right: 0;  top: 0;  bottom: 0;  padding: 25px;  color: #fff;  text-shadow: 0 1px 1px #000;  -webkit-transform: translateX(-200%) rotateY(90deg);  -moz-transform: translateX(-200%) rotateY(90deg);  -o-transform: translateX(-200%) rotateY(90deg);  -ms-transform: translateX(-200%) rotateY(90deg);  transform: translateX(-200%) rotateY(90deg);  -webkit-transition: all 1s ease-in-out;  -moz-transition: all 1s ease-in-out;  -o-transition: all 1s ease-in-out;  -ms-transition: all 1s ease-in-out;  transition: all 1s ease-in-out;  text-align: left;  text-indent: 25px;  -webkit-box-shadow: 0 0 50px rgba(100,100,100,0.1) inset;  box-shadow: 0 0 50px rgba(100,100,100,0.1) inset;}body #appwrapper > section#help .wrapper section article.active {  -webkit-transform: translateX(0) rotateY(0);  -moz-transform: translateX(0) rotateY(0);  -o-transform: translateX(0) rotateY(0);  -ms-transform: translateX(0) rotateY(0);  transform: translateX(0) rotateY(0);  background: rgba(100,100,100,0.1);}body #appwrapper > section#help .wrapper section article.active ~ article {  -webkit-transform: translateX(200%) rotateY(-90deg);  -moz-transform: translateX(200%) rotateY(-90deg);  -o-transform: translateX(200%) rotateY(-90deg);  -ms-transform: translateX(200%) rotateY(-90deg);  transform: translateX(200%) rotateY(-90deg);}body #appwrapper > section#landing {  background: #fff;  z-index: 1;  -webkit-transform: translateY(-100%) scale(0.5) rotateX(45deg);  -moz-transform: translateY(-100%) scale(0.5) rotateX(45deg);  -o-transform: translateY(-100%) scale(0.5) rotateX(45deg);  -ms-transform: translateY(-100%) scale(0.5) rotateX(45deg);  transform: translateY(-100%) scale(0.5) rotateX(45deg);  text-shadow: 0 1px 1px #fff;  font-weight: 100 !important;}body #appwrapper > section#landing .dragger {  bottom: 0;  right: 25px;  font-size: 72pt;  border-top-right-radius: 0;  border-top-left-radius: 0;}body #appwrapper > section#landing aside {  overflow: hidden;  position: absolute;  -webkit-transition: all 0.5s ease-in-out;  -moz-transition: all 0.5s ease-in-out;  -o-transition: all 0.5s ease-in-out;  -ms-transition: all 0.5s ease-in-out;  transition: all 0.5s ease-in-out;}body #appwrapper > section#landing aside.main {  left: 50%;  top: 50%;  right: 50%;  bottom: 50%;  width: 125px;  height: 125px;  -webkit-border-radius: 100%;  border-radius: 100%;  -webkit-box-shadow: 0 0 1000px rgba(0,0,0,0.4);  box-shadow: 0 0 1000px rgba(0,0,0,0.4);  border: solid 1px rgba(0,0,0,0.2);  margin: -125px 0 0 -125px;  text-align: center;  padding: 62.5px;  font-size: 18pt;  color: #fff;}body #appwrapper > section#landing aside.main:hover {  -webkit-box-shadow: 0 0 100px rgba(0,0,0,0.8);  box-shadow: 0 0 100px rgba(0,0,0,0.8);  color: #000;}body #appwrapper > section#landing aside.main h1 {  padding: 0;  margin: 0;  opacity: 1;  -ms-filter: none;  filter: none;  height: 62.5px;  margin: 31.25px 0;}body #appwrapper > section#landing aside.main .content {  opacity: 0;  filter: alpha(opacity=0);  -ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=0)';  -webkit-transform: translateX(-100%);  -moz-transform: translateX(-100%);  -o-transform: translateX(-100%);  -ms-transform: translateX(-100%);  transform: translateX(-100%);}body #appwrapper > section#landing aside.readmore {  top: 0;  left: 0;  width: 100%;  height: 100%;  background: #fff;  z-index: 999;  -webkit-box-shadow: 0 0 50px rgba(0,0,0,0.2) inline;  box-shadow: 0 0 50px rgba(0,0,0,0.2) inline;  padding: 25px;  -webkit-border-radius: 0px;  border-radius: 0px;  border: none;}body #appwrapper > section#landing aside.readmore h1 {  opacity: 0;  filter: alpha(opacity=0);  -ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=0)';  -webkit-transform: translateX(100%);  -moz-transform: translateX(100%);  -o-transform: translateX(100%);  -ms-transform: translateX(100%);  transform: translateX(100%);}body #appwrapper > section#landing aside.readmore .content {  opacity: 1;  -ms-filter: none;  filter: none;}body #appwrapper > section#landing nav {  position: absolute;  top: 50%;  left: 0;  margin: -125px 0 0 -125px;  height: 250px;  width: 50%;  display: table;  text-align: right;}body #appwrapper > section#landing nav > * {  margin: 0 0 0 125px;  padding-right: 50px;  display: table-cell;  vertical-align: middle;}body #appwrapper > section#landing nav.right {  text-align: left;  left: auto;  right: 0;  margin-left: 0;  margin-right: -125px;}body #appwrapper > section#landing nav.right > * {  margin-left: 0;  margin-right: 125px;  padding-right: 0;  padding-left: 50px;}body #appwrapper > section#landing nav h1 {  font-size: 36pt;  font-weight: 100;}body #appwrapper > section#landing nav li {  list-style: none;  padding: 10px;  font-size: 14pt;}body #appwrapper > section#landing nav h1,body #appwrapper > section#landing nav li {  color: #000;  -webkit-transition: all 0.5s ease-in-out;  -moz-transition: all 0.5s ease-in-out;  -o-transition: all 0.5s ease-in-out;  -ms-transition: all 0.5s ease-in-out;  transition: all 0.5s ease-in-out;  opacity: 0.2;  filter: alpha(opacity=20);  -ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=20)';  cursor: pointer;}body #appwrapper > section#landing nav h1#chrome,body #appwrapper > section#landing nav li#chrome {  color: #ff0;}body #appwrapper > section#landing nav h1#firefox,body #appwrapper > section#landing nav li#firefox {  color: #ffa500;}body #appwrapper > section#landing nav h1#windows,body #appwrapper > section#landing nav li#windows {  color: #00f;}body #appwrapper > section#landing nav h1#opera,body #appwrapper > section#landing nav li#opera {  color: #f00;}body #appwrapper > section#landing nav h1:hover,body #appwrapper > section#landing nav li:hover {  opacity: 0.8;  filter: alpha(opacity=80);  -ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=80)';}body #appwrapper > section#application {  background: #f00;  z-index: 2;  -webkit-transform: translateY(100%) scale(0.5) rotateX(45deg);  -moz-transform: translateY(100%) scale(0.5) rotateX(45deg);  -o-transform: translateY(100%) scale(0.5) rotateX(45deg);  -ms-transform: translateY(100%) scale(0.5) rotateX(45deg);  transform: translateY(100%) scale(0.5) rotateX(45deg);}body #appwrapper > section#application .dragger.help {  right: 25px;  top: 0;  border-top-right-radius: 0;  border-top-left-radius: 0;  border-top: none;}body #appwrapper > section#application .dragger.landing {  left: 25px;  bottom: 0;  border-bottom-right-radius: 0;  border-bottom-left-radius: 0;  border-bottom: none;}body #appwrapper.landing section#landing,body #appwrapper.help section#help,body #appwrapper.application section#application,body #appwrapper.settings section#settings {  -webkit-transform: none;  -moz-transform: none;  -o-transform: none;  -ms-transform: none;  transform: none;}body #appwrapper.help section#help ~ section#application,body #appwrapper.settings section#settings ~ section#application {  -webkit-transform: none;  -moz-transform: none;  -o-transform: none;  -ms-transform: none;  transform: none;}body #appwrapper {  position: relative;  width: 100%;  height: 100%;  -webkit-perspective: 1600px;  -moz-perspective: 1600px;  -ms-perspective: 1600px;  perspective: 1600px;  -webkit-perspective-origin: bottom center;  -moz-perspective-origin: bottom center;  -ms-perspective-origin: bottom center;  perspective-origin: bottom center;}body #loadingscreen {  position: absolute;  left: 0;  right: 0;  top: 0;  bottom: 0;  opacity: 0;  filter: alpha(opacity=0);  -ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=0)';  z-index: -1;  -webkit-transition: all 1s ease-in-out;  -moz-transition: all 1s ease-in-out;  -o-transition: all 1s ease-in-out;  -ms-transition: all 1s ease-in-out;  transition: all 1s ease-in-out;  overflow: hidden;}body #loadingscreen * {  -webkit-transition: all 0.5s ease-in-out;  -moz-transition: all 0.5s ease-in-out;  -o-transition: all 0.5s ease-in-out;  -ms-transition: all 0.5s ease-in-out;  transition: all 0.5s ease-in-out;}body #loadingscreen > section {  width: 100%;  height: 100%;  background: #000;  opacity: 0.8;  filter: alpha(opacity=80);  -ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=80)';  trnasition: all 1s ease-in-out;}body #loadingscreen > aside {  -webkit-transition: all 0.5s ease-in-out;  -moz-transition: all 0.5s ease-in-out;  -o-transition: all 0.5s ease-in-out;  -ms-transition: all 0.5s ease-in-out;  transition: all 0.5s ease-in-out;  position: absolute;  left: -200%;  right: 200%;  top: 0;  bottom: 0;  background: #fff;  -webkit-box-shadow: 0 0 5px rgba(0,0,0,0.2);  box-shadow: 0 0 5px rgba(0,0,0,0.2);}body #loadingscreen > aside:last-of-type {  border: solid 1px rgba(0,0,0,0.05);  left: 200%;  right: -200%;}body #loadingscreen.active > aside {  left: 0;  right: 0;}body #loadingscreen > article {  height: 200px;  width: 350px;  background: #fff;  -webkit-border-radius: 4px;  border-radius: 4px;  -webkit-box-shadow: 0 5px 5px rgba(0,0,0,0.2);  box-shadow: 0 5px 5px rgba(0,0,0,0.2);  border: solid 1px rgba(0,0,0,0.2);  opacity: 0;  filter: alpha(opacity=0);  -ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=0)';  position: absolute;  z-index: 9;  left: 50%;  top: 50%;  margin: -100px 0 0 -175px;  text-align: center;  -webkit-transform: scale(10);  -moz-transform: scale(10);  -o-transform: scale(10);  -ms-transform: scale(10);  transform: scale(10);  font-family: Roboto;  font-size: 18pt;  font-weight: 100;  text-align: center;  line-height: 200px;  vertical-align: middle;}body #loadingscreen > article > span,body #loadingscreen > article p,body #loadingscreen > article div {  display: inline-block;  vertical-align: middle;}body #loadingscreen > article > span {  width: 30px;  height: 30px;  -webkit-border-radius: 100%;  border-radius: 100%;  border: solid 1px rgba(0,0,0,0.3);  margin-top: -6px;}body #loadingscreen > article div {  width: 0;  overflow: hidden;}body #loadingscreen > article div p {  float: left;}body #loadingscreen > article div:last-of-type p {  float: right;}body #loadingscreen > article > p {  line-height: 1em;  position: absolute;  left: 10%;  right: 10%;  top: 65%;  height: 50px;  font-size: 14pt;  overflow: hidden;}body #loadingscreen > article:hover > span {  border-color: rgba(0,0,0,0.8);}body #loadingscreen > article:hover div {  width: 80px;  margin: 0;  padding: 0;  margin-left: 11px;}body #loadingscreen > article:hover div:last-of-type {  width: 11px;  margin: 0;  margin-right: 80px;}body #loadingscreen.active > article {  opacity: 1;  -ms-filter: none;  filter: none;  -webkit-transform: scale(1);  -moz-transform: scale(1);  -o-transform: scale(1);  -ms-transform: scale(1);  transform: scale(1);}body #loadingscreen.active {  z-index: 99;  opacity: 1;  -ms-filter: none;  filter: none;}";
+		element.innerHTML = "body,html {  overflow: hidden;  width: 100%;  height: 100%;  margin: 0;  padding: 0;}body {  width: 100%;  height: 100%;  font-size: 10pt;  font-family: Roboto, sans-serif;  color: #242424;  background: #100;}@font-face {  font-family: 'Open Sans';  font-style: normal;  font-weight: 300;  src: local('Open Sans Light'), local('OpenSans-Light'), url('<<INSERT OPEN SANS 300 WOFF HERE>>') format('woff');}@font-face {  font-family: 'Open Sans';  font-style: normal;  font-weight: 400;  src: local('Open Sans'), local('OpenSans'), url('<<INSERT OPEN SANS 400 WOFF HERE>>') format('woff');}@font-face {  font-family: 'Electrolize';  font-style: normal;  font-weight: 400;  src: local('Electrolize'), local('Electrolize-Regular'), url('<<INSERT ELECTROLIZE WOFF HERE>>') format('woff');}@font-face {  font-family: 'Roboto';  font-style: normal;  font-weight: 100;  src: local('Roboto Thin'), local('Roboto-Thin'), url('<<INSERT ROBOTO 100 WOFF HERE>>') format('woff');}@font-face {  font-family: 'Roboto';  font-style: normal;  font-weight: 400;  src: local('Roboto Regular'), local('Roboto-Regular'), url('<<INSERT ROBOTO 400 WOFF HERE>>') format('woff');}body #appwrapper > section {  position: absolute;  font-weight: 100;  z-index: 1;  left: 0;  top: 0;  bottom: 0;  right: 0;  -webkit-perspective: 1600px;  -moz-perspective: 1600px;  -ms-perspective: 1600px;  perspective: 1600px;  -webkit-transition: all 1s ease-in-out;  -moz-transition: all 1s ease-in-out;  -o-transition: all 1s ease-in-out;  -ms-transition: all 1s ease-in-out;  transition: all 1s ease-in-out;  font-family: Roboto;}body #appwrapper > section .dragger {  position: fixed;  width: auto;  z-index: 5;  opacity: 1;  -ms-filter: none;  filter: none;  font-size: 24;  background: rgba(255,255,255,0.2);  -webkit-border-radius: 4px;  border-radius: 4px;  border: solid 1px rgba(255,255,255,0.4);  padding: 15px;}body #appwrapper > section#help {  background: rgba(0,0,0,0.8);  z-index: 3;  -webkit-transform: translateY(-100%);  -moz-transform: translateY(-100%);  -o-transform: translateY(-100%);  -ms-transform: translateY(-100%);  transform: translateY(-100%);}body #appwrapper > section#help .dragger {  background: rgba(0,0,0,0.8);  border-color: #000;  color: #fff;  bottom: 0;  left: 25px;  border-bottom-right-radius: 0;  border-bottom-left-radius: 0;  border-bottom: none;}body #appwrapper > section#help .wrapper {  display: table;  width: 100%;  height: 100%;  text-align: center;}body #appwrapper > section#help .wrapper aside {  position: absolute;  top: 0;  bottom: 0;  width: 15%;  -webkit-transition: all 0.5s ease-in-out;  -moz-transition: all 0.5s ease-in-out;  -o-transition: all 0.5s ease-in-out;  -ms-transition: all 0.5s ease-in-out;  transition: all 0.5s ease-in-out;  background: rgba(255,255,255,0.1);}body #appwrapper > section#help .wrapper aside.right {  right: 0;}body #appwrapper > section#help .wrapper aside.left {  left: 0;}body #appwrapper > section#help .wrapper aside:hover {  background: rgba(255,255,255,0.2);}body #appwrapper > section#help .wrapper nav {  position: absolute;  top: 70%;  width: 500px;  left: 50%;  margin-left: -250px;  text-align: center;}body #appwrapper > section#help .wrapper nav li {  display: inline-block;  width: 0;  height: 0;  border: solid 5px rgba(255,255,255,0.4);  -webkit-border-radius: 100%;  border-radius: 100%;  margin: 10px;  -webkit-transition: all 0.5s ease-in-out;  -moz-transition: all 0.5s ease-in-out;  -o-transition: all 0.5s ease-in-out;  -ms-transition: all 0.5s ease-in-out;  transition: all 0.5s ease-in-out;}body #appwrapper > section#help .wrapper nav li:hover {  border-color: rgba(255,255,255,0.6);}body #appwrapper > section#help .wrapper nav li.active {  border-color: #fff;}body #appwrapper > section#help .wrapper section {  position: absolute;  height: 40%;  top: 20%;  left: 50%;  margin-left: -250px;  width: 500px;  -webkit-box-shadow: 0 0 50px rgba(0,0,0,0.1);  box-shadow: 0 0 50px rgba(0,0,0,0.1);  overflow: hidden;  -webkit-border-radius: 4px;  border-radius: 4px;  -webkit-perspective: 200px;  -moz-perspective: 200px;  -ms-perspective: 200px;  perspective: 200px;}body #appwrapper > section#help .wrapper section article {  position: absolute;  left: 0;  right: 0;  top: 0;  bottom: 0;  padding: 25px;  color: #fff;  text-shadow: 0 1px 1px #000;  -webkit-transform: translateX(-200%) rotateY(90deg);  -moz-transform: translateX(-200%) rotateY(90deg);  -o-transform: translateX(-200%) rotateY(90deg);  -ms-transform: translateX(-200%) rotateY(90deg);  transform: translateX(-200%) rotateY(90deg);  -webkit-transition: all 1s ease-in-out;  -moz-transition: all 1s ease-in-out;  -o-transition: all 1s ease-in-out;  -ms-transition: all 1s ease-in-out;  transition: all 1s ease-in-out;  text-align: left;  text-indent: 25px;  -webkit-box-shadow: 0 0 50px rgba(100,100,100,0.1) inset;  box-shadow: 0 0 50px rgba(100,100,100,0.1) inset;}body #appwrapper > section#help .wrapper section article.active {  -webkit-transform: translateX(0) rotateY(0);  -moz-transform: translateX(0) rotateY(0);  -o-transform: translateX(0) rotateY(0);  -ms-transform: translateX(0) rotateY(0);  transform: translateX(0) rotateY(0);  background: rgba(100,100,100,0.1);}body #appwrapper > section#help .wrapper section article.active ~ article {  -webkit-transform: translateX(200%) rotateY(-90deg);  -moz-transform: translateX(200%) rotateY(-90deg);  -o-transform: translateX(200%) rotateY(-90deg);  -ms-transform: translateX(200%) rotateY(-90deg);  transform: translateX(200%) rotateY(-90deg);}body #appwrapper > section#landing {  background: #fff;  z-index: 1;  -webkit-transform: translateY(-100%) scale(0.5) rotateX(45deg);  -moz-transform: translateY(-100%) scale(0.5) rotateX(45deg);  -o-transform: translateY(-100%) scale(0.5) rotateX(45deg);  -ms-transform: translateY(-100%) scale(0.5) rotateX(45deg);  transform: translateY(-100%) scale(0.5) rotateX(45deg);  text-shadow: 0 1px 1px #fff;  font-weight: 100 !important;}body #appwrapper > section#landing .dragger {  bottom: 0;  right: 25px;  font-size: 72pt;  border-top-right-radius: 0;  border-top-left-radius: 0;}body #appwrapper > section#landing aside {  overflow: hidden;  position: absolute;  -webkit-transition: all 0.5s ease-in-out;  -moz-transition: all 0.5s ease-in-out;  -o-transition: all 0.5s ease-in-out;  -ms-transition: all 0.5s ease-in-out;  transition: all 0.5s ease-in-out;}body #appwrapper > section#landing aside.main {  left: 50%;  top: 50%;  right: 50%;  bottom: 50%;  width: 125px;  height: 125px;  -webkit-border-radius: 100%;  border-radius: 100%;  -webkit-box-shadow: 0 0 1000px rgba(0,0,0,0.4);  box-shadow: 0 0 1000px rgba(0,0,0,0.4);  border: solid 1px rgba(0,0,0,0.2);  margin: -125px 0 0 -125px;  text-align: center;  padding: 62.5px;  font-size: 18pt;  color: #fff;}body #appwrapper > section#landing aside.main:hover {  -webkit-box-shadow: 0 0 100px rgba(0,0,0,0.8);  box-shadow: 0 0 100px rgba(0,0,0,0.8);  color: #000;}body #appwrapper > section#landing aside.main h1 {  padding: 0;  margin: 0;  opacity: 1;  -ms-filter: none;  filter: none;  height: 62.5px;  margin: 31.25px 0;}body #appwrapper > section#landing aside.main .content {  opacity: 0;  filter: alpha(opacity=0);  -ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=0)';  -webkit-transform: translateX(-100%);  -moz-transform: translateX(-100%);  -o-transform: translateX(-100%);  -ms-transform: translateX(-100%);  transform: translateX(-100%);}body #appwrapper > section#landing aside.readmore {  top: 0;  left: 0;  width: 100%;  height: 100%;  background: #fff;  z-index: 999;  -webkit-box-shadow: 0 0 50px rgba(0,0,0,0.2) inline;  box-shadow: 0 0 50px rgba(0,0,0,0.2) inline;  padding: 25px;  -webkit-border-radius: 0px;  border-radius: 0px;  border: none;}body #appwrapper > section#landing aside.readmore h1 {  opacity: 0;  filter: alpha(opacity=0);  -ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=0)';  -webkit-transform: translateX(100%);  -moz-transform: translateX(100%);  -o-transform: translateX(100%);  -ms-transform: translateX(100%);  transform: translateX(100%);}body #appwrapper > section#landing aside.readmore .content {  opacity: 1;  -ms-filter: none;  filter: none;}body #appwrapper > section#landing nav {  position: absolute;  top: 50%;  left: 0;  margin: -125px 0 0 -125px;  height: 250px;  width: 50%;  display: table;  text-align: right;}body #appwrapper > section#landing nav > * {  margin: 0 0 0 125px;  padding-right: 50px;  display: table-cell;  vertical-align: middle;}body #appwrapper > section#landing nav.right {  text-align: left;  left: auto;  right: 0;  margin-left: 0;  margin-right: -125px;}body #appwrapper > section#landing nav.right > * {  margin-left: 0;  margin-right: 125px;  padding-right: 0;  padding-left: 50px;}body #appwrapper > section#landing nav h1 {  font-size: 36pt;  font-weight: 100;}body #appwrapper > section#landing nav li {  list-style: none;  padding: 10px;  font-size: 14pt;}body #appwrapper > section#landing nav h1,body #appwrapper > section#landing nav li {  color: #000;  -webkit-transition: all 0.5s ease-in-out;  -moz-transition: all 0.5s ease-in-out;  -o-transition: all 0.5s ease-in-out;  -ms-transition: all 0.5s ease-in-out;  transition: all 0.5s ease-in-out;  opacity: 0.2;  filter: alpha(opacity=20);  -ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=20)';  cursor: pointer;}body #appwrapper > section#landing nav h1#chrome,body #appwrapper > section#landing nav li#chrome {  color: #ff0;}body #appwrapper > section#landing nav h1#firefox,body #appwrapper > section#landing nav li#firefox {  color: #ffa500;}body #appwrapper > section#landing nav h1#windows,body #appwrapper > section#landing nav li#windows {  color: #00f;}body #appwrapper > section#landing nav h1#opera,body #appwrapper > section#landing nav li#opera {  color: #f00;}body #appwrapper > section#landing nav h1:hover,body #appwrapper > section#landing nav li:hover {  opacity: 0.8;  filter: alpha(opacity=80);  -ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=80)';}body #appwrapper > section#application {  background: #f00;  z-index: 2;  -webkit-transform: translateY(100%) scale(0.5) rotateX(45deg);  -moz-transform: translateY(100%) scale(0.5) rotateX(45deg);  -o-transform: translateY(100%) scale(0.5) rotateX(45deg);  -ms-transform: translateY(100%) scale(0.5) rotateX(45deg);  transform: translateY(100%) scale(0.5) rotateX(45deg);}body #appwrapper > section#application .dragger.help {  right: 25px;  top: 0;  border-top-right-radius: 0;  border-top-left-radius: 0;  border-top: none;}body #appwrapper > section#application .dragger.landing {  left: 25px;  bottom: 0;  border-bottom-right-radius: 0;  border-bottom-left-radius: 0;  border-bottom: none;}body #appwrapper.landing section#landing,body #appwrapper.help section#help,body #appwrapper.application section#application,body #appwrapper.settings section#settings {  -webkit-transform: none;  -moz-transform: none;  -o-transform: none;  -ms-transform: none;  transform: none;}body #appwrapper.help section#help ~ section#application,body #appwrapper.settings section#settings ~ section#application {  -webkit-transform: none;  -moz-transform: none;  -o-transform: none;  -ms-transform: none;  transform: none;}body #appwrapper {  position: relative;  width: 100%;  height: 100%;  -webkit-perspective: 1600px;  -moz-perspective: 1600px;  -ms-perspective: 1600px;  perspective: 1600px;  -webkit-perspective-origin: bottom center;  -moz-perspective-origin: bottom center;  -ms-perspective-origin: bottom center;  perspective-origin: bottom center;  -webkit-transition: all 1s ease-in-out;  -moz-transition: all 1s ease-in-out;  -o-transition: all 1s ease-in-out;  -ms-transition: all 1s ease-in-out;  transition: all 1s ease-in-out;  font-family: Roboto;  font-weight: 100;  overflow: hidden;}body #modal-window {  position: absolute;  left: 0;  right: 0;  top: 0;  bottom: 0;  -webkit-transition: all 1s ease-in-out;  -moz-transition: all 1s ease-in-out;  -o-transition: all 1s ease-in-out;  -ms-transition: all 1s ease-in-out;  transition: all 1s ease-in-out;  background: rgba(0,0,0,0);  z-index: -1;}body #modal-window section {  position: absolute;  left: 50%;  top: 50%;  right: 50%;  bottom: 50%;  -webkit-border-radius: 2px;  border-radius: 2px;  width: 480px;  height: 290px;  margin: -150px 0 0 -250px;  -webkit-box-shadow: -1px 1px 5px rgba(0,0,0,0.4);  box-shadow: -1px 1px 5px rgba(0,0,0,0.4);  background: #fff;  -webkit-transform: scale(0.2);  -moz-transform: scale(0.2);  -o-transform: scale(0.2);  -ms-transform: scale(0.2);  transform: scale(0.2);  -webkit-transition: all 1s ease-in-out;  -moz-transition: all 1s ease-in-out;  -o-transition: all 1s ease-in-out;  -ms-transition: all 1s ease-in-out;  transition: all 1s ease-in-out;  opacity: 0;  filter: alpha(opacity=0);  -ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=0)';}body #modal-window section > * {  position: absolute;  left: 0;  right: 0;}body #modal-window section header {  top: 0;  height: 55px;  line-height: 55px;  overflow: hiden;  font-size: 18pt;  font-weight: 100;  padding-left: 10px;}body #modal-window section nav {  top: 10px;  right: 10px;}body #modal-window section nav li {  list-style: none;  margin: 5px;  display: inline-block;  float: right;  font-size: 12pt;}body #modal-window section article {  overflow: auto;  top: 70px;  bottom: 0;  padding: 0 20px 20px;}body #modal-window.fullscreen section {  width: 100%;  height: 100%;  margin: 0;  left: 0;  top: 0;  bottom: 0;  right: 0;}body .modal-active {  -webkit-transform: scale(0.9);  -moz-transform: scale(0.9);  -o-transform: scale(0.9);  -ms-transform: scale(0.9);  transform: scale(0.9);  -webkit-border-radius: 2px;  border-radius: 2px;  opacity: 0.8;  filter: alpha(opacity=80);  -ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=80)';}body .modal-active ~ #modal-container #modal-window {  background: rgba(0,0,0,0.2);  z-index: 1;}body .modal-active ~ #modal-container #modal-window section {  -webkit-transform: scale(1);  -moz-transform: scale(1);  -o-transform: scale(1);  -ms-transform: scale(1);  transform: scale(1);  opacity: 1;  -ms-filter: none;  filter: none;}body #loadingscreen {  position: absolute;  left: 0;  right: 0;  top: 0;  bottom: 0;  opacity: 0;  filter: alpha(opacity=0);  -ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=0)';  z-index: -1;  -webkit-transition: all 1s ease-in-out;  -moz-transition: all 1s ease-in-out;  -o-transition: all 1s ease-in-out;  -ms-transition: all 1s ease-in-out;  transition: all 1s ease-in-out;  overflow: hidden;}body #loadingscreen * {  -webkit-transition: all 0.5s ease-in-out;  -moz-transition: all 0.5s ease-in-out;  -o-transition: all 0.5s ease-in-out;  -ms-transition: all 0.5s ease-in-out;  transition: all 0.5s ease-in-out;}body #loadingscreen > section {  width: 100%;  height: 100%;  background: #000;  opacity: 0.8;  filter: alpha(opacity=80);  -ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=80)';  trnasition: all 1s ease-in-out;}body #loadingscreen > aside {  -webkit-transition: all 0.5s ease-in-out;  -moz-transition: all 0.5s ease-in-out;  -o-transition: all 0.5s ease-in-out;  -ms-transition: all 0.5s ease-in-out;  transition: all 0.5s ease-in-out;  position: absolute;  left: -200%;  right: 200%;  top: 0;  bottom: 0;  background: #fff;  -webkit-box-shadow: 0 0 5px rgba(0,0,0,0.2);  box-shadow: 0 0 5px rgba(0,0,0,0.2);}body #loadingscreen > aside:last-of-type {  border: solid 1px rgba(0,0,0,0.05);  left: 200%;  right: -200%;}body #loadingscreen.active > aside {  left: 0;  right: 0;}body #loadingscreen > article {  height: 200px;  width: 350px;  background: #fff;  -webkit-border-radius: 4px;  border-radius: 4px;  -webkit-box-shadow: 0 5px 5px rgba(0,0,0,0.2);  box-shadow: 0 5px 5px rgba(0,0,0,0.2);  border: solid 1px rgba(0,0,0,0.2);  opacity: 0;  filter: alpha(opacity=0);  -ms-filter: 'progid:DXImageTransform.Microsoft.Alpha(Opacity=0)';  position: absolute;  z-index: 9;  left: 50%;  top: 50%;  margin: -100px 0 0 -175px;  text-align: center;  -webkit-transform: scale(10);  -moz-transform: scale(10);  -o-transform: scale(10);  -ms-transform: scale(10);  transform: scale(10);  font-family: Roboto;  font-size: 18pt;  font-weight: 100;  text-align: center;  line-height: 200px;  vertical-align: middle;}body #loadingscreen > article > span,body #loadingscreen > article p,body #loadingscreen > article div {  display: inline-block;  vertical-align: middle;}body #loadingscreen > article > span {  width: 30px;  height: 30px;  -webkit-border-radius: 100%;  border-radius: 100%;  border: solid 1px rgba(0,0,0,0.3);  margin-top: -6px;}body #loadingscreen > article div {  width: 0;  overflow: hidden;}body #loadingscreen > article div p {  float: left;}body #loadingscreen > article div:last-of-type p {  float: right;}body #loadingscreen > article > p {  line-height: 1em;  position: absolute;  left: 10%;  right: 10%;  top: 65%;  height: 50px;  font-size: 14pt;  overflow: hidden;}body #loadingscreen > article:hover > span {  border-color: rgba(0,0,0,0.8);}body #loadingscreen > article:hover div {  width: 80px;  margin: 0;  padding: 0;  margin-left: 11px;}body #loadingscreen > article:hover div:last-of-type {  width: 11px;  margin: 0;  margin-right: 80px;}body #loadingscreen.active > article {  opacity: 1;  -ms-filter: none;  filter: none;  -webkit-transform: scale(1);  -moz-transform: scale(1);  -o-transform: scale(1);  -ms-transform: scale(1);  transform: scale(1);}body #loadingscreen.active {  z-index: 99;  opacity: 1;  -ms-filter: none;  filter: none;}";
 		element.id = "compiled_styles";
 		return element;
 	}

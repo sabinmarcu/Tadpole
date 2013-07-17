@@ -36,5 +36,5 @@ class HelpController extends IS.Object
 		if ( it.target.className.indexOf "wrapper" ) >= 0 then @runtime.set("app-state", 1)
 
 Controller = new HelpController()
-angular.module "Revelation" .controller "Help", ["$scope", "Runtime", Controller.init]
+angular.module AppInfo.displayname .controller "Help", ["$scope", "Runtime", Controller.init]
 module.exports = Controller

@@ -1,4 +1,5 @@
 const STATES = [\landing \application \help]; States = new IS.Enum STATES
+const MODALS = [\modal-inactive \modal-active \modal-active]; Modals = new IS.Enum MODALS
 
 class PageController extends IS.Object
 	# First time setup
@@ -33,17 +34,18 @@ class PageController extends IS.Object
 		d = document.createElement "div"
 		d.setAttribute "id", "appwrapper"
 		# Computing ng-class 
-		objects = []
-		for state in STATES
-			objects.push "#{States[state]}: '#{state}'"
-		objects-string = objects.join ", "
-		class-string = "{#objects-string}[runtime.props['app-state']]"
+		#objects = []
+		#for state in STATES
+			#objects.push "#{States[state]}: '#{state}'"
+		#objects-string = objects.join ", "
+		#class-string = "{#objects-string}[runtime.props['app-state']]"
 		# Applying it
-		d.setAttribute "ng-class", class-string
+		d.setAttribute "class", "{{computeClass()}}"
+		#d.setAttribute "ng-class", class-string
 		# Rendering
 		d.innerHTML = DepMan.render "index", {States}
 		# Appending
-		document.body.appendChild d
+		document.body.insertBefore d, document.body.children[0]
 	config-scope: ~>
 		@safeApply = (fn) ~>
 			phase = @scope.$parent.$$phase
@@ -70,9 +72,10 @@ class PageController extends IS.Object
 
 	# Finally, the stuff connected with the scope (angular magic)
 	get-body-state: ~> STATES[@runtime.get "app-state"]
+	compute-class: ~> [STATES[@runtime.get('app-state')], MODALS[@runtime.get("modal-state")]] * " "
 
 
 # Bootstrapping the whole shebang!
 Controller = new PageController()
-angular.module "Revelation" .controller "Page", ["$scope", "Runtime", Controller.init]
+angular.module AppInfo.displayname .controller "Page", ["$scope", "Runtime", Controller.init]
 module.exports = Controller
