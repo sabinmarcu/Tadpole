@@ -3,7 +3,7 @@ const DRIVERS = [\webkit \normal]; Drivers = new IS.Enum DRIVERS
 class NotificationHelper extends IS.Object
 	~> 
 		Runtime.init 'toast-driver', \number
-		Runtime.init 'toast-timeout', \numeber
+		Runtime.init 'toast-timeout', \number
 
 		timeout <~ Storage.get "toast-timeout"
 		timeout ?= 5000

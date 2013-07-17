@@ -5,6 +5,4 @@
 	<%- DepMan.render [ "pages", "landing" ] %>
 </section>
 <section id="application">
-	<div class="dragger landing" ng-click="runtime.set('app-state', <%= @States['landing'] %>)" <%= _T "Landing" %>></div>
-	<div class="dragger help" ng-click="runtime.set('app-state', <%= @States['help'] %>)" <%= _T "Help" %>></div>
 </section>

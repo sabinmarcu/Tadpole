@@ -33,18 +33,9 @@ class PageController extends IS.Object
 	render-index: ~>
 		d = document.createElement "div"
 		d.setAttribute "id", "appwrapper"
-		# Computing ng-class 
-		#objects = []
-		#for state in STATES
-			#objects.push "#{States[state]}: '#{state}'"
-		#objects-string = objects.join ", "
-		#class-string = "{#objects-string}[runtime.props['app-state']]"
-		# Applying it
 		d.setAttribute "class", "{{computeClass()}}"
-		#d.setAttribute "ng-class", class-string
-		# Rendering
+		d.setAttribute "rel", "Document Wrapper"
 		d.innerHTML = DepMan.render "index", {States}
-		# Appending
 		document.body.insertBefore d, document.body.children[0]
 	config-scope: ~>
 		@safeApply = (fn) ~>

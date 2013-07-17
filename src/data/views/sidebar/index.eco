@@ -1,0 +1,10 @@
+<section ng-controller="Sidebar" class="{{STATES[runtime.props['sidebar-state']]}}">
+	<nav>
+		<li ng-repeat="tab in TABS" ng-click="runtime.set('sidebar-tab', Tabs[tab])" ng-class="{true: 'active'}[runtime.props['sidebar-tab'] == $index]"><i class="{{ICONS[$index]}}"></i></li>
+	</nav>
+	<section>
+		<% for tab, index in @TABS: %>
+		<article ng-class="{true: 'active'}[runtime.props['sidebar-tab'] == <%= index %>]"><%- DepMan.render ['sidebar', 'tabs', tab] %></article>
+		<% end %>
+	</section>
+</section>

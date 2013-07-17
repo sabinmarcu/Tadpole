@@ -1,0 +1,4 @@
+<ul>
+	<li onclick="Toast('Example', 'With Content')">Activate a Toast</li>
+	<li onclick="Modal.show({title: 'Some Title', content: 'Some Example Content'})">Open a modal window.</li>
+</ul>

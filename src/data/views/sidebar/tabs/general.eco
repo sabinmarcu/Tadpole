@@ -1,0 +1,4 @@
+<ul>
+	<li ng-click="runtime.set('app-state', 0)">Activate the landing page</li>
+	<li ng-click="runtime.set('app-state', 2)">Activate the help page</li>
+</ul>

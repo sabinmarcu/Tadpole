@@ -60,6 +60,7 @@ class Application extends IS.Object
 		DepMan.controller "Page"
 		DepMan.controller "Landing"
 		DepMan.controller "Help"
+		DepMan.controller "Sidebar"
 		angular.bootstrap document.body, [AppInfo.displayname]
 
 module.exports = Application
