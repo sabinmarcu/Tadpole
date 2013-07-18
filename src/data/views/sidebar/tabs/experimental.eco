@@ -1,5 +1,6 @@
+<h1 <%= _T "Experimental Features" %>></h1>
 <ul>
-	<li onclick="Toast('Example', 'With Content')">Activate a Toast</li>
-	<li onclick="Notification.toastNormal('Example', [ 'With Content' ])">Activate a Toast (Modal Override)</li>
-	<li onclick="Modal.show({title: 'Some Title', content: 'Some Example Content'})">Open a modal window.</li>
+	<li onclick="Toast('Example', 'With Content')"><p <%= _T "Activate a Toast" %>></p></li>
+	<li onclick="Notification.toastNormal('Example', [ 'With Content' ])"><p <%= _T "Activate a Toast (Modal Override)" %>></p></li>
+	<li onclick="Modal.show({title: 'Some Title', content: 'Some Example Content'})"><p <%= _T "Open a modal window" %>></p></li>
 </ul>

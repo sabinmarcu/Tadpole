@@ -1,23 +1,22 @@
 class LanguageHelper extends IS.Object
 	(@Runtime) ~>
 		@echo "Initializing Language Controls"
-		Runtime.init "language", "string"
+		@Runtime.init "language", "string"
+		@Runtime.subscribe "prop-language-change", ~> @switchLanguage @Runtime.get "language"
 		Storage.get "lang", (lang) ~>
 			language = lang or "en-US"
 			@log language
-			@switchLanguage language
+			@Runtime.set \language, language
 
 	switchLanguage: (@language) ~>
 		@echo "Switching language to #{@language}"
 		try
 			DepMan.language @language
-			@Runtime.set "language", @language
 			@_language = JSONImport["#{@language}"]
 			Storage.set "lang", @language
 			do @_translateAll
 		catch e
 			@_language = []
-			@Runtime.set "language", ""
 			@log "Error Encountered", e
 
 	_translate: (text) ~> @_language[text] or text

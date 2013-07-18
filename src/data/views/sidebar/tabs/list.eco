@@ -1,1 +1,1 @@
-LIST
+<h1 <%= _T "Document List" %>></h1>
