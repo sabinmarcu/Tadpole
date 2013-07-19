@@ -9,7 +9,7 @@ class NotificationHelper extends IS.Object
 		timeout ?= 5000
 
 		Runtime.set 'toast-timeout', timeout
-		Runtime.set 'toast-driver',  Drivers[\normal]
+		Runtime.set 'toast-driver',	Drivers[\normal]
 		if Tester[\webkitNotifications]
 			unless Tester[\chrome.storage]
 				handler = ->

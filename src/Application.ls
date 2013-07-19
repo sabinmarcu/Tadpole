@@ -38,7 +38,6 @@ class Application extends IS.Object
 		window.DepMan = new ( require "classes/helpers/DependenciesManager" )
 		window.Tester = new ( DepMan.helper "Tester")()
 		window.Storage = new ( DepMan.helper "Storage")()
-		window.Settings = DepMan.helper "SettingsBook"
 	fixStylesheets: ~>
 		styles = window.getStylesheets!; fwstyles = $('#css-font-awesome')
 		styles.innerHTML = styles.innerHTML.replace /\<\<INSERT OPEN SANS 300 WOFF HERE\>\>/g, DepMan.font "woff/opensans1"
