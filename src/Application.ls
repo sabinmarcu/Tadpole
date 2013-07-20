@@ -46,21 +46,24 @@ class Application extends IS.Object
 		styles.innerHTML = styles.innerHTML.replace /\<\<INSERT ELECTROLIZE WOFF HERE\>\>/g, DepMan.font "woff/electrolize"
 		styles.innerHTML = styles.innerHTML.replace /\<\<INSERT ROBOTO 100 WOFF HERE\>\>/g, DepMan.font "woff/roboto100"
 		styles.innerHTML = styles.innerHTML.replace /\<\<INSERT ROBOTO 400 WOFF HERE\>\>/g, DepMan.font "woff/roboto400"
-		document.head.appendChild styles
 		fwstyles.html (fwstyles.html().replace /\<\<INSERT FONTAWESOME EOT HERE\>\>/g, DepMan.font "eot/fontawesome-webfont")
 		fwstyles.html (fwstyles.html().replace /\<\<INSERT FONTAWESOME TTF HERE\>\>/g, DepMan.font "ttf/fontawesome-webfont")
 		fwstyles.html (fwstyles.html().replace /\<\<INSERT FONTAWESOME WOFF HERE\>\>/g, DepMan.font "woff/fontawesome-webfont")
+		document.head.appendChild styles
 	loadApplication: ~>
 		window.Loading = new ( DepMan.helper "Loading" )()
 		angular.module AppInfo.displayname, []
 		DepMan.helper "Runtime"
 		DepMan.helper "Language"
 		[ window.Notification, window.Toast ] = DepMan.helper "Notification"
+		DepMan.model "Document"
 		DepMan.controller "Modals"
 		DepMan.controller "Page"
 		DepMan.controller "Landing"
 		DepMan.controller "Help"
 		DepMan.controller "Sidebar"
+		DepMan.controller "Document"
+		DepMan.controller "DocumentList"
 		angular.bootstrap document.body, [AppInfo.displayname]
 
 module.exports = Application

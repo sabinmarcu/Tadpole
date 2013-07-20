@@ -1,6 +1,6 @@
 #appwrapper	#application #sidebar-container > section
 	display inline-block
-	position absolute
+	position fixed
 	top 0
 	left 0
 	height 75%
@@ -8,14 +8,13 @@
 	width 250px
 	background white
 	border-bottom-right-radius 2px
-	border solid 1px rgba(0, 0, 0, 0.3)
+	border #ccc
 	border-left none
 	border-top none
 	box-shadow -1px 1px 5px rgba(0, 0, 0, 0.4)
 	transition all 1s ease-in-out
 	transform translateX(-100%)
-	&.open
-		transform none
+	z-index 9
 	*
 		z-index 2
 	aside
@@ -68,6 +67,12 @@
 		left 0
 		overflow hidden
 		article
+			h1
+				padding 15px 0 15px 10px
+				display block
+				border-bottom solid 1px rgba(0, 0, 0, 0.2)
+				font-size 10pt
+				margin 0
 			position absolute
 			border solid 1px rgba(0, 0, 0, 0.2)
 			left -1px
@@ -91,8 +96,6 @@
 				margin 0
 				> *
 					margin 15px 0 15px 10px
-			h1
-				padding 15px 0 15px 10px
 			input, select, textarea
 				display block
 				margin 0
@@ -116,6 +119,37 @@
 				background black
 			label
 				display block
-	&.open aside
-		right 0
-		box-shadow -2px 0 5px rgba(0, 0, 0, 0.2)
+			#documentlistplaceholder section
+				top 49px
+				bottom 0
+				padding-top 46px
+				nav
+					bottom auto
+					top 0
+					border-top none
+					border-bottom solid 1px #ccc
+					li
+						display inline-block
+						border none 
+						border-right solid 1px #ddd
+						border-bottom solid 1px #ccc
+						float left
+						height 45px
+						width 45px
+						line-height 45px
+						padding 0
+						margin 0 0 -1px 0
+						transition-duration 0.25s
+						&:hover
+							border-bottom-color #fff
+						> *
+							margin 0
+				article
+					position relative
+					transform none
+
+	&.open 
+		transform none
+		aside
+			right 0
+			box-shadow -2px 0 5px rgba(0, 0, 0, 0.2)

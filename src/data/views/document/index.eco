@@ -1,0 +1,11 @@
+<section ng-controller="Document" ng-class="{0: 'sidebarclosed', 1: 'sidebaropen'}[runtime.props['sidebar-state']]">
+	<header>
+		{{activeDocument.title}} 
+		<nav>
+			<li ng-click="runtime.set('document-state', 0)" ng-class="{0: 'active', 1: 'inactive'}[runtime.props['document-state']]"><i class="icon-list"></i></li>
+			<li ng-click="runtime.set('document-state', 1)" ng-class="{0: 'inactive', 1: 'active'}[runtime.props['document-state']]"><i class="icon-sitemap"></i></li>
+		</nav>
+	</header>
+	<article id="outline" ng-class="{0: 'inactive', 1: 'active'}[runtime.props['document-state']]"></article>
+	<article id="mindmap" ng-class="{1: 'inactive', 0: 'active'}[runtime.props['document-state']]"></article>
+</section>

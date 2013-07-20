@@ -1,0 +1,13 @@
+<section ng-controller="DocumentList">
+	<nav>
+		<li ng-click="addDocument()"><i class="icon-plus"></i></li>
+		<li><i class="icon-remove"></i></li>
+		<li><i class="icon-save"></i></li>
+		<li><i class="icon-cloud-download"></i></li>
+		<li><i class="icon-cloud-upload"></i></li>
+	</nav>
+	<article ng-repeat="(id, document) in models._reccords">
+		<input type="text" ng-model="document.title" ngc-focus="switch(id)" />
+		<small>{{id}}</small>
+	</article>
+</section>
