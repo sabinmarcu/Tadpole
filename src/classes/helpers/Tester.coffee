@@ -15,6 +15,7 @@ TESTS =
 
 	"chrome.storage": -> chrome? and chrome.storage?
 	"webkitNotifications": -> webkitNotifications?
+	"mac": -> (navigator.userAgent.indexOf "Macintosh") >= 0
 
 # A list of functions that normalize some stuff relating to databases and stuff
 NORMIALIZES =

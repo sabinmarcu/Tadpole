@@ -7,6 +7,7 @@ class PageController extends IS.Object
 		@set-attributes!
 		@render-index!
 		@log "PageController Initialized"
+
 	set-attributes: ~>
 		document.body.setAttribute "ng-csp", true
 		document.body.setAttribute "ng-controller", "Page"
@@ -18,17 +19,23 @@ class PageController extends IS.Object
 		@config-scope!
 		@init-runtime!
 		@get-stored!
-
-		# And now, building the interface
-		@log "Initializing the PageController"
-		#Loading.start();
-		#Loading.progress "Loading Application"
-		#Loading.progress 10
-		#@safeApply!
-		#Loading.end();
-
-		# And, of course, returning the object
+		@hook-keyboard!
 		@
+
+	hook-keyboard: ~>
+		key = if Tester.mac then "cmd" else "ctrl"
+		handler = (e, key) ~>
+			e.preventDefault!
+			key = switch key
+			| \l => States.landing
+			| \p => States.application
+			| \? => States.help
+			@runtime.set \app-state key
+			@safeApply!
+		jwerty.key "#{key}+l", ~> handler it, \l
+		jwerty.key "#{key}+p", ~> handler it, \p
+		jwerty.key "#{key}+shift+/", ~> handler it, \?
+		jwerty.key "esc", ~> if (@runtime.get \app-state) is States.help then @runtime.set \app-state, States.application; @safeApply! 
 
 	render-index: ~>
 		d = document.createElement "div"
@@ -37,6 +44,7 @@ class PageController extends IS.Object
 		d.setAttribute "rel", "Document Wrapper"
 		d.innerHTML = DepMan.render "index", {States}
 		document.body.insertBefore d, document.body.children[0]
+		
 	config-scope: ~>
 		@safeApply = (fn) ~>
 			phase = @scope.$parent.$$phase
@@ -47,19 +55,19 @@ class PageController extends IS.Object
 		@scope <<< @
 	init-runtime: ~> @runtime.init "app-state", \number
 	get-stored: ~>
-		@prev-state = States[\landing]
+		@@prev-state = States[\landing]
 		Storage.get "app-state", (state) ~>
-			@prev-state = parseInt state or States[\landing]
-			@runtime.set "app-state", @prev-state
+			@@prev-state = parseInt state or States[\landing]
+			@runtime.set "app-state", @@prev-state
 		@runtime.subscribe "prop-app-state-change", (value) ~>
 			switch value
 			| States[\landing] => Storage.set "app-state", States[\landing]; @log "State changed, switching to landing next time!"
 			| otherwise =>
-				if @prev-state is States[\landing]
+				if @@prev-state is States[\landing]
 					Storage.set "app-state", States[\application]
 					@log "State changed, switching to app next time!"
-			@log @prev-state
-			@prev-state = value
+			@log @@prev-state
+			@@prev-state = value
 
 	# Finally, the stuff connected with the scope (angular magic)
 	get-body-state: ~> STATES[@runtime.get "app-state"]

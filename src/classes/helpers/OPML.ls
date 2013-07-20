@@ -25,7 +25,7 @@ class OPMLReader extends IS.Object
 		const tabs = new Array(depth + 1) * "\t"
 		for node in list
 			string = "#tabs<outline "
-			for key, value of node then unless key in [ \children \_folded ]
+			for key, value of node then unless key in [ \children \_folded \id ]
 				string += "#key='#value' "
 			@index += 1
 			if node._folded then expansionState.push @index
@@ -48,7 +48,6 @@ class OPMLReader extends IS.Object
 		@expansionState = JSON.parse [ \[, ( @dom.children[0].querySelector "expansionState" .childNodes[0].nodeValue ), \] ] * ""
 		@json =
 			title: @dom.children[0].querySelector "title" .childNodes[0].nodeValue
-			expansionState: @expansionState
 			data: @decode-list @dom.children[1].children
 
 	decode-list: (list) ~>

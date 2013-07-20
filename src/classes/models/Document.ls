@@ -1,5 +1,7 @@
 class DocumentModel extends IS.Object
-	init: ~> @parent = @constructor; @log "New Document: [#{@_id}]"
+	init: ~> 
+		@parent = @constructor
+		@log "New Document: [#{@_id}]";
 	rename: (newname) ~> @parent.rename @, newname
 	@rename = (item, newname) ->
 		@_symlinks[newname] = item

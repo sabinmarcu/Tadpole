@@ -31,6 +31,7 @@ class Application extends IS.Object
 		DepMan.lib "prelude"
 		window <<< window.prelude
 		DepMan.lib "jquery"
+		window.jwerty = (DepMan.lib "hotkeys").jwerty
 		DepMan.lib "angular.min"
 		DepMan.lib "QRCodeDraw"
 		DepMan.stylesheet "font-awesome"

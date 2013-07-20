@@ -58,8 +58,21 @@ class SidebarController extends IS.Object
 	init: (@scope, @runtime) ~>
 		@config-scope!
 		@init-runtime!
+		@hook-keyboard!
 		@scope.clientid = ""
 		@scope.language = @runtime.get 'language'
+
+	hook-keyboard: ~>
+		key = if Tester.mac then "cmd" else "ctrl"
+		handle = (e, tab) ~> 
+			e.preventDefault!
+			if (@runtime.get "sidebar-state") is States.closed then @runtime.set "sidebar-state", States.open
+			@runtime.set "sidebar-tab", Tabs[tab]
+			@safeApply!
+
+		for tab in TABS then let currentTab = tab
+			jwerty.key "#{key}+#{Tabs[currentTab]+1}", -> handle it, currentTab
+		jwerty.key "esc", ~> if (@runtime.get "sidebar-state") is States.open then @runtime.set \sidebar-state, States.closed; @safeApply!
 
 	config-scope: ~>
 		@safeApply = (fn) ~>
