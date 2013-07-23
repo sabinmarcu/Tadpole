@@ -1,0 +1,10 @@
+<aside id="secondary" ng-class="{false: 'inactive', true: 'active'}[node.$viewmore]">
+	<label for="relation{{node.$index}}">
+		<span <%= _T "Relation between this node and the previous." %>></span>
+		<input type="text" ng-model="node.relation" ng-change="replicate(node, 'relation')" id="relation{{node.$index}}">
+	</label>
+	<label for="node{{node.$index}}">
+		<span <%= _T "Notes associated" %>></span>
+		<textarea id="node{{node.$index}}" ng-model="node.note" ng-change="replicate(node, 'note')"></textarea>
+	</label>
+</aside>

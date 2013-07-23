@@ -27,12 +27,16 @@ class DocumentListController extends IS.Object
 				if key is \next and current + 1 < @models.documents.length then current += 1
 				if key is \previous and current - 1 > 0 then current -= 1
 				@runtime.set 'active-document', @models.documents[current]
-			| \save => @log "Save not implemented"
+			| \save => @save-document!
+			| \delete => @delete-document!
+			| \download => @download-document!
 
 		jwerty.key "#{key}+alt+n", ~> @log "N"; handle it, \new
 		jwerty.key "#{key}+arrow-down", ~> handle it, \next
 		jwerty.key "#{key}+arrow-up", ~> handle it, \previous
 		jwerty.key "#{key}+s", ~> handle it, \save
+		jwerty.key "#{key}+d", ~> handle it, \delete
+		jwerty.key "#{key}+shift+d", ~> handle it, \download
 		@log "Handled!"
 
 	config-scope: ~>
@@ -44,8 +48,14 @@ class DocumentListController extends IS.Object
 			else @scope.$apply(fn)
 		@scope <<< @
 
-	add-document: ~> @models.new!
 	switch: ~> @runtime.set 'active-document', it
+	add-document: ~> @models.new!
+	delete-document: ~> @models.delete @runtime.props['active-document']
+	save-document: ~> @models.save @runtime.props['active-document']
+	download-document: ~> 
+		content = @fetch-document!.export()
+		window.open "data:application/xml,#content", "Download", "location=no,menubar=no,titlebar=no,toolbar=no"
+	fetch-document: ~>  @models._reccords[@runtime.props['active-document']]
 
 Controller = new DocumentListController()
 angular.module AppInfo.displayname .controller "DocumentList", ["$scope", "Runtime", "Documents", Controller.init]

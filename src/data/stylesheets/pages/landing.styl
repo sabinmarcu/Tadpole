@@ -9,6 +9,13 @@ size = 250px
 		overflow hidden
 		position absolute
 		transition all 0.5s ease-in-out
+		img 
+			position absolute
+			z-index -1
+			opacity 0.1
+			transition all 0.2s ease-in-out
+			left -25%
+			top 25%
 		&.main
 			left 50%
 			top 50%
@@ -27,6 +34,8 @@ size = 250px
 			&:hover
 				box-shadow 0 0 100px rgba(0, 0, 0, 0.8)
 				color black
+				img
+					opacity 0.2
 			h1
 				padding 0
 				margin 0
@@ -52,6 +61,17 @@ size = 250px
 				transform translateX(100%)
 			.content 
 				opacity 1
+			img
+				z-index 9
+				top auto
+				left auto
+				bottom -100px
+				right -100px
+				opacity 0.4
+				&:hover
+					opacity 0.8
+					bottom -75px
+					right -50px
 	nav
 		position absolute
 		top 50%

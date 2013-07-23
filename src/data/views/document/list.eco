@@ -1,8 +1,8 @@
 <section ng-controller="DocumentList">
 	<nav>
 		<li ng-click="addDocument()"><i class="icon-plus"></i></li>
-		<li><i class="icon-remove"></i></li>
-		<li><i class="icon-save"></i></li>
+		<li ng-click="deleteDocument()"><i class="icon-remove"></i></li>
+		<li ng-click="saveDocument()"><i class="icon-save"></i></li>
 		<li><i class="icon-cloud-download"></i></li>
 		<li><i class="icon-cloud-upload"></i></li>
 	</nav>

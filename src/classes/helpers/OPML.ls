@@ -2,21 +2,26 @@ class OPMLReader extends IS.Object
 	(@data) ~>
 		@json = []
 		@opml = ""
-		switch typeof @data
-		| \array, \object => @encode-json!
-		| otherwise => @decode-opml!
+		if @data.substr? then @decode-opml!
+		else @encode-json!
 
-	encode-json: ~> @json = @data.data; @title = @data.title; [body, expansionState] = @encode-node @json; @opml = """<?xml version='1.0' encoding='utf-8' ?>
-		<opml>
-			<head>
-				<title>#{@data.title}</title>
-				<expansionState>#expansionState</expansionState>
-			</head>
-			<body>
-	#body
-			</body>
-		</opml>
-	"""
+	encode-json: ~> 
+		@json = @data
+		@uuid = @data.uuid
+		@title = @data.title
+		[body, expansionState] = @encode-node @json.data
+		@opml = """<?xml version='1.0' encoding='utf-8' ?>
+			<opml>
+				<head>
+					<title>#{@data.title}</title>
+					<expansionState>#expansionState</expansionState>
+					<uuid>#{@data.uuid}</uuid>
+				</head>
+				<body>
+		#body
+				</body>
+			</opml>
+		"""
 	encode-node: (list, depth = 3) ~>
 		@log "Encoding [#depth]", list
 		@index ?= 0
@@ -25,10 +30,12 @@ class OPMLReader extends IS.Object
 		const tabs = new Array(depth + 1) * "\t"
 		for node in list
 			string = "#tabs<outline "
-			for key, value of node then unless key in [ \children \_folded \id ]
-				string += "#key='#value' "
+			for key, value of node 
+				unless key in [ \children \text ] or key[0] is '$' 
+					string += "_#key='#value' "
+				if key is \text then string += "#key='#value' "
 			@index += 1
-			if node._folded then expansionState.push @index
+			if node.$folded then expansionState.push @index
 			if node.children?
 				nextState = []
 				nextString = ""
@@ -45,19 +52,28 @@ class OPMLReader extends IS.Object
 		@opml = @data
 		@dom = ( new DOMParser() ).parseFromString @opml, "text/xml" .children[0]
 		@index = 0
-		@expansionState = JSON.parse [ \[, ( @dom.children[0].querySelector "expansionState" .childNodes[0].nodeValue ), \] ] * ""
+		@expansionState = []
+		if (node = @dom.children[0].querySelector "expansionState") and node?
+			@expansionState = JSON.parse [ \[, node.childNodes[0]?.nodeValue, \] ] * ""
+		@uuid = null
+		if (node = @dom.children[0].querySelector "uuid") and node?
+			@uuid = node.childNodes[0]?.nodeValue
 		@json =
 			title: @dom.children[0].querySelector "title" .childNodes[0].nodeValue
 			data: @decode-list @dom.children[1].children
+		@title = @json.title
+		@log @
 
 	decode-list: (list) ~>
 		l = []
 		for item in list
 			@index += 1
 			i = {}
-			if @index in @expansionState then i._folded = true
+			if @index in @expansionState then i.$folded = true
 			for attr in item.attributes
-				i[attr.nodeName] = attr.nodeValue
+				name = attr.nodeName
+				if name[0] is "_" then name = name.substr 1
+				i[name] = attr.nodeValue
 			if item.children.length
 				i.children = @decode-list item.children
 			l.push i
@@ -68,4 +84,4 @@ class OPMLAPI extends IS.Object
 	~> @log "OPML API Online!"; window.OPML = @
 	read: (data) ~> new OPMLReader data
 
-angular.module AppInfo.displayname .service \OPMLReader, new OPMLAPI
+angular.module AppInfo.displayname .service \OPMLReader, OPMLAPI

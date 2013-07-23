@@ -4,6 +4,7 @@
 </nav>
 <aside id="landingaside">
 	<h1 ng-click="runtime.set('landing-state', 1)" <%= _T "Read More" %>></h1>
+	<img src="/icon.ico" alt="" ng-click="runtime.set('landing-state', 0)">
 	<div class="content" ng-click="runtime.set('landing-state', 0)"><%- DepMan.render ["pages", "landing-content"] %></div>
 </aside>
 <nav class="right">

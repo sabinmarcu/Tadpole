@@ -1,7 +1,7 @@
 {
-  "name": "axon",
-  "displayname": "Axons",
-  "version": "0.3.0",
+  "name": "tadpole",
+  "displayname": "Tadpole",
+  "version": "3.0.8",
   "author": {
     "name": "Sabin Marcu",
     "email": "sabinmarcu@gmail.com"

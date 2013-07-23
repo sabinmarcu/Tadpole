@@ -19,9 +19,10 @@ radial(from, to)
 	background -ms-radial-gradient(center, ellipse cover, from 0%,to 100%) 
 	background radial-gradient(ellipse at center, from 0%,to 100%) 
 
-
+section#application #documentplaceholder > section > section
+	@import "grid"
 section#application #documentplaceholder
-	section
+	> section
 		fix()
 		perspective 200px
 		radial(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.4))
@@ -53,7 +54,7 @@ section#application #documentplaceholder
 						color rgba(0, 0, 0, 0.8)
 					&.active
 						color black
-		article
+		> section
 			fix()
 			top 45px
 			backface-visibility hidden
@@ -66,14 +67,14 @@ section#application #documentplaceholder
 			box-shadow 0 0 15px rgba(0, 0, 0, 0.8)
 			background white
 			&.active
-				left 0
-				right 0
-				transform none
-				z-index 2
-				~ article
-					transform rotateY(90deg) translateX(100%)
-					right -100%
-					left 100%
+				left 0 !important
+				right 0 !important
+				transform none !important
+				z-index 2 !important
+			&:last-child
+				transform rotateY(90deg) translateX(100%)
+				right -100%
+				left 100%
 		&.sidebaropen
 			header
 				padding-left 265px

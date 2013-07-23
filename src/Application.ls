@@ -55,6 +55,7 @@ class Application extends IS.Object
 		angular.module AppInfo.displayname, []
 		DepMan.helper "Runtime"
 		DepMan.helper "Language"
+		DepMan.helper "OPML"
 		[ window.Notification, window.Toast ] = DepMan.helper "Notification"
 		DepMan.model "Document"
 		DepMan.controller "Modals"

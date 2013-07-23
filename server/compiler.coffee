@@ -10,10 +10,6 @@ json     = require path.resolve "@{__dirname}/../package.json"
 pack     = stitch.createPackage
 	"dependencies": ["./node_modules/isf/lib/isf.min.js", "./node_modules/pc2cs/src/ClientClient.coffee"]
 	"paths": ["./src"]
-packjson = fs.readFileSync path.resolve "@{__dirname}/../package.json"
-packjson = """
-window.AppInfo = #{packjson};
-"""
 
 
 # The Compiler Bootstrap
@@ -33,7 +29,7 @@ class Compiler
 
 	@talk: (args...) -> if @options["verbose"] then @log.apply @, args
 
-	@sources: [packjson]
+	@sources: []
 	@options: {}
 
 	# Compile the application to its designated location.
@@ -43,6 +39,9 @@ class Compiler
 				if err then return throw CompilerErrorReporter.generate 2, CompilerErrorReporter.wrapCustomError err
 				critem = """
 					#{require path.resolve "#{__dirname}/data/copyright"}
+				"""
+				@sources.push """
+					window.AppInfo = #{fs.readFileSync path.resolve "@{__dirname}/../package.json"};
 				"""
 				@sources.push """
 					// Writing Copyright Information to HTML
@@ -69,7 +68,7 @@ class Compiler
 				if @options["verbose"] then @sources.push "window.isDev = true;"
 				source += src for src in @sources when src.substr?
 				source += do src for src in @sources when src.apply?
-				@sources.length -= 2 + (@options.verbose)
+				@sources.length -= 3 + (@options.verbose)
 				added = false
 				@compileStyles(null, (styles) =>
 					source += """

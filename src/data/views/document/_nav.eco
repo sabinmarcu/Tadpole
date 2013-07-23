@@ -1,0 +1,5 @@
+<li ng-click="add(node)"><i class="icon-plus"></i></li>
+<li ng-click="remove(node)"><i class="icon-remove"></i></li>
+<li>
+	<label for="showhide{{node.$index}}"><input type="checkbox" ng-model="node.$viewmore" id="showhide{{node.$index}}"><i ng-class="{true: 'icon-eye-open', false: 'icon-eye-close'}[node.$viewmore]"></i></label>
+</li>
