@@ -46,12 +46,14 @@ class DocumentController extends IS.Object
 
 	node-add-root: (init = false) ~> 
 		doc = @fetch-document!
-		doc.data.push text: "New Root Document"
-		doc.refresh!
-		@safe-apply!
-		setTimeout LanguageHelper._translateAll, 50
-		unless init 
-			@prep "node.add-root", true
+		if doc then
+			doc.data.push text: "New Root Document"
+			doc.refresh!
+			@safe-apply!
+			setTimeout LanguageHelper._translateAll, 50
+			unless init 
+				@prep "node.add-root", true
+		else @models.new!
 
 	node-remove: (index) ~>
 		node = @fetch-node index

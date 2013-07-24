@@ -4,7 +4,9 @@
 	</nav>				
 	<label for="text{{node.$index}}">
 		<span <%= _T "Node Text" %>></span>
-		<input type="text" ng-model="node.text" ng-change="replicate(node, 'text')"/>
+		<div>
+			<input type="text" ng-model="node.text" ng-change="replicate(node, 'text')"/>
+		</div>
 	</label>
 	<nav id="primary">
 	<%- DepMan.render ["document", "_nav"] %>

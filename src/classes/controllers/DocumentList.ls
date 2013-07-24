@@ -14,6 +14,42 @@ class DocumentListController extends IS.Object
 	init: (@scope, @runtime, @models) ~>
 		@config-scope!
 		@hook-keyboard!
+		@hook-events!
+
+	hook-events: ~>
+		Client?.events = 
+			"connection.new": @connection-new
+			"connection.request": @connection-request
+			"connection.broadcast": @connection-broadcast
+			"document.change": (...args) ~> @passthrough @document-change, args
+		Client?.loadEvents
+
+	replicate: ~> @prep 'document.change', @fetch-document!.title
+	document-change: (newval) ~> @fetch-document!.title = newval; @safeApply!
+
+	passthrough: (fn, args) ~>
+		id = args.pop!
+		if id isnt Client.id then fn.apply @, args
+
+	prep: (ev, ...data) ~>
+		data.push Client.id
+		data.unshift ev
+		Client.publish.apply Client, data  
+
+	connection-request: ~> @requested = true; @log "Client connect requested! (should not send away data)"
+
+	connection-new: (id) ~> 
+		@log @requested
+		unless @requested
+			@log "Sending data to the new connection! (should not appear on the requester)"
+			Client.publish "connection.broadcast", id, @fetch-document!.export!
+
+	connection-broadcast: (id, doc) ~>
+		if not id? or id is Client.id
+			@log "Got data from the connectee! (should appear on the requester)"
+			Toast "Got Document", "Got incoming document from the network!", "The new document has been opened and synchronized between all clients!"
+			@models.get-document doc
+			delete @requested
 
 	hook-keyboard: ~>
 		key = if Tester.mac then "cmd" else "ctrl"
@@ -48,9 +84,12 @@ class DocumentListController extends IS.Object
 			else @scope.$apply(fn)
 		@scope <<< @
 
-	switch: ~> @runtime.set 'active-document', it
-	add-document: ~> @models.new!
-	delete-document: ~> @models.delete @runtime.props['active-document']
+	switch: ~> 
+		unless @runtime.props['active-document'] is it
+			@runtime.set 'active-document', it
+			Client.publish "connection.broadcast", null, @fetch-document!.export!
+	add-document: ~> @models.new!; Client.publish "connection.broadcast", null, @fetch-document!.export!
+	delete-document: ~> @models.delete @runtime.props['active-document'] 
 	save-document: ~> @models.save @runtime.props['active-document']
 	download-document: ~> 
 		content = @fetch-document!.export()
