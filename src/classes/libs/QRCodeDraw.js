@@ -15,8 +15,8 @@
  *
  */
 
-var QRCodeLib = require('qrcode');
-var QRVersionCapacityTable = require('qrcapacitytable').QRCapacityTable;
+var QRCodeLib = require('classes/libs/qrcode');
+var QRVersionCapacityTable = require('classes/libs/qrcapacitytable').QRCapacityTable;
 var QRCode = QRCodeLib.QRCode;
 
 function QRCodeDraw(){}

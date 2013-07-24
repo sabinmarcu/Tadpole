@@ -111,6 +111,7 @@ class DocumentController extends IS.Object
 				if fn and (typeof(fn) is 'function')
 					do fn
 			else @scope.$apply(fn)
+			LanguageHelper._translateAll!
 		@scope <<< @
 
 	switch: (id) ~> @runtime.set 'active-document', id

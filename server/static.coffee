@@ -60,7 +60,7 @@ class Server
 					res.send req.body.content
 				if @compiler?
 					@compiler.addSource DataServer.compileClientSource
-					App.get "/js/g.js", (req, res) => @compiler.compile null, (source) ->
+					App.get "/js/tadpole.js", (req, res) => @compiler.compile null, (source) ->
 						res.send source, {"Content-Type": "application/javascript"}, 201
 					App.get "/css/styles.css", (req, res) => @compiler.compileStyles null, (source) ->
 						res.contentType "text/css"

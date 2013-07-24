@@ -11,8 +11,9 @@ class SidebarController extends IS.Object
 		window.SidebarController = @
 
 	get-deps: ~>
-		require "qrcode"
-		require "qrcapacitytable"
+		DepMan.lib "qrcode"
+		DepMan.lib "qrcapacitytable"
+		DepMan.lib "excanvas"
 		@Client = DepMan.helper "DataTransfer"
 		@Client.subscribe "CONNECTED", ~>
 			@hook-image!

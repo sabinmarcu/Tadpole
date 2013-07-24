@@ -19,11 +19,11 @@ if (args.version) {
 	var info = require("./package.json");
 	require("./server/help")(info)
 } else {
-	var Compiler = null, Static = null;
+	var Compiler = null, Static = null, json = require("./package.json");
 	if (args.compile) {
 		var location = args.location || __dirname + "/public"
 		if (location[location.length - 1] !== "/") location += "/"
-		var jsLocation = location + "js/g.js",
+		var jsLocation = location + "js/" + json.name + ".js",
 			cssLocation = location + "css/styles.css"
 		Compiler = require("./server/compiler");
 		Compiler.setAttribute("bundle", args.bundle);

@@ -33,7 +33,7 @@ class Compiler
 	@options: {}
 
 	# Compile the application to its designated location.
-	@compile: (to = "./public/js/g.js", callback = null) ->
+	@compile: (to = "./public/js/#{json.name}.js", callback = null) ->
 		try
 			pack.compile (err, source) =>
 				if err then return throw CompilerErrorReporter.generate 2, CompilerErrorReporter.wrapCustomError err

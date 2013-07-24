@@ -3322,4 +3322,4 @@ var io = ('undefined' === typeof module ? {} : module.exports);
     if (typeof define === "function" && define.amd) {
         define([], function () { return io; });
     }
-})();
+})(window);
