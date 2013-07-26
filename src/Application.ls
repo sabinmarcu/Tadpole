@@ -31,6 +31,7 @@ class Application extends IS.Object
 		DepMan.lib "prelude"
 		window <<< window.prelude
 		DepMan.lib "jquery"
+		window.Hammer = DepMan.lib "hammer"
 		window.jwerty = (DepMan.lib "hotkeys").jwerty
 		DepMan.lib "angular.min"
 		DepMan.lib "QRCodeDraw"
@@ -56,6 +57,8 @@ class Application extends IS.Object
 		DepMan.helper "Runtime"
 		DepMan.helper "Language"
 		DepMan.helper "OPML"
+		DepMan.helper "ShadowCanvas"
+		DepMan.helper "Canvas"
 		[ window.Notification, window.Toast ] = DepMan.helper "Notification"
 		DepMan.model "Document"
 		DepMan.controller "Modals"

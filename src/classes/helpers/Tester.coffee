@@ -4,7 +4,7 @@ PREFIXES = ["moz", "webkit", "ms"]
 # A list of tests to figure out how to run the app
 TESTS =
 	"indexeddb": ->
-		# Checking wether the base indexedDB exists
+		# Checking whether the base indexedDB exists
 		if window.indexedDB then return true
 		
 		# Else, check if one of the other ones are available
@@ -16,6 +16,13 @@ TESTS =
 	"chrome.storage": -> chrome? and chrome.storage?
 	"webkitNotifications": -> webkitNotifications?
 	"mac": -> (navigator.userAgent.indexOf "Macintosh") >= 0
+	"requestAnimationFrame": -> 
+		# Checking whether the base rAF exists
+		if window.requestAnimationFrame then return true
+
+		# Else, check if one of the other ones is available
+		return true for prefix in PREFIXES when window["#{prefix}RequestAnimationFrame"]
+		return false
 
 # A list of functions that normalize some stuff relating to databases and stuff
 NORMIALIZES =
@@ -35,7 +42,7 @@ NORMIALIZES =
 		window.LocalStorage = {}
 		if chrome? and chrome.storage?
 			window.LocalStorage.set = (key, value) -> chrome.storage.local.set key: value
-			window.LocalStorage.get = chrome.storage.local.get
+			window.LocalStorage.get = (args...) -> chrome.storage.local.get.apply chrome.storage.local, args
 			window.LocalStorage.remove = chrome.storage.local.remove
 		# Else run the regular localstorage with a slightly different API
 		else
@@ -43,11 +50,15 @@ NORMIALIZES =
 			window.LocalStorage.get = (item, callback) -> res = {}; res[item] = window.localStorage.getItem item; callback res
 			window.LocalStorage.remove = (item) -> window.localStorage.removeItem item
 
+	"requestAnimationFrame" : -> 
+		if not window.requestAnimationFrame?
+			return window.requestAnimationFrame = window["#{prefix}RequestAnimationFrame"] for prefix in PREFIXES when window["#{prefix}RequestAnimationFrame"]?
+
 # Finally wrapping them up in an object that runs the tests, runs the normalizes and makes the test results available
 # Also, if a test was unsuccesful then the normalize function associated never runs
 class Tester extends IS.Object
 	constructor: -> @log "Tester Online"; do @tests; do @normalize
 	tests: -> @[name] = do test for name, test of TESTS
-	normalize: -> do normalize for name, normalize of NORMIALIZES when @[name]
+	normalize: -> do normalize for name, normalize of NORMIALIZES
 
 module.exports = Tester

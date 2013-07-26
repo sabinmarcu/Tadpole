@@ -3,6 +3,7 @@ class LanguageHelper extends IS.Object
 		@echo "Initializing Language Controls"
 		@Runtime.init "language", "string"
 		@Runtime.subscribe "prop-language-change", ~> @switchLanguage @Runtime.get "language"
+		@_language = {}
 		Storage.get "lang", (lang) ~>
 			language = lang or "en-US"
 			@log language
@@ -16,7 +17,7 @@ class LanguageHelper extends IS.Object
 			Storage.set "lang", @language
 			do @_translateAll
 		catch e
-			@_language = []
+			@_language = {}
 			@log "Error Encountered", e
 
 	_translate: (text) ~> @_language[text] or text

@@ -23,6 +23,7 @@ class DocumentListController extends IS.Object
 			"connection.broadcast": @connection-broadcast
 			"document.change": (...args) ~> @passthrough @document-change, args
 		Client?.loadEvents
+		@runtime.subscribe "prop-active-document-change", @save-state
 
 	replicate: ~> @prep 'document.change', @fetch-document!.title
 	document-change: (newval) ~> @fetch-document!.title = newval; @safeApply!
@@ -90,7 +91,7 @@ class DocumentListController extends IS.Object
 			Client.publish "connection.broadcast", null, @fetch-document!.export!
 	add-document: ~> @models.new!; Client.publish "connection.broadcast", null, @fetch-document!.export!
 	delete-document: ~> @models.delete @runtime.props['active-document'] 
-	save-document: ~> @models.save @runtime.props['active-document']
+	save-document: (doc) ~> @models.save (doc or @runtime.props['active-document'])
 	download-document: ~> 
 		content = @fetch-document!.export()
 		window.open "data:application/xml,#content", "Download", "location=no,menubar=no,titlebar=no,toolbar=no"
@@ -102,6 +103,9 @@ class DocumentListController extends IS.Object
 		[f, l] = [(content.indexOf "<uuid>"), (content.indexOf "</uuid>")]
 		content = content.replace (content.substr f, l - f + 9), ""
 		@models.get-document content
+	save-state: ~> 
+		for doc in @models.documents
+			@save-document doc
 
 Controller = new DocumentListController()
 angular.module AppInfo.displayname .controller "DocumentList", ["$scope", "Runtime", "Documents", Controller.init]

@@ -26,6 +26,7 @@ class ModalController extends IS.Object
 		@scope <<< @
 	init-runtime: ~>
 		@runtime.init 'modal-state', \number
+		
 	toggle: ~>
 		if ( @runtime.get \modal-state ) is States.normal then @runtime.set \modal-state, States.fullscreen
 		else @runtime.set \modal-state, States.normal
@@ -34,7 +35,8 @@ class ModalController extends IS.Object
 	show: (data = {title: "No Title", content: "No Content"}, timeout) ~>
 		@scope.title = data.title or @scope.title
 		@scope.content = data.content or @scope.content
-		@runtime.set \modal-state, States.normal
+		if window.innerWidth <= 320 then @runtime.set \modal-state, States.fullscreen
+		else @runtime.set \modal-state, States.normal
 		if timeout then setTimeout @hide, timeout
 		@safeApply!
 	hide: ~> @runtime.set \modal-state, States.closed; @safeApply!

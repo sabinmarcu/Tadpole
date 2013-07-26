@@ -19,9 +19,11 @@ class DocumentModel extends IS.Object
 		@initIndex!
 		@refreshIndex @data, 0, @
 	initIndex: ~>
-		@index = 1
+		@index = 0
 		@indexes = []
-	refreshIndex: (list, depth, parent, hidden = false) ~>
+		@levels = []
+	refreshIndex: (list, depth, parent) ~>
+		@levels[depth] ?= []
 		for node in list
 			node.$index = @index++
 			node.$depth = depth
@@ -29,13 +31,21 @@ class DocumentModel extends IS.Object
 			node.$status ?= false
 			node.$viewmore ?= false
 			node.$folded ?= false
-			node.$hidden = hidden
+			node.$hidden = parent.$folded
 			node.note ?= ""
 			if not node.status
 				if node.children and node.children.length then node.status = "indeterminate"
 				else node.status = "unchecked"
+			if not node.$renderer then node.$renderer = new (DepMan.renderer "Node")(node)
+			if not node.location
+				y-offset = @levels[depth].length
+				if y-offset then y-offset = @levels[depth][y-offset - 1].location.y + 70
+				if parent.location then node.location = x: parent.location.x + 350, y: parent.location.y + y-offset
+				else node.location = x: 20, y: 20 + y-offset
+			if depth and not node.$linerenderer then node.$linerenderer  =  new (DepMan.renderer "Line")(node)
 			@indexes.push node
-			if node.children then @refreshIndex node.children, depth + 1, node, node.$folded
+			@levels[depth].push node
+			if node.children then @refreshIndex node.children, depth + 1, node
 	save: ~> @parent.save @_id
 	delete: ~> @parent.delete @_id
 	export: ~> @log @; (@parent.reader.read title: @title, data: @data, uuid: @_id).opml

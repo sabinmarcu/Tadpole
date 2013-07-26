@@ -11,7 +11,9 @@
 		 	<%- DepMan.render ["document", "_main"] %>
 		 	<%- DepMan.render ["document", "_alt"] %>
 		</article>
-		<aside ng-click="nodeAddRoot()"><i class="icon-plus"></i></aside>
+		<aside ng-click="addRoot()"><i class="icon-plus"></i></aside>
 	</section>
-	<section id="mindmap" ng-class="{0: 'inactive', 1: 'active'}[runtime.props['document-state']]"></section>
+	<section id="mindmap" ng-class="{0: 'inactive', 1: 'active'}[runtime.props['document-state']]">
+		<canvas></canvas>
+	</section>
 </section>

@@ -51,6 +51,8 @@ class SidebarController extends IS.Object
 	init-runtime: ~>
 		@runtime.init "sidebar-state", \number
 		@runtime.init "sidebar-tab", \number
+		@runtime.subscribe "prop-sidebar-state-change", ~> @safe-apply!
+		@runtime.subscribe "prop-sidebar-tab-change", ~> @safe-apply!
 		tab <~ Storage.get "sidebar-tab"
 		tab ?= 0
 		@runtime.set "sidebar-tab", tab
@@ -60,6 +62,7 @@ class SidebarController extends IS.Object
 		@config-scope!
 		@init-runtime!
 		@hook-keyboard!
+		@hook-gestures!
 		@scope.clientid = ""
 		@scope.language = @runtime.get 'language'
 
@@ -75,6 +78,13 @@ class SidebarController extends IS.Object
 			jwerty.key "#{key}+#{Tabs[currentTab]+1}", -> handle it, currentTab
 		jwerty.key "esc", ~> if (@runtime.get "sidebar-state") is States.open then @runtime.set \sidebar-state, States.closed; @safeApply!
 
+	hook-gestures: ~>
+		target = Hammer ($ '#sidebar-container section section' .0)
+		target.on "swiperight", ~> if @runtime.props[\sidebar-tab] isnt Tabs.list then @runtime.set \sidebar-tab, @runtime.props[\sidebar-tab] - 1
+		target.on "swipeleft", ~> if @runtime.props[\sidebar-tab] isnt Tabs.experimental then @runtime.set \sidebar-tab, @runtime.props[\sidebar-tab] + 1
+		target.on "swipedown", ~> if @runtime.props[\sidebar-tab] is Tabs.server then Client.reconnect!
+
+
 	config-scope: ~>
 		@safeApply = (fn) ~>
 			phase = @scope.$parent.$$phase
@@ -88,6 +98,8 @@ class SidebarController extends IS.Object
 		@log "Toggleing state"
 		if @runtime.props['sidebar-state'] is States.open then @runtime.set 'sidebar-state', States.closed
 		else @runtime.set "sidebar-state", States.open
+	
+	verify-and-connect: ~> if @scope.clientid then Client.connect @scope.clientid
 
 Controller = new SidebarController()
 angular.module AppInfo.displayname .controller "Sidebar", ["$scope", "Runtime", Controller.init]
