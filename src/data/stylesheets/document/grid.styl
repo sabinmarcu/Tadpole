@@ -12,8 +12,8 @@
 		font-size 100px
 		color rgba(0, 0, 0, 0.2)
 		transition all 0.5s ease-in-out
-		&:hover
-			color rgba(0, 0, 0, 0.4)
+	&:hover i
+		color rgba(0, 0, 0, 0.4)
 
 > article
 	*
@@ -146,8 +146,29 @@
 
 	border-bottom solid 1px #ccc
 	background linear-gradient(top, rgba(0, 0, 0, 0.1) 0, rgba(0, 0, 0, 0.2) 100%)
-
+	.modal.button
+		display none
 
 &
 	overflow-y auto
 	overflow-x hidden
+
+@media (max-width:320px) 
+	nav > *
+		width 25px !important
+		height 35px !important
+		line-height 35px !important
+	.button
+		&.add, &.remove, &.showhide
+			display none
+		&.modal
+			display block !important
+			border-left solid 1px #ccc
+	input, label, aside#primary
+		height 35px !important
+	aside#primary div
+		right 26px
+		left 52px
+	article.inactive
+		aside#primary
+			height 0 !important

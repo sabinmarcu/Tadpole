@@ -32,6 +32,7 @@ class OPMLReader extends IS.Object
 			string = "#tabs<outline "
 			for key, value of node 
 				unless key in [ \children \text ] or key[0] is '$' 
+					if key is \location then value = "#{value.x},#{value.y}"
 					string += "_#key='#value' "
 				if key is \text then string += "#key='#value' "
 			@index += 1
@@ -50,34 +51,48 @@ class OPMLReader extends IS.Object
 
 	decode-opml: ~>
 		@opml = @data
-		@dom = ( new DOMParser() ).parseFromString @opml, "text/xml" .children[0]
+		@dom = ( new DOMParser() ).parseFromString @opml, "text/xml" .childNodes[0]
 		@index = 0
 		@expansionState = []
-		if (node = @dom.children[0].querySelector "expansionState") and node?
+		if (node = @find-opml-node @dom .querySelector "expansionState") and node?
 			@expansionState = JSON.parse [ \[, node.childNodes[0]?.nodeValue, \] ] * ""
 		@uuid = null
-		if (node = @dom.children[0].querySelector "uuid") and node?
+		if (node = @find-opml-node @dom .querySelector "uuid") and node?
 			@uuid = node.childNodes[0]?.nodeValue
 		@json =
-			title: @dom.children[0].querySelector "title" .childNodes[0].nodeValue
-			data: @decode-list @dom.children[1].children
+			title: @find-opml-node @dom .querySelector "title" .childNodes[0].nodeValue
+			data: @decode-list (@find-opml-node @dom, 2 .childNodes)
 		@title = @json.title
 		@log @
 
 	decode-list: (list) ~>
 		l = []
-		for item in list
+		for item in list when @validate-opml-node item
+			@log "Extracting", item
 			@index += 1
 			i = {}
 			if @index in @expansionState then i.$folded = true
 			for attr in item.attributes
 				name = attr.nodeName
 				if name[0] is "_" then name = name.substr 1
-				i[name] = attr.nodeValue
-			if item.children.length
-				i.children = @decode-list item.children
+				if name is "location" 
+					val = JSON.parse "[#{attr.nodeValue}]"
+					i[name] = x: val[0], y: val[1]
+				else i[name] = attr.nodeValue
+			if item.childNodes.length
+				i.children = @decode-list item.childNodes
 			l.push i
 		l
+
+	find-opml-node: (item, which = 1) ~>
+		nr = 0
+		for node in item.childNodes
+			if @validate-opml-node node
+				nr++
+				if nr is which then return node
+		return null
+
+	validate-opml-node: (node) ~> node.nodeName isnt '#text'
 
 
 class OPMLAPI extends IS.Object

@@ -14,7 +14,8 @@ class Client extends BaseClient
 		"log": -> console.log arguments
 		"switchMode": (mode) -> switchMode mode
 		
-	init: ~> @publish "CONNECTED"; Toast "Connected", "Connected to the server!"
+	init: ~> @publish "CONNECTED"
+	reconnect: ~> @socket.socket.disconnect!; @socket.socket.connect!
 
 window.Client = new Client()
 angular.module AppInfo.displayname .value window.Client
