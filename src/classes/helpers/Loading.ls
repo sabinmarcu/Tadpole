@@ -10,8 +10,8 @@ class LoadingHelper extends IS.Object
 		do @resize
 		@echo "Loading screen ready"
 
-	start: ~> @loadingScreen.className = \active
-	end: ~> @loadingScreen.className = ""
+	start: ~> @loadingScreen.className = \active; @
+	end: ~> @loadingScreen.className = ""; @
 	resize: ~> @asides |> map -> 
 		angle = Math.atan window.innerWidth / window.innerHeight
 		arg = switch it.dataset.location
@@ -20,9 +20,11 @@ class LoadingHelper extends IS.Object
 		transString = "translateX(#{arg})  skew(#{angle}rad)"
 		console.log transString
 		$ it .css \transform, transString
+		@
 	progress: (arg) ~> 
 		@message.innerHTML = switch typeof arg
 		| \number => "Loading: #{arg}%"
 		| otherwise => arg
+		@
 
 module.exports = LoadingHelper

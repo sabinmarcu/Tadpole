@@ -4,6 +4,10 @@ class Application extends IS.Object
 		do @firstTimeInclude
 		do @loadLibs
 		do @fixStylesheets
+		window.Loading = new ( DepMan.helper "Loading" )()
+		window.Storage = new ( DepMan.helper "Storage")(@continue-load)
+
+	continue-load: ~>
 		do @loadApplication
 
 	baseSetup: ->
@@ -39,7 +43,6 @@ class Application extends IS.Object
 	firstTimeInclude: ~>
 		window.DepMan = new ( require "classes/helpers/DependenciesManager" )
 		window.Tester = new ( DepMan.helper "Tester")()
-		window.Storage = new ( DepMan.helper "Storage")()
 	fixStylesheets: ~>
 		styles = window.getStylesheets!; fwstyles = $('#css-font-awesome')
 		styles.innerHTML = styles.innerHTML.replace /\<\<INSERT OPEN SANS 300 WOFF HERE\>\>/g, DepMan.font "woff/opensans1"
@@ -52,7 +55,6 @@ class Application extends IS.Object
 		fwstyles.html (fwstyles.html().replace /\<\<INSERT FONTAWESOME WOFF HERE\>\>/g, DepMan.font "woff/fontawesome-webfont")
 		document.head.appendChild styles
 	loadApplication: ~>
-		window.Loading = new ( DepMan.helper "Loading" )()
 		angular.module AppInfo.displayname, []
 		DepMan.helper "Runtime"
 		DepMan.helper "Language"
