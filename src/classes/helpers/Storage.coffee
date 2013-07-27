@@ -13,13 +13,14 @@ class StorageItem
 	remove: () => @driver.remove @item; @parent._remove @item
 
 class Storage
-	constructor: ->
+	constructor: (callback) ->
 		# Initial setup
 		[@items, @lastKey, drivers] = [{}, 0, { "localstorage": "LocalStorage", "indexeddb": "IndexedDB" }]
 
 		# Loading Drivers
-		if Tester.indexeddb then @driver = DepMan.helper "storage/Drivers/#{drivers.indexeddb}"
-		else if Tester.localstorage then @driver = DepMan.helper "storage/Drivers/#{drivers.localstorage}"
+		Loading.start().progress "Loading Database"
+		if Tester.indexeddb then @driver = new ( DepMan.helper "storage/Drivers/#{drivers.indexeddb}" )(=> Loading.end(); callback() )
+		else if Tester.localstorage then @driver = new ( DepMan.helper "storage/Drivers/#{drivers.localstorage}" )(=> Loading.end(); callback() )
 
 	# CRUD Definitions
 	reuse  : (item) => @items[item] or (@items[item] = new StorageItem(item, @lastKey++, @))

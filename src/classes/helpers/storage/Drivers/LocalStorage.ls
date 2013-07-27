@@ -1,4 +1,5 @@
 class LocalStorageDriver extends IS.Object
+	~> it!
 	set: (item, value) ~>
 		switch typeof value
 		| "object" => @set-object item, value
