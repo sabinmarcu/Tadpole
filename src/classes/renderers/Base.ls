@@ -52,5 +52,9 @@ class BaseFrameBuffer extends IS.Object
 	scan: ~> 
 		rgb = @context.get-image-data it.x, it.y, 1, 1 .data
 		rgb[0] * 255 * 255 + rgb[1] * 255 + rgb[2]
+	start-draw: ~> @drawing = true
+	end-draw: ~> delete @drawing
+	start-resize: ~> @resizing = true
+	end-resize: ~> delete @resizing
 
 module.exports = BaseFrameBuffer

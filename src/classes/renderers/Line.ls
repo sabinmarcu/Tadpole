@@ -1,16 +1,21 @@
 class LineRenderer extends DepMan.renderer "Base"
 	(@node) ~> super!; @setup-size!; @sequence!
 	setup-size: ~>
+		@start-resize!
 		@deltas = x: @node.location.x - @node.$parent.location.x, y: @node.location.y - @node.$parent.location.y
 		@buffer.width = Math.abs @deltas.x + 1
 		@buffer.height = Math.abs @deltas.y + 1
-		@log @
+		@end-resize!
 
 	sequence: ~>
 		@setup-size!
 		@reset!
 		@set-points!
 		@draw-line!
+		@set-text-points!
+		unless @node.relation is ""
+			@rotate!
+			@draw-text!
 
 	set-points: ~>
 		# Initial
@@ -45,6 +50,24 @@ class LineRenderer extends DepMan.renderer "Base"
 		@context.move-to @rpoints.first.x, @rpoints.first.y
 		@context.bezier-curve-to @rpoints.first.x + @deltas.x / 3, @rpoints.first.y + @deltas.y, @rpoints.second.x - @deltas.x / 3, @rpoints.second.y - @deltas.y, @rpoints.second.x, @rpoints.second.y
 		@context.stroke!
+
+	set-text-points: ~>
+		@context.font = "normal 12px Verdana"
+		@rpoints = @context.measure-text @node.relation
+		@log @rpoints
+
+	rotate: ~> 
+		@log @buffer.width / 2 - @rpoints.width / 2, @buffer.height / 2 - 20
+		@context.translate @buffer.width / 2, @buffer.height / 2
+		@context.rotate Math.atan @buffer.height / @buffer.width / 8
+
+	draw-text: ~> 
+		@context.fill-style = 'rgba(256, 256, 256, 0.9)'
+		@context.stroke-style = 'rgba(0, 0, 0, 0.2)'
+		@context.fill-rect-r @rpoints.width / -2, -20, @rpoints.width * 2, 30, 4
+		@context.stroke-rect-r @rpoints.width / -2, -20, @rpoints.width * 2, 30, 4
+		@context.fill-style = "black"
+		@context.fill-text @node.relation, 0, 0
 
 
 module.exports = LineRenderer

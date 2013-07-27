@@ -15,8 +15,10 @@ class CanvasService extends DepMan.renderer "Base"
 		@resize!
 
 	resize: ~>
+		@start-resize!
 		@buffer.width = window.innerWidth
 		@buffer.height = window.innerHeight - 49
+		@end-resize!
 
 	set-taps: ~>
 		target = Hammer ($ '#mindmap > canvas' .0)
@@ -33,10 +35,12 @@ class CanvasService extends DepMan.renderer "Base"
 			# First Pass, Lines
 			for node in doc.indexes when node.$hidden isnt true
 				if node.$linerenderer then let r = node.$linerenderer
-					@context.drawImage r.buffer, r.points.first.x + 150, r.points.first.y + 25
+					unless r.drawing or r.resizing or @drawing or @resizing
+						@context.drawImage r.buffer, r.points.first.x + 150, r.points.first.y + 25
 			# Second Pass, Nodes
 			for node in doc.indexes when node.$hidden isnt true
-				@context.drawImage node.$renderer.buffer, node.location.x, node.location.y
+				unless node.$renderer.drawing or node.$renderer.resizing or @drawing or @resizing
+					@context.drawImage node.$renderer.buffer, node.location.x, node.location.y
 				
 			if @functional then requestAnimationFrame @sequence
 		else @active = false
@@ -65,21 +69,14 @@ class CanvasService extends DepMan.renderer "Base"
 			point = @get-point it
 			if @target
 				@dragging = true
-				@target.location.x = point.clientX - @offset.x
-				@target.location.y = point.clientY - @offset.y - 45
-				@target.$linerenderer?.sequence!
-				if @target.children
-					for kid in @target.children
-						@log kid
-						kid.$linerenderer.sequence!
+				Client.publish "node.move", @target.$index, point.clientX - @offset.x, point.clientY - @offset.y - 45
 			else if @accelerating then @accelerate point
 	ev-up: ~>
 		if @active
-			if @dragging then
-				delete @dragging
-			else
+			if not @dragging
 				target = @get-target @get-point it
 				if target >= 0 then @edit @get-node target  
+			delete @dragging if @dragging
 			delete @target if @target
 			delete @offset if @offset
 			delete @accelerating if @accelerating

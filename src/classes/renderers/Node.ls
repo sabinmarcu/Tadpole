@@ -36,7 +36,7 @@ class NodeRenderer extends DepMan.renderer "Base"
 		@context.fill-style = @colors.text
 		@context.stroke-style = @colors.border
 		@context.font = "normal 15px Verdana"
-		text = @node.text; if text.length > 30 then text = "#{text.substr 0, 27}..."
+		text = @node.text; if text.length > 28 then text = "#{text.substr 0, 25}..."
 		@context.stroke-text text, 20, 30
 		@context.fill-text text, 20, 30
 

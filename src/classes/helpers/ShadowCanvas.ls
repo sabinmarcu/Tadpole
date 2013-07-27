@@ -16,7 +16,8 @@ class ShadowCanvasService extends DepMan.renderer "Base"
 			if @offsets? then @context.translate @offsets.x, @offsets.y
 			# One pass, shadow nodes.
 			for node in doc.indexes when node.$hidden isnt true
-				@context.drawImage node.$renderer.sbuffer, node.location.x, node.location.y
+				unless node.$renderer.drawing
+					@context.drawImage node.$renderer.sbuffer, node.location.x, node.location.y
 
 			if @functional then requestAnimationFrame @sequence
 

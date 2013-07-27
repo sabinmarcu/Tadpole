@@ -32,6 +32,7 @@ class DocumentModel extends IS.Object
 			node.$viewmore ?= false
 			node.$folded ?= false
 			node.$hidden = parent.$folded
+			node.relation ?= ""
 			node.note ?= ""
 			if not node.status
 				if node.children and node.children.length then node.status = "indeterminate"

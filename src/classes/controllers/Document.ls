@@ -20,6 +20,7 @@ class DocumentController extends IS.Object
 			"node.add": @node-add
 			"node.add-root": @node-add-root
 			"node.remove": @node-remove
+			"node.move": @node-move
 		Client?.loadEvents!
 
 	node-change: (index, property, value) ~>
@@ -28,9 +29,18 @@ class DocumentController extends IS.Object
 		node[property] = value
 		if property is \status then @propagate-change node
 		if property is \text then node.$renderer.sequence!
+		if property is \relation then node.$linerenderer?.sequence!
 		@fetch-document!.refresh!
 		node.$renderer.sequence!
 		@safeApply!
+
+	node-move: (index, x, y) ~>
+		node = @fetch-node index
+		node.location.x = x
+		node.location.y = y
+		node.$linerenderer?.sequence!
+		if node.children then for kid in node.children
+			kid.$linerenderer.sequence!
 
 	replicate: (node, property) ~> @prep 'node.change', node.$index, property, node[property]
 	add: (node) ~> Client.publish 'node.add', node.$index
@@ -188,7 +198,7 @@ class DocumentController extends IS.Object
 					node.$folded = (form.find '#folded' .0.checked) is true
 				else node.$status = (form.find '#checked' .0.checked) is true
 				if oldvalues.text isnt node.text then @replicate node, 'text'; node.$renderer.sequence!
-				if oldvalues.relation isnt node.relation then @replicate node, 'relation'
+				if oldvalues.relation isnt node.relation then node.$linerenderer?.sequence!; @replicate node, 'relation'
 				if oldvalues.note isnt node.note then @replicate node, 'note'
 				if oldvalues.$folded isnt node.$folded then @refresh node
 				if oldvalues.checked isnt node.$status then @change-status node
@@ -198,8 +208,8 @@ class DocumentController extends IS.Object
 		setTimeout ~>
 			form = $ '#editform'
 			if window.innerWidth <= 300 then @runtime.set 'modal-state', 2
-			form.find '#checkcontainer' .show!
-			form.find '#foldcontainer' .show! 
+			form.find '#checkcontainer' .attr "checked", false .show!
+			form.find '#foldcontainer' .attr "checked", false .show! 
 			form.find '#text' .val node.text
 			form.find '#relation' .val node.relation
 			form.find '#note' .val node.note
