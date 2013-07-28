@@ -16,6 +16,9 @@ class ModalController extends IS.Object
 	init: (@scope, @runtime) ~> 
 		@config-scope!
 		@init-runtime!
+		@hook-keyboard!
+	hook-keyboard: ~>
+		jwerty.key "esc", ~> @hide!
 	config-scope: ~>
 		@safeApply = (fn) ~>
 			phase = @scope.$parent.$$phase
