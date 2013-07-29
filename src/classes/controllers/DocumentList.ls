@@ -11,7 +11,7 @@ class DocumentListController extends IS.Object
 		div.innerHTML = DepMan.render [\document \list]
 		$ '#sidebar-container section section' .children()[0] .appendChild div
 
-	init: (@scope, @runtime, @models) ~>
+	init: (@scope, @runtime, @models, @dnd) ~>
 		@config-scope!
 		@hook-keyboard!
 		@hook-events!
@@ -40,7 +40,6 @@ class DocumentListController extends IS.Object
 	connection-request: ~> @requested = true; @log "Client connect requested! (should not send away data)"
 
 	connection-new: (id) ~> 
-		@log @requested
 		unless @requested
 			@log "Sending data to the new connection! (should not appear on the requester)"
 			Client.publish "connection.broadcast", id, @fetch-document!.export!
@@ -73,6 +72,7 @@ class DocumentListController extends IS.Object
 		jwerty.key "#{key}+s", ~> handle it, \save
 		jwerty.key "#{key}+d", ~> handle it, \delete
 		jwerty.key "#{key}+shift+d", ~> handle it, \download
+		jwerty.key "#{key}+shift+u", ~> handle it, \upload
 		jwerty.key "#{key}+shift+c", ~> handle it, \duplicate
 		@log "Handled!"
 
@@ -106,7 +106,18 @@ class DocumentListController extends IS.Object
 	save-state: ~> 
 		for doc in @models.documents
 			@save-document doc
+	upload-document: ~>
+		input = document.create-element "input"
+		input.type = 'file'
+		document.body.append-child input
+		$ input .click!change ~>
+			for file in it.target.files then let f = file
+				type = f.name.substr ( f.name.lastIndexOf "." ) + 1 
+				if type in [\opml \xml]
+					reader = new FileReader!
+					reader.onload = ~> @models.get-document it.target.result
+					reader.read-as-text f
 
 Controller = new DocumentListController()
-angular.module AppInfo.displayname .controller "DocumentList", ["$scope", "Runtime", "Documents", Controller.init]
+angular.module AppInfo.displayname .controller "DocumentList", ["$scope", "Runtime", "Documents", "DND", Controller.init]
 module.exports = Controller

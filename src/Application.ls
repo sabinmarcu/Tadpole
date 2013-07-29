@@ -61,6 +61,7 @@ class Application extends IS.Object
 		DepMan.helper "OPML"
 		DepMan.helper "ShadowCanvas"
 		DepMan.helper "Canvas"
+		DepMan.helper "DND"
 		[ window.Notification, window.Toast ] = DepMan.helper "Notification"
 		DepMan.model "Document"
 		DepMan.controller "Modals"

@@ -3,8 +3,8 @@ class LineRenderer extends DepMan.renderer "Base"
 	setup-size: ~>
 		@start-resize!
 		@deltas = x: @node.location.x - @node.$parent.location.x, y: @node.location.y - @node.$parent.location.y
-		@buffer.width = Math.abs @deltas.x + 1
-		@buffer.height = Math.abs @deltas.y + 1
+		@buffer.width = ( Math.abs @deltas.x ) + 1
+		@buffer.height = ( Math.abs @deltas.y ) + 1
 		@end-resize!
 
 	sequence: ~>

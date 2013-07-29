@@ -63,7 +63,6 @@ class CanvasService extends DepMan.renderer "Base"
 				@target = target
 				@offset = x: point.clientX - target.location.x, y: point.clientY - target.location.y - 45
 			else @accelerate point
-
 	ev-move: ~>
 		if @active
 			point = @get-point it

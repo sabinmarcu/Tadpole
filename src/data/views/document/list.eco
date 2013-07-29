@@ -5,6 +5,7 @@
 			<li ng-click="deleteDocument()"><i class="icon-remove"></i></li>
 			<li ng-click="saveDocument()"><i class="icon-save"></i></li>
 			<li ng-click="downloadDocument()"><i class="icon-cloud-download"></i></li>
+			<li ng-click="uploadDocument()"><i class="icon-cloud-upload"></i></li>
 			<li ng-click="duplicateDocument()"><i class="icon-copy"></i></li>
 		</div>
 	</nav>
