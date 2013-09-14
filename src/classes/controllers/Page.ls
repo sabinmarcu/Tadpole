@@ -56,15 +56,15 @@ class PageController extends IS.Object
 	init-runtime: ~> @runtime.init "app-state", \number
 	get-stored: ~>
 		@@prev-state = States[\landing]
-		Storage.get "app-state", (state) ~>
+		DBStorage.get "app-state", (state) ~>
 			@@prev-state = parseInt state or States[\landing]
 			@runtime.set "app-state", @@prev-state
 		@runtime.subscribe "prop-app-state-change", (value) ~>
 			switch value
-			| States[\landing] => Storage.set "app-state", States[\landing]; @log "State changed, switching to landing next time!"
+			| States[\landing] => DBStorage.set "app-state", States[\landing]; @log "State changed, switching to landing next time!"
 			| otherwise =>
 				if @@prev-state is States[\landing]
-					Storage.set "app-state", States[\application]
+					DBStorage.set "app-state", States[\application]
 					@log "State changed, switching to app next time!"
 			@log @@prev-state
 			@@prev-state = value

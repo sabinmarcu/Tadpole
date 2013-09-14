@@ -65,11 +65,11 @@ class DocumentModel extends IS.Object
 		@_reccords[final]._id = @_reccords[final]._uuid = final
 
 	@get-initial-state = ~>
-		docs <~ Storage.get "documents"
+		docs <~ DBStorage.get "documents"
 		docs ?= []
 		if docs.substr? then docs = JSON.parse docs
 		for doc in docs
-			content <~ Storage.get doc
+			content <~ DBStorage.get doc
 			@get-document content
 
 	@get-document = (data) ~> 
@@ -88,32 +88,32 @@ class DocumentModel extends IS.Object
 	@delete = (item) ~>
 		@deleteLink item
 		delete @_reccords[item]
-		Storage.remove item
+		DBStorage.remove item
 		index = @documents.indexOf item
 		@documents = @documents.splice index, 1
 		@runtime.set 'active-document', @documents[index-1]
 		Toast "Document Status", "The document has been successfuly deleted!"
 
 	@deleteLink = (item) ~>
-		items <~ Storage.get "documents"
+		items <~ DBStorage.get "documents"
 		items ?= []
 		if items.substr? then items = JSON.parse items
 		if items.indexOf item >= 0
 			items.splice (items.indexOf item), 1
-			Storage.set "documents", JSON.stringify items
+			DBStorage.set "documents", JSON.stringify items
 
 	@save = (item) ~>
 		@saveLink item
-		Storage.set item, @_reccords[item].export!
+		DBStorage.set item, @_reccords[item].export!
 		Toast "Document Status", "The document has been successfuly saved!"
 
 	@saveLink = (item) ~>
-		items <~ Storage.get "documents"
+		items <~ DBStorage.get "documents"
 		items ?= []
 		if items.substr? then items = JSON.parse items
 		unless (items.indexOf item) >= 0
 			items.push item
-			Storage.set "documents", JSON.stringify items
+			DBStorage.set "documents", JSON.stringify items
 
 
 
