@@ -5,7 +5,7 @@ class Application extends IS.Object
 		do @loadLibs
 		do @fixStylesheets
 		window.Loading = new ( DepMan.helper "Loading" )()
-		window.Storage = new ( DepMan.helper "Storage")(@continue-load)
+		window.DBStorage = new ( DepMan.helper "Storage")(@continue-load)
 
 	continue-load: ~>
 		do @loadApplication

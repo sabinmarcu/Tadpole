@@ -1,26 +1,31 @@
 class LocalStorageDriver extends IS.Object
-	~> it!
+	~> it?!
+
 	set: (item, value) ~>
 		switch typeof value
 		| "object" => @set-object item, value
 		| "function" => @set item, value!
 		| otherwise => @set-string item, value
+
 	set-object: (item, object)~>
 		props = [key for key, value of object]
 		@set-string item, "#>object#{item}"
 		@set-string "#>object#{item}-props", JSON.stringify props
 		for prop in props
 			@set "#>object#{item}-prop-#{prop}", object[prop]
+
 	get: (item, callback) ~>
 		set <~ @get-string item
 		init = set[item]
 		return callback null unless init
 		if ( init.substr 0, 2 ) is \#> then @get-object init, callback
 		else callback init		
+
 	get-object: (item, callback) ->
 		object = {}
 		<~ @handle-object item, \get, object
 		callback object
+
 	handle-object: (item, func, object, callback) ~>
 		propsstring = "#{item}-props"
 		set <~ @get-string propsstring
@@ -57,4 +62,4 @@ class LocalStorageDriver extends IS.Object
 	get-string: LocalStorage.get
 	remove-string: LocalStorage.remove
 
-module.exports = new LocalStorageDriver()
+module.exports = LocalStorageDriver
