@@ -53,10 +53,10 @@ class SidebarController extends IS.Object
 		@runtime.init "sidebar-tab", \number
 		@runtime.subscribe "prop-sidebar-state-change", ~> @safe-apply!
 		@runtime.subscribe "prop-sidebar-tab-change", ~> @safe-apply!
-		tab <~ Storage.get "sidebar-tab"
+		tab <~ DBStorage.get "sidebar-tab"
 		tab ?= 0
 		@runtime.set "sidebar-tab", tab
-		@runtime.subscribe "prop-sidebar-tab-change", ~> Storage.set "sidebar-tab", @runtime.get "sidebar-tab"
+		@runtime.subscribe "prop-sidebar-tab-change", ~> DBStorage.set "sidebar-tab", @runtime.get "sidebar-tab"
 
 	init: (@scope, @runtime) ~>
 		@config-scope!

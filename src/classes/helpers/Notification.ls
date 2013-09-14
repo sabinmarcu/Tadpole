@@ -5,7 +5,7 @@ class NotificationHelper extends IS.Object
 		Runtime.init 'toast-driver', \number
 		Runtime.init 'toast-timeout', \number
 
-		timeout <~ Storage.get "toast-timeout"
+		timeout <~ DBStorage.get "toast-timeout"
 		timeout ?= 5000
 
 		Runtime.set 'toast-timeout', timeout

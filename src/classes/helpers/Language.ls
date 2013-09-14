@@ -4,7 +4,7 @@ class LanguageHelper extends IS.Object
 		@Runtime.init "language", "string"
 		@Runtime.subscribe "prop-language-change", ~> @switchLanguage @Runtime.get "language"
 		@_language = {}
-		Storage.get "lang", (lang) ~>
+		DBStorage.get "lang", (lang) ~>
 			language = lang or "en-US"
 			@log language
 			@Runtime.set \language, language
@@ -14,7 +14,7 @@ class LanguageHelper extends IS.Object
 		try
 			DepMan.language @language
 			@_language = JSONImport["#{@language}"]
-			Storage.set "lang", @language
+			DBStorage.set "lang", @language
 			do @_translateAll
 		catch e
 			@_language = {}
