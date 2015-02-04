@@ -1,5 +1,5 @@
-require("coffee-script");
-var parser = require("cliparser"),
+require("coffee-script/register");
+var parser = require("cliparser-coffee"),
 	args   = parser.parse(process.argv, {
 		"-v": "--version",
 		"-h": "--help",
